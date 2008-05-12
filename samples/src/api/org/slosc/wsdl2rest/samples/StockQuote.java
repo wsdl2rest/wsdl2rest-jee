@@ -4,13 +4,13 @@ import java.net.URL;
 import java.math.BigDecimal;
 
 public class StockQuote{
-	String ticker;
-	String currency;
-	BigDecimal lastPrice;
-	BigDecimal highestPriceToday;
-	BigDecimal lowestPriceToday;
+	private String ticker;
+	private String currency;
+	private BigDecimal lastPrice;
+	private BigDecimal highestPriceToday;
+	private BigDecimal lowestPriceToday;
 	
-	URL bid;
+	private URL bid;
 
     public String getTicker() {
         return ticker;
