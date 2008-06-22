@@ -1,5 +1,7 @@
 package org.slosc.wsdl2rest.wsdl;
 
+import java.util.List;
+
 /**
  * Created by IntelliJ IDEA.
  * User: lilantha
@@ -10,6 +12,6 @@ package org.slosc.wsdl2rest.wsdl;
 public interface MethodInfo {
     String getMethodName();
     String getReturnType();
-    String[] getParameterNames();
-    Class[] getParameterTypes();
+    List<Param> getParams();
+    String getExceptionType();
 }

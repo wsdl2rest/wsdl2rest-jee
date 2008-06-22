@@ -23,12 +23,19 @@ import org.w3c.dom.Element;
 import org.w3c.dom.NodeList;
 import org.w3c.dom.Node;
 import org.apache.wsif.schema.Parser;
+import org.apache.wsif.util.WSIFUtils;
+import org.apache.wsif.WSIFException;
+import org.apache.commons.logging.Log;
+import org.apache.commons.logging.LogFactory;
 
 import javax.wsdl.*;
 import javax.wsdl.extensions.UnknownExtensibilityElement;
+import javax.wsdl.extensions.ExtensibilityElement;
+//import javax.wsdl.extensions.schema.Schema;
 import javax.wsdl.factory.*;
 import javax.wsdl.xml.*;
 import javax.xml.namespace.QName;
+import javax.xml.validation.Schema;
 import java.util.*;
 import java.io.File;
 
@@ -38,6 +45,8 @@ import java.io.File;
  */
 public class WSDLProcessor {
 
+    private static Log log = LogFactory.getLog(WSDLProcessor.class);
+    
     private static final String xsdURI = "http://www.w3.org/2001/XMLSchema";
 
     //Mapping XML types to Java types
@@ -60,6 +69,7 @@ public class WSDLProcessor {
     private List<ClassDefinition> typeDefs = new ArrayList<ClassDefinition>();
     private Stack svc = new Stack();
     private Stack operation = new Stack();
+
 
     public WSDLProcessor(){
         //TODO - fix this list
@@ -108,11 +118,14 @@ public class WSDLProcessor {
     }
 
     public List<ClassDefinition> getTypeDefs() {
+        for(String key: serviceDef.keySet()){
+            typeDefs.add(serviceDef.get(key));    
+        }
         return typeDefs;
     }
 
-    public void setTypeDefs(List<ClassDefinition> typeDefs) {
-        this.typeDefs = typeDefs;
+    public Map<String, ClassDefinitionImpl> getServiceDef() {
+        return serviceDef;
     }
 
     private void processImports(Definition def) {
@@ -128,21 +141,21 @@ public class WSDLProcessor {
         //Get ride of this once we implement our own type mappings.
         Parser.getTypeMappings(def, typeRegistry, true, null);
         Iterator itr = typeRegistry.keySet().iterator();
-        System.out.println("Type mapping:");
+        log.info("Type mapping:");
         while(itr.hasNext()){
-            String key = (String)itr.next();
-            System.out.println("Key: "+key+"\tValue: "+typeRegistry.get(key));
+            QName key = (QName)itr.next();
+            log.info("Key: "+key+"\tValue: "+typeRegistry.get(key));
         }
         
     }
 
     public void processMessages(Definition def){
         Map messages = def.getMessages();
-        System.out.println("Messages: ");
+        log.info("Messages: ");
         for (Object o : messages.values()) {
             Message msg = (Message) o;
             if (!msg.isUndefined()) {
-                System.out.println("\t"+msg.getQName());
+                log.info("\t"+msg.getQName());
             }
         }
     }
@@ -150,11 +163,11 @@ public class WSDLProcessor {
     private void processPortTypes(Definition def) {
 
         Map portTypes = def.getPortTypes();
-        System.out.println("PortTypes: ");
+        log.info("PortTypes: ");
         for (Object o : portTypes.values()) {
             PortType ptype = (PortType) o;
             if (!ptype.isUndefined()) {
-                System.out.println("\t"+ptype.getQName());
+                log.info("\t"+ptype.getQName());
             }
         }
     }
@@ -162,60 +175,130 @@ public class WSDLProcessor {
     private void processBindings(Definition def) {
 
         Map bindings = def.getBindings();
-        System.out.println("Bindings: ");
+        log.info("Bindings: ");
         for (Object o : bindings.values()) {
             Binding  binding = (Binding) o;
             if (! binding.isUndefined()) {
-                System.out.println( "\t"+binding.getQName());
+                log.info( "\t"+binding.getQName());
             }
         }
     }
 
     private void processBindings(Definition def, Binding binding){
 
-        System.out.println("\tBinding: "+binding.getQName().getLocalPart());
+        log.info("\tBinding: "+binding.getQName().getLocalPart());
         processPortTypes(def, binding.getPortType());
     }
 
     private void processPortTypes(Definition def, PortType portTypes){
 
-        System.out.println("\tPortType: "+portTypes.getQName().getLocalPart());
-        System.out.println("\tOperations: ");
+        log.info("\tPortType: "+portTypes.getQName().getLocalPart());
+        log.info("\tOperations: ");
 
         for (Object op : portTypes.getOperations()) {
             Operation oper = (Operation) op;
-            System.out.println("\t\tOperation: " + oper.getName());
+            String operation = oper.getName();
+            log.info("\t\tOperation: " + operation);
             
             ClassDefinitionImpl svcDef = serviceDef.get(this.svc.peek());
-            svcDef.addMethod(oper.getName());
+            svcDef.addMethod(operation);
 
             Input in = oper.getInput();
             Output out = oper.getOutput();
             Map f = oper.getFaults();
 
 
-            System.out.println("\t\t\tInput: ");
-            processMessages(def, in.getMessage());
-            System.out.println("\t\t\tOutput: ");
-            processMessages(def, out.getMessage());
-            System.out.println("\t\t\tFaults: ");
-            for (Object o : f.values()) {
-                Fault fault = (Fault) o;
-                processMessages(def, fault.getMessage());
+            log.info("\t\t\tInput: ");
+            if(in != null)
+                processMessages(def, in.getMessage(),operation, 0);
+            
+            log.info("\t\t\tOutput: ");
+            if(out != null)
+                processMessages(def, out.getMessage(), operation, 1);
+
+            log.info("\t\t\tFaults: ");
+            if(f != null){
+                for (Object o : f.values()) {
+                    Fault fault = (Fault) o;
+                    processMessages(def, fault.getMessage(),operation, 2);
+                }
             }
         }
     }
 
-    public void processMessages(Definition def, Message message){
-        System.out.println("\t\t\tMessage: "+message.getQName().getLocalPart());
+    private static Part getWrappedDocLiteralPart(List parts, String operationName) {
+		boolean wrapped = !(parts==null);
+		Part elementPart = null;
+		for (int i = 0; wrapped && i < parts.size(); i++) {
+			Part p = (Part) parts.get(i);
+			if (p.getElementName() != null) {
+				if (elementPart == null) {
+					elementPart = p;
+   				    String pName = p.getElementName().getLocalPart();
+                    if(pName.endsWith("Response")) pName = pName.substring(0, pName.lastIndexOf("Response"));
+                    if (!operationName.equals(pName)) {
+					   wrapped = false;
+				    }
+				} else {
+					wrapped = false;
+				}
+			}
+		}
+		if (!wrapped) {
+			elementPart = null;
+		}
+		return elementPart;
+	}
+
+    private List unwrapParts(Definition def, Message message, String operation){
+        List parts = message.getOrderedParts(null);
+        Part p = getWrappedDocLiteralPart(parts, operation);
+        if (p != null) {
+            List unWrappedParts = null;
+            try {
+                unWrappedParts = WSIFUtils.unWrapPart(p, def);
+            } catch (Exception e) {
+                log.error("Exception in unWrapping Parts: ", e);
+            }
+            parts.remove(p);
+            if(unWrappedParts != null){
+                parts.addAll(unWrappedParts);
+            }
+        }
+        return parts;
+    }
+
+    public void processMessages(Definition def, Message message, String operation, int type) {
+        log.info("\t\t\tMessage: "+message.getQName().getLocalPart());
         if(!message.isUndefined() && message.getParts() != null){
-           for(Object p: message.getParts().values()){
+
+            List parts = unwrapParts(def, message, operation);
+            if(parts == null || parts.size() == 0) return;
+            List<Param> params = new ArrayList<Param>();
+            int indx = -1;
+            for(Object p: parts){
                Part part = (Part)p;
+
                if(part != null){
-                   System.out.println("\t\t\tPart: "+ part.getElementName());
-                   String param = (String)typeRegistry.get(part.getElementName());
+                   QName elmName = part.getElementName();
+                   if(elmName == null) continue;
+                   log.info("\t\t\tPart: "+ elmName.getPrefix()+":"+elmName.getLocalPart());
+                   String paramType = (String)typeRegistry.get(elmName);
+                   log.info("\t\t\t\tParams: "+paramType+" "+part.getName());
                    //prcessSchemaTypes(def, part.getElementName());
+                   params.add(new ParamImpl(paramType, part.getName()));
+                   indx++;
                }
+           }
+           if(indx >= 0){
+                ClassDefinitionImpl svcDef = serviceDef.get(this.svc.peek());
+                MethodInfoImpl mInf = svcDef.getMethodInfo(operation);
+               switch(type){
+                   case 0: mInf.setParams(params); break;
+                   case 1: mInf.setReturnType(params.get(0).getParamType()); break;
+                   case 2: mInf.setExceptionType(params.get(0).getParamType());
+               }
+
            }
         }
     }
@@ -235,14 +318,15 @@ public class WSDLProcessor {
 
 
         for (Object oee : types.getExtensibilityElements()) {
-            Element e = ((UnknownExtensibilityElement)oee).getElement();
-            String ns = e.getNamespaceURI();
+            QName qn = ((ExtensibilityElement)oee).getElementType();
+            String ns = qn.getNamespaceURI();
             //ignore anything other than schema;
             // TODO imports are not supported at this time
-            if(!(e.getLocalName().equals("schema") &&
+            if(!(qn.getLocalPart().equals("schema") &&
                     (NS_URI_SCHEMA_XSDS[0].equals(ns)
                     ||NS_URI_SCHEMA_XSDS[1].equals(ns)
                     ||NS_URI_SCHEMA_XSDS[2].equals(ns)))) continue;
+            Element e = null;//((Schema) oee).getElement();
             //ignore any other targetNamespaces for current lookup.
             String targetNamespace = e.getAttribute("targetNamespace");
             if(!targetNamespace.equals(type.getNamespaceURI())) continue;
@@ -286,7 +370,7 @@ public class WSDLProcessor {
                     if(loc > 0) {
                         typ = (String)typeRegistry.get(typ.substring(loc+1));
                     }
-                    System.out.println("\t\t\tparam: "+typ+" "+seqName.getNodeValue());
+                    log.info("\t\t\tparam: "+typ+" "+seqName.getNodeValue());
                 }
             }
         }
@@ -308,11 +392,11 @@ public class WSDLProcessor {
 
         String svcPackageName=def.getTargetNamespace();
         Map services = def.getServices();
-        System.out.println("Services: ");
+        log.info("Services: ");
         for (Object o : services.values()) {
             Service svc = (Service) o;
             final String svcName = svc.getQName().getLocalPart();
-            System.out.println("\t"+svcName);
+            log.info("\t"+svcName);
             ClassDefinitionImpl svcDef = new ClassDefinitionImpl();
             svcDef.setClassName(svcName);
             svcDef.setPackageName(svcPackageName);
@@ -322,7 +406,7 @@ public class WSDLProcessor {
             Map ports = svc.getPorts();
             for(Object po: ports.values()){
                 Port port = (Port) po;
-                System.out.println("\tPort: "+port.getName());
+                log.info("\tPort: "+port.getName());
                 processBindings(def, port.getBinding());
 
             }
@@ -338,10 +422,32 @@ public class WSDLProcessor {
             usage();
         }
 
-        new WSDLProcessor().process(args[0], args[1], args[2]);
+        WSDLProcessor wsdlProcessor = new WSDLProcessor();
+        wsdlProcessor.process(args[0], args[1], args[2]);
+        List<ClassDefinition> svcClasses = wsdlProcessor.getTypeDefs();
+
+        for(ClassDefinition clazzDef : svcClasses){
+            System.out.println("package "+clazzDef.getPackageName()+";\n\n\n");
+            System.out.print("public interface ");
+            System.out.println(clazzDef.getClassName()+" {\n");
+            for(MethodInfo mInf:clazzDef.getMethods()){
+                System.out.print("\t"+mInf.getReturnType()+" ");
+                System.out.print(mInf.getMethodName()+"(");
+                List<Param> params = mInf.getParams();
+                int i=0; int size = params.size();
+                for(Param p : params){
+                    String comma = (++i != size)?", ":"";
+                    System.out.print(p.getParamType()+" "+p.getParamName()+comma);
+                }
+                String excep = mInf.getExceptionType() != null?(" throws "+ mInf.getExceptionType()):"";
+                System.out.println(")"+excep+";");
+            }
+            System.out.println("}\n\n\n");
+
+        }
     }
 
     private static void usage() {
-        System.out.println("Usage: wsdl2rest <wsdl>");
+        log.info("Usage: wsdl2rest <wsdl>");
     }
 }

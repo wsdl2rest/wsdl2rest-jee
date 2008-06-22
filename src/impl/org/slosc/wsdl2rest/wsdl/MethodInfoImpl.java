@@ -1,5 +1,7 @@
 package org.slosc.wsdl2rest.wsdl;
 
+import java.util.List;
+
 /**
  * Licensed to the Apache Software Foundation (ASF) under one
  * or more contributor license agreements. See the NOTICE file
@@ -22,8 +24,8 @@ package org.slosc.wsdl2rest.wsdl;
 public class MethodInfoImpl implements MethodInfo{
     private String methodName;
     private String returnType;
-    private Class [] parameterTypes;
-    private String [] parameterNames;
+    private List<Param> params;
+    private String exceptionType;
 
     public MethodInfoImpl() {
     }
@@ -48,19 +50,19 @@ public class MethodInfoImpl implements MethodInfo{
         this.returnType = returnType;
     }
 
-    public Class[] getParameterTypes() {
-        return parameterTypes;
+    public List<Param> getParams() {
+        return params;
     }
 
-    public void setParameterTypes(Class[] parameterTypes) {
-        this.parameterTypes = parameterTypes;
+    public void setParams(List<Param> params) {
+        this.params = params;
     }
 
-    public String[] getParameterNames() {
-        return parameterNames;
+    public String getExceptionType() {
+        return exceptionType;
     }
 
-    public void setParameterNames(String[] parameterNames) {
-        this.parameterNames = parameterNames;
+    public void setExceptionType(String exceptionType) {
+        this.exceptionType = exceptionType;
     }
 }
