@@ -34,19 +34,19 @@ public class WSDLProcessorTest extends TestCase {
 
     class WSDLFiles implements FileFilter {
         public boolean accept(File pathname) {
-            System.out.println("Processin wsdl: "+pathname.getName());
+//            System.out.println("Processin wsdl: "+pathname.getName());
             return pathname.getName().endsWith(".wsdl");
         }
     }
 
     public void testProcess() throws Exception {
-
+//        System.out.println("testProcess:");
         String loc = System.getProperty("org.slosc.wsdl2rest.wsdl.wsdlLocations");
         if(loc == null ) {
-            System.out.println("No location of wsdls");
+            System.out.println("No location for wsdls");
             return;
         }
-        System.out.println("wsdls location: "+loc);
+//        System.out.println("wsdls location: "+loc);
         File wsdlLoc = new File(loc);
         if(!wsdlLoc.isDirectory()) return;
 
