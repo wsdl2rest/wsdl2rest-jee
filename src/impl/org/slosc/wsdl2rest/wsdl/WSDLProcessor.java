@@ -57,7 +57,7 @@ public class WSDLProcessor {
     private static Map typeRegistry = new HashMap();
 
     private Map<String, ClassDefinitionImpl> serviceDef = new HashMap<String, ClassDefinitionImpl>();
-    private List<ClassDefinitionImpl> typeDefs = new ArrayList<ClassDefinitionImpl>();
+    private List<ClassDefinition> typeDefs = new ArrayList<ClassDefinition>();
     private Stack svc = new Stack();
     private Stack operation = new Stack();
 
@@ -106,7 +106,15 @@ public class WSDLProcessor {
         }
         return null;
     }
-    
+
+    public List<ClassDefinition> getTypeDefs() {
+        return typeDefs;
+    }
+
+    public void setTypeDefs(List<ClassDefinition> typeDefs) {
+        this.typeDefs = typeDefs;
+    }
+
     private void processImports(Definition def) {
         Map imports = def.getImports();
         for (Object o : imports.values()) {
