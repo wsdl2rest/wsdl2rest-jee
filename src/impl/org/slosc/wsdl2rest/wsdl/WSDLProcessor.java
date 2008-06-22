@@ -22,21 +22,26 @@ package org.slosc.wsdl2rest.wsdl;
 import org.w3c.dom.Element;
 import org.w3c.dom.NodeList;
 import org.w3c.dom.Node;
-import org.w3c.dom.NamedNodeMap;
+import org.apache.wsif.schema.Parser;
 
 import javax.wsdl.*;
-import javax.wsdl.extensions.ExtensibilityElement;
-import javax.wsdl.extensions.schema.Schema;
+import javax.wsdl.extensions.UnknownExtensibilityElement;
 import javax.wsdl.factory.*;
 import javax.wsdl.xml.*;
 import javax.xml.namespace.QName;
 import java.util.*;
 import java.io.File;
 
+/**
+ * Following class process WSDL document and generate a list of service interfaces & methods
+ * It follows  JSR-101 specifications
+ */
 public class WSDLProcessor {
 
     private static final String xsdURI = "http://www.w3.org/2001/XMLSchema";
 
+    //Mapping XML types to Java types
+    //the JAX-RPC mapping specification does not dictate a specific Java mapping for xsd:anyType.
     private static String Types[] = {
         "string", "normalizedString", "token", "byte", "unsignedByte",
         "base64Binary", "hexBinary", "integer", "positiveInteger",
@@ -51,22 +56,26 @@ public class WSDLProcessor {
 
     private static Map typeRegistry = new HashMap();
 
+    private Map<String, ClassDefinitionImpl> serviceDef = new HashMap<String, ClassDefinitionImpl>();
+    private List<ClassDefinitionImpl> typeDefs = new ArrayList<ClassDefinitionImpl>();
+    private Stack svc = new Stack();
+    private Stack operation = new Stack();
+
     public WSDLProcessor(){
         //TODO - fix this list
-        typeRegistry.put("string", String.class.getName());
-        typeRegistry.put("normalizedString", String.class.getName());
-        typeRegistry.put("byte", "byte");
-        typeRegistry.put("integer", "int");
-        typeRegistry.put("long", "long");
-        typeRegistry.put("float", "float");
-        typeRegistry.put("double", "double");
-        typeRegistry.put("short", "short");
-        typeRegistry.put("boolean", "boolean");
-        typeRegistry.put("unsignedShort", "short");
-        typeRegistry.put("decimal", "double");
-        typeRegistry.put("date", Date.class.getName());
-        typeRegistry.put("time", Date.class.getName());
-
+//        typeRegistry.put("string", String.class.getName());
+//        typeRegistry.put("normalizedString", String.class.getName());
+//        typeRegistry.put("byte", "byte");
+//        typeRegistry.put("integer", "int");
+//        typeRegistry.put("long", "long");
+//        typeRegistry.put("float", "float");
+//        typeRegistry.put("double", "double");
+//        typeRegistry.put("short", "short");
+//        typeRegistry.put("boolean", "boolean");
+//        typeRegistry.put("unsignedShort", "short");
+//        typeRegistry.put("decimal", "double");
+//        typeRegistry.put("date", Date.class.getName());
+//        typeRegistry.put("time", Date.class.getName());
     }
 
     public Map process(String wsdlURI, String username, String password){
@@ -89,14 +98,10 @@ public class WSDLProcessor {
             reader.setFeature("javax.wsdl.importDocuments", true);
             Definition def = reader.readWSDL(null, wsdl);
 
-//            processImports(def);
-//            prcessSchemaTypes(def);
-//            processMessages(def);
-//            processPortTypes(def);
-//            processBindings(def);
+            prcessSchemaTypes(def);
             processServices(def);
 
-        }catch (WSDLException e){
+        }catch (Exception e){
             e.printStackTrace();
         }
         return null;
@@ -111,11 +116,16 @@ public class WSDLProcessor {
         }
     }
 
-    private void prcessSchemaTypes(Definition def) {
-        Types schemaTypes = def.getTypes();
-        if(schemaTypes != null){
-            Element e = schemaTypes.getDocumentationElement();
+    private void prcessSchemaTypes(Definition def) throws Exception {
+        //Get ride of this once we implement our own type mappings.
+        Parser.getTypeMappings(def, typeRegistry, true, null);
+        Iterator itr = typeRegistry.keySet().iterator();
+        System.out.println("Type mapping:");
+        while(itr.hasNext()){
+            String key = (String)itr.next();
+            System.out.println("Key: "+key+"\tValue: "+typeRegistry.get(key));
         }
+        
     }
 
     public void processMessages(Definition def){
@@ -139,7 +149,6 @@ public class WSDLProcessor {
                 System.out.println("\t"+ptype.getQName());
             }
         }
-
     }
 
     private void processBindings(Definition def) {
@@ -152,25 +161,26 @@ public class WSDLProcessor {
                 System.out.println( "\t"+binding.getQName());
             }
         }
-
     }
 
     private void processBindings(Definition def, Binding binding){
 
         System.out.println("\tBinding: "+binding.getQName().getLocalPart());
         processPortTypes(def, binding.getPortType());
-
-
     }
 
     private void processPortTypes(Definition def, PortType portTypes){
 
         System.out.println("\tPortType: "+portTypes.getQName().getLocalPart());
-        List ops = portTypes.getOperations();
         System.out.println("\tOperations: ");
-        for(int i=0; i < ops.size();i++){
-            Operation oper = (Operation)ops.get(i);
-            System.out.println("\t\tOperation: "+oper.getName());
+
+        for (Object op : portTypes.getOperations()) {
+            Operation oper = (Operation) op;
+            System.out.println("\t\tOperation: " + oper.getName());
+            
+            ClassDefinitionImpl svcDef = serviceDef.get(this.svc.peek());
+            svcDef.addMethod(oper.getName());
+
             Input in = oper.getInput();
             Output out = oper.getOutput();
             Map f = oper.getFaults();
@@ -182,7 +192,7 @@ public class WSDLProcessor {
             processMessages(def, out.getMessage());
             System.out.println("\t\t\tFaults: ");
             for (Object o : f.values()) {
-                Fault fault = (Fault)o;
+                Fault fault = (Fault) o;
                 processMessages(def, fault.getMessage());
             }
         }
@@ -190,74 +200,122 @@ public class WSDLProcessor {
 
     public void processMessages(Definition def, Message message){
         System.out.println("\t\t\tMessage: "+message.getQName().getLocalPart());
-        if(!message.isUndefined()){
-           Map parts = message.getParts();
-           for(Object partO: parts.values()){
-               Part part = (Part)partO;
-               if(part!=null){
+        if(!message.isUndefined() && message.getParts() != null){
+           for(Object p: message.getParts().values()){
+               Part part = (Part)p;
+               if(part != null){
                    System.out.println("\t\t\tPart: "+ part.getElementName());
-                   prcessSchemaTypes(def, part.getElementName());
+                   String param = (String)typeRegistry.get(part.getElementName());
+                   //prcessSchemaTypes(def, part.getElementName());
                }
-
            }
         }
-
     }
 
+   public static final String [] NS_URI_SCHEMA_XSDS ={"http://www.w3.org/1999/XMLSchema",
+           "http://www.w3.org/2000/10/XMLSchema", "http://www.w3.org/2001/XMLSchema"};
+  
 
 
+    //TODO - fix this; this is really complex part. make it as single iteration at begin and then reused the popuplated info.
     private void prcessSchemaTypes(Definition def, QName type) {
-        Types schemaTypes = def.getTypes();
-        if(schemaTypes != null){
-            List eeList = schemaTypes.getExtensibilityElements();
+        
+        Types types = def.getTypes();
+        Map imports = def.getImports();
+        //TODO - add support for imported schemas
+        if(types == null) return;
 
-            for (Object oee : eeList) {
-                Element e = ((Schema) oee).getElement();
-                if(!e.getAttribute("targetNamespace").equals(type.getNamespaceURI())) continue;
 
-                NodeList nL = e.getChildNodes();
-                for(int i=0;i<nL.getLength();i++){
-                    Node node = nL.item(i);
-                    if(node.getNodeType() != Node.ELEMENT_NODE || !node.getLocalName().equals("element")) continue;
-                    Node name = node.getAttributes().getNamedItem("name");
-                    if(!name.getNodeValue().equals(type.getLocalPart())) continue;
+        for (Object oee : types.getExtensibilityElements()) {
+            Element e = ((UnknownExtensibilityElement)oee).getElement();
+            String ns = e.getNamespaceURI();
+            //ignore anything other than schema;
+            // TODO imports are not supported at this time
+            if(!(e.getLocalName().equals("schema") &&
+                    (NS_URI_SCHEMA_XSDS[0].equals(ns)
+                    ||NS_URI_SCHEMA_XSDS[1].equals(ns)
+                    ||NS_URI_SCHEMA_XSDS[2].equals(ns)))) continue;
+            //ignore any other targetNamespaces for current lookup.
+            String targetNamespace = e.getAttribute("targetNamespace");
+            if(!targetNamespace.equals(type.getNamespaceURI())) continue;
 
-                    Node complexTypes = ((Element)node).getElementsByTagNameNS(xsdURI,"complexType").item(0);
-                    if(complexTypes == null) continue;
-                    Node sequence     = ((Element)complexTypes).getElementsByTagNameNS(xsdURI,"sequence").item(0);
+            NodeList nL = e.getChildNodes();
+            for(int i=0;i<nL.getLength();i++){
+                Node node = nL.item(i);
+                if(node.getNodeType() != Node.ELEMENT_NODE) continue;
+                Element el = (Element)node;
 
-                    NodeList elements = ((Element)sequence).getElementsByTagNameNS(xsdURI,"element");
-                    for(int k=0;k<elements.getLength();k++){
-                        Node elNode = elements.item(k);
-                        Node seqName = elNode.getAttributes().getNamedItem("name");
-                        Node seqType = elNode.getAttributes().getNamedItem("type");
+                //check if this element is the one we are looking for?
+                Node name = el.getAttributes().getNamedItem("name");
+                if(!name.getNodeValue().equals(type.getLocalPart())) continue;
 
-                        String typ = seqType.getNodeValue();
-                        int loc    = typ.indexOf(":");
+                //ok now we found the required element; now see what is the type of that element
+                String elLocalName = el.getLocalName();
+                if (elLocalName.equals("complexType")) {
+                    //this need to map to a bean parameter
+                    processSchemaComplexTypes(el, type);
+				} else if (elLocalName.equals("simpleType")) {
+                    processSchemaSimpleType(el, type);
+				} else if (elLocalName.equals("element")) {
+                    processSchemaElementType(el, type);
+				} else{
+                    //TODO ignore other element types for now
+                }
 
-                        if(loc > 0) {
-                            typ = (String)typeRegistry.get(typ.substring(loc+1));  
-                        }
-                        System.out.println("\t\t\tparam: "+typ+" "+seqName.getNodeValue());
+                Node complexTypes = el.getElementsByTagNameNS(xsdURI,"complexType").item(0);
+                if(complexTypes == null) continue;
+                Node sequence     = ((Element)complexTypes).getElementsByTagNameNS(xsdURI,"sequence").item(0);
+
+                NodeList elements = ((Element)sequence).getElementsByTagNameNS(xsdURI,"element");
+                for(int k=0;k<elements.getLength();k++){
+                    Node elNode = elements.item(k);
+                    Node seqName = elNode.getAttributes().getNamedItem("name");
+                    Node seqType = elNode.getAttributes().getNamedItem("type");
+
+                    String typ = seqType.getNodeValue();
+                    int loc    = typ.indexOf(":");
+
+                    if(loc > 0) {
+                        typ = (String)typeRegistry.get(typ.substring(loc+1));
                     }
+                    System.out.println("\t\t\tparam: "+typ+" "+seqName.getNodeValue());
                 }
             }
         }
     }
 
+    private void processSchemaElementType(Element el, QName type) {
+
+    }
+
+    private void processSchemaSimpleType(Element el, QName type) {
+
+    }
+
+    private void processSchemaComplexTypes(Element el, QName type) {
+        
+    }
+
     private void processServices(Definition def) {
 
+        String svcPackageName=def.getTargetNamespace();
         Map services = def.getServices();
         System.out.println("Services: ");
         for (Object o : services.values()) {
             Service svc = (Service) o;
-            System.out.println("\t"+svc.getQName().getLocalPart());
+            final String svcName = svc.getQName().getLocalPart();
+            System.out.println("\t"+svcName);
+            ClassDefinitionImpl svcDef = new ClassDefinitionImpl();
+            svcDef.setClassName(svcName);
+            svcDef.setPackageName(svcPackageName);
+            serviceDef.put(svcName, svcDef);
+            this.svc.push(svcName);
 
             Map ports = svc.getPorts();
-            for(Object port: ports.values()){
-                Port p = (Port) port;
-                System.out.println("\tPort: "+p.getName());
-                processBindings(def, p.getBinding());
+            for(Object po: ports.values()){
+                Port port = (Port) po;
+                System.out.println("\tPort: "+port.getName());
+                processBindings(def, port.getBinding());
 
             }
         }

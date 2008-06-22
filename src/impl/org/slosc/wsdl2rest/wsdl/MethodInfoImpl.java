@@ -19,16 +19,16 @@ package org.slosc.wsdl2rest.wsdl;
  * under the License.
  */
 
-public class MethodInfo {
+public class MethodInfoImpl implements MethodInfo{
     private String methodName;
     private String returnType;
     private Class [] parameterTypes;
     private String [] parameterNames;
 
-    public MethodInfo() {
+    public MethodInfoImpl() {
     }
 
-    public MethodInfo(String methodName) {
+    public MethodInfoImpl(String methodName) {
         this.methodName = methodName;
     }
 

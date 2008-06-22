@@ -22,10 +22,10 @@ import java.util.ArrayList;
  * under the License.
  */
 
-public class ClassDefinition {
+public class ClassDefinitionImpl implements ClassDefinition {
     private String packageName;
     private String className;
-    private List<MethodInfo> methods = new ArrayList<MethodInfo>();
+    private List<MethodInfoImpl> methods = new ArrayList<MethodInfoImpl>();
 
 
     public String getPackageName() {
@@ -44,17 +44,17 @@ public class ClassDefinition {
         this.className = className;
     }
 
-    public List<MethodInfo> getMethods() {
+    public List<MethodInfoImpl> getMethods() {
         return methods;
     }
 
-    public void setMethods(List<MethodInfo> methods) {
+    public void setMethods(List<MethodInfoImpl> methods) {
         this.methods = methods;
     }
 
-    public void addMethodInfo(MethodInfo method){
+    public void addMethodInfo(MethodInfoImpl method){
         for(int i=0;i<methods.size();i++){
-            MethodInfo mi = methods.get(i);
+            MethodInfoImpl mi = methods.get(i);
             if(mi.getMethodName().equals(method.getMethodName())){
                 methods.set(i, method);
                 return;
@@ -63,23 +63,23 @@ public class ClassDefinition {
         methods.add(method);
     }
 
-    public MethodInfo getMethodInfo(String methodName){
-        for(MethodInfo mi : methods){
+    public MethodInfoImpl getMethodInfo(String methodName){
+        for(MethodInfoImpl mi : methods){
             if(mi.getMethodName().equals(methodName))
                 return mi;
         }
         return null;
     }
 
-    public MethodInfo addMethod(String methodName){
-        MethodInfo mi = null;
+    public MethodInfoImpl addMethod(String methodName){
+        MethodInfoImpl mi = null;
         for(int i=0;i<methods.size();i++){
             mi = methods.get(i);
             if(mi.getMethodName().equals(methodName)){
                 return mi;
             }
         }
-        mi = new MethodInfo(methodName);
+        mi = new MethodInfoImpl(methodName);
         methods.add(mi);
         return mi;
     }
