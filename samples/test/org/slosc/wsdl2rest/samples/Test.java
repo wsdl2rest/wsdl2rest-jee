@@ -11,7 +11,9 @@ import org.springframework.context.ApplicationContext;
 import org.springframework.context.support.ClassPathXmlApplicationContext;
 import org.slosc.wsdl2rest.samples.StockQuoteService;
 
-
+/*
+ * @author 
+ */
 public class Test {
 
     private StockQuoteService service;
