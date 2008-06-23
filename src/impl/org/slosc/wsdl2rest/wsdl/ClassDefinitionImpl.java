@@ -2,6 +2,8 @@ package org.slosc.wsdl2rest.wsdl;
 
 import java.util.List;
 import java.util.ArrayList;
+import java.net.URL;
+import java.net.MalformedURLException;
 
 /**
  * Licensed to the Apache Software Foundation (ASF) under one
@@ -24,6 +26,7 @@ import java.util.ArrayList;
 
 public class ClassDefinitionImpl implements ClassDefinition {
     private String packageName;
+    private List<String> imports;
     private String className;
     private List<MethodInfoImpl> methods = new ArrayList<MethodInfoImpl>();
 
@@ -32,7 +35,32 @@ public class ClassDefinitionImpl implements ClassDefinition {
         return packageName;
     }
 
+    public List<String> getImports() {
+        return imports;
+    }
+
+    public void setImports(List<String> imports) {
+        this.imports = imports;
+    }
+
     public void setPackageName(String packageName) {
+        try {
+            if(packageName == null || packageName.length() == 0 || !packageName.startsWith("http")) {
+                this.packageName ="";
+                return;
+            }
+            URL loc = new URL(packageName);
+            if(loc.getProtocol().equals("http")){
+                String host = loc.getHost();
+                String [] pk = host.split("\\.");
+                StringBuilder s = new StringBuilder();
+                for(int i=0;i<pk.length;i++)
+                    s.append(pk[pk.length - i - 1]).append((i+1 < pk.length)?".":"");
+                packageName = s.toString()+loc.getPath().replace('/','.');
+            }
+        } catch (MalformedURLException e) {
+            e.printStackTrace();  //To change body of catch statement use File | Settings | File Templates.
+        }
         this.packageName = packageName;
     }
 
@@ -44,7 +72,7 @@ public class ClassDefinitionImpl implements ClassDefinition {
         this.className = className;
     }
 
-    public List<MethodInfoImpl> getMethods() {
+    public List<? extends  MethodInfo> getMethods() {
         return methods;
     }
 

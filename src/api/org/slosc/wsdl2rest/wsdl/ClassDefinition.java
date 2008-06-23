@@ -12,7 +12,8 @@ import java.util.List;
 public interface ClassDefinition {
 
     String getPackageName();
+    List<String> getImports();
     String getClassName();
 
-    List<MethodInfoImpl> getMethods();
+    List<? extends  MethodInfo> getMethods();
 }

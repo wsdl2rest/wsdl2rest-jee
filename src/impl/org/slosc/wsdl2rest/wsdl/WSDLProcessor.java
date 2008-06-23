@@ -190,6 +190,13 @@ public class WSDLProcessor {
         processPortTypes(def, binding.getPortType());
     }
 
+    /* WSDL 1.1 spec: 2.4.5 Names of Elements within an Operation
+     * If the name attribute is not specified on a one-way or notification message, it defaults to the name of the operation.
+     * If the name attribute is not specified on the input or output messages of a request-response or solicit-response operation,
+     * the name defaults to the name of the operation with "Request"/"Solicit" or "Response" appended, respectively.
+     * Each fault element must be named to allow a binding to specify the concrete format of the fault message.
+     * The name of the fault element is unique within the set of faults defined for the operation.
+     */
     private void processPortTypes(Definition def, PortType portTypes){
 
         log.info("\tPortType: "+portTypes.getQName().getLocalPart());
@@ -202,19 +209,24 @@ public class WSDLProcessor {
             
             ClassDefinitionImpl svcDef = serviceDef.get(this.svc.peek());
             svcDef.addMethod(operation);
-
+            List paramOrder = oper.getParameterOrdering();
+//            if(paramOrder.get(0))
             Input in = oper.getInput();
             Output out = oper.getOutput();
             Map f = oper.getFaults();
 
 
             log.info("\t\t\tInput: ");
-            if(in != null)
+            if(in != null){
+                if(in.getName() == null) in.setName(operation);
                 processMessages(def, in.getMessage(),operation, 0);
+            }
             
             log.info("\t\t\tOutput: ");
-            if(out != null)
+            if(out != null) {
+                if(out.getName() == null) out.setName(operation+"Response");
                 processMessages(def, out.getMessage(), operation, 1);
+            }
 
             log.info("\t\t\tFaults: ");
             if(f != null){
@@ -225,6 +237,7 @@ public class WSDLProcessor {
             }
         }
     }
+
 
     private static Part getWrappedDocLiteralPart(List parts, String operationName) {
 		boolean wrapped = !(parts==null);
@@ -276,6 +289,7 @@ public class WSDLProcessor {
             if(parts == null || parts.size() == 0) return;
             List<Param> params = new ArrayList<Param>();
             int indx = -1;
+            List<String> imports = new ArrayList<String>();
             for(Object p: parts){
                Part part = (Part)p;
 
@@ -284,21 +298,29 @@ public class WSDLProcessor {
                    if(elmName == null) continue;
                    log.info("\t\t\tPart: "+ elmName.getPrefix()+":"+elmName.getLocalPart());
                    String paramType = (String)typeRegistry.get(elmName);
+                   if(paramType == null) continue; 
                    log.info("\t\t\t\tParams: "+paramType+" "+part.getName());
                    //prcessSchemaTypes(def, part.getElementName());
+                   int packLoc = paramType.lastIndexOf(".");
+                   if(packLoc > 0){
+                       String imp = paramType.substring(0,packLoc);
+                       if(!imp.equals("java.lang"))
+                            imports.add(imp);
+                       paramType = paramType.substring(packLoc+1);
+                   }
                    params.add(new ParamImpl(paramType, part.getName()));
                    indx++;
                }
            }
            if(indx >= 0){
-                ClassDefinitionImpl svcDef = serviceDef.get(this.svc.peek());
-                MethodInfoImpl mInf = svcDef.getMethodInfo(operation);
+               ClassDefinitionImpl svcDef = serviceDef.get(this.svc.peek());
+               MethodInfoImpl mInf = svcDef.getMethodInfo(operation);
                switch(type){
                    case 0: mInf.setParams(params); break;
                    case 1: mInf.setReturnType(params.get(0).getParamType()); break;
                    case 2: mInf.setExceptionType(params.get(0).getParamType());
                }
-
+               svcDef.setImports(imports);
            }
         }
     }
@@ -427,17 +449,24 @@ public class WSDLProcessor {
         List<ClassDefinition> svcClasses = wsdlProcessor.getTypeDefs();
 
         for(ClassDefinition clazzDef : svcClasses){
-            System.out.println("package "+clazzDef.getPackageName()+";\n\n\n");
-            System.out.print("public interface ");
+            System.out.println("\npackage "+clazzDef.getPackageName()+";\n\n");
+            if(clazzDef.getImports() != null){
+                for(String impo : clazzDef.getImports()){
+                  System.out.println("import "+impo+";");
+                }
+            }
+            System.out.print("\n\npublic interface ");
             System.out.println(clazzDef.getClassName()+" {\n");
             for(MethodInfo mInf:clazzDef.getMethods()){
                 System.out.print("\t"+mInf.getReturnType()+" ");
                 System.out.print(mInf.getMethodName()+"(");
                 List<Param> params = mInf.getParams();
-                int i=0; int size = params.size();
-                for(Param p : params){
-                    String comma = (++i != size)?", ":"";
-                    System.out.print(p.getParamType()+" "+p.getParamName()+comma);
+                if(params != null){
+                    int i=0; int size = params.size();
+                    for(Param p : params){
+                        String comma = (++i != size)?", ":"";
+                        System.out.print(p.getParamType()+" "+p.getParamName()+comma);
+                    }
                 }
                 String excep = mInf.getExceptionType() != null?(" throws "+ mInf.getExceptionType()):"";
                 System.out.println(")"+excep+";");

@@ -261,6 +261,23 @@ data types.<br>
 The &lt;binding&gt; element defines the message format and protocol
 details for each port.<br>
 <br>
+<ul type="disc">
+  <li class="MsoNormal"><b>Types</b>&#8211; a container for data type
+definitions using some type system (such as XSD). </li>
+  <li class="MsoNormal"><b>Message</b>&#8211; an abstract, typed definition
+of the data being communicated. </li>
+  <li class="MsoNormal"><b>Operation</b>&#8211; an abstract description of an
+action supported by the service. </li>
+  <li class="MsoNormal"><b>Port Type</b>&#8211;an abstract set of operations
+supported by one or more endpoints. </li>
+  <li class="MsoNormal"><b>Binding</b>&#8211; a concrete protocol and data
+format specification for a particular port type. </li>
+  <li class="MsoNormal"><b>Port</b>&#8211; a single endpoint defined as a
+combination of a binding and a network address. </li>
+  <li class="MsoNormal"><b>Service</b>&#8211; a collection of related
+endpoints. </li>
+</ul>
+<br>
 <br>
 <br>
 <big>HTTP Defintion</big><br>

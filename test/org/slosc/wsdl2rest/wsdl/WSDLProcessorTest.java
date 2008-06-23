@@ -59,8 +59,13 @@ public class WSDLProcessorTest extends TestCase {
             List<ClassDefinition> svcClasses = wsdlProcessor.getTypeDefs();
 
             for(ClassDefinition clazzDef : svcClasses){
-                System.out.println("package "+clazzDef.getPackageName()+";\n\n\n");
-                System.out.print("public interface ");
+                System.out.println("\npackage "+clazzDef.getPackageName()+";\n\n");
+                if(clazzDef.getImports() != null){
+                    for(String impo : clazzDef.getImports()){
+                      System.out.println("import "+impo+";");
+                    }
+                }
+                System.out.print("\n\npublic interface ");
                 System.out.println(clazzDef.getClassName()+" {\n");
                 for(MethodInfo mInf:clazzDef.getMethods()){
                     System.out.print("\t"+mInf.getReturnType()+" ");
