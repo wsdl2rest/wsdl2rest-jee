@@ -1,0 +1,11 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<classpath>
+    <classpathentry kind="con" path="org.eclipse.jdt.launching.JRE_CONTAINER" />
+    <classpathentry kind="src" path="src/api" />
+    <classpathentry kind="src" path="src/impl" />
+    <classpathentry kind="src" path="test" />
+    <classpathentry kind="con" path="org.eclipse.jdt.USER_LIBRARY/lib" />
+    <classpathentry kind="src" path="/wsif-2.0" combineaccessrules="false" />
+    <classpathentry kind="output" path="bin" />
+</classpath>
+
