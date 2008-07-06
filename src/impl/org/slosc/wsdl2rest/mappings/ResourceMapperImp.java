@@ -1,11 +1,13 @@
-package org.slosc.wsdl2rest.wsdl;
+package org.slosc.wsdl2rest.mappings;
+
+import org.slosc.wsdl2rest.mappings.ResourceMapper;
 
 import java.util.List;
 import java.util.ArrayList;
 import java.util.regex.Pattern;
 import java.util.regex.Matcher;
 
-public class ResourceMapperImp implements ResourceMapper{
+public class ResourceMapperImp implements ResourceMapper {
 
     private List<String> resources;
 	
