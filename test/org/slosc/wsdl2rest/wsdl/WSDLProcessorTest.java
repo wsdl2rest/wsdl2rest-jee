@@ -24,6 +24,7 @@ import org.slosc.wsdl2rest.wsdl.WSDLProcessor;
 import org.slosc.wsdl2rest.wsdl.ClassDefinition;
 import org.slosc.wsdl2rest.wsdl.MethodInfo;
 import org.slosc.wsdl2rest.wsdl.Param;
+import org.slosc.wsdl2rest.wsdl.ResourceMapperImp;
 
 import java.util.List;
 import java.io.File;
@@ -59,10 +60,20 @@ public class WSDLProcessorTest extends TestCase {
             List<ClassDefinition> svcClasses = wsdlProcessor.getTypeDefs();
 
             for(ClassDefinition clazzDef : svcClasses){
-                System.out.println("\npackage "+clazzDef.getPackageName()+";\n\n");
+                System.out.println("\npackage "+clazzDef.getPackageName()+";");
+                // Get resources of package name
+                ResourceMapperImp rm1 = new ResourceMapperImp(clazzDef.getPackageName());
+                System.out.print("Resources for " + clazzDef.getPackageName() + ":");
+                System.out.println(rm1.toString() + "\n\n");
+                
                 if(clazzDef.getImports() != null){
                     for(String impo : clazzDef.getImports()){
                       System.out.println("import "+impo+";");
+                      // Get resources of imports
+                      ResourceMapperImp rm2 = new ResourceMapperImp(impo);
+                      System.out.print("Resources for " + impo + ":");
+                      System.out.println(rm2.toString());
+                      
                     }
                 }
                 System.out.print("\n\npublic interface ");
@@ -80,8 +91,16 @@ public class WSDLProcessorTest extends TestCase {
                     }
                     String excep = mInf.getExceptionType() != null?(" throws "+ mInf.getExceptionType()):"";
                     System.out.println(")"+excep+";");
+                    // Get resources of methods
+                    ResourceMapperImp rm3 = new ResourceMapperImp(mInf.getMethodName());
+                    System.out.print("\t"+"Resources for " + mInf.getMethodName() + ":");
+                    System.out.println(rm3.toString());
                 }
-                System.out.println("}\n\n\n");
+                System.out.println("}");
+                // Get resources of public interfaces
+                ResourceMapperImp rm4 = new ResourceMapperImp(clazzDef.getClassName());
+                System.out.print("Resources for " + clazzDef.getClassName() + ":");
+                System.out.println(rm4.toString()+"\n\n\n");
             }
         }
     }

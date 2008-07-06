@@ -1,0 +1,2272 @@
+Testsuite: org.slosc.wsdl2rest.wsdl.WSDLProcessorTest
+Tests run: 1, Failures: 0, Errors: 0, Time elapsed: 1.047 sec
+------------- Standard Output ---------------
+Retrieving document at 'file:/C:/Thushan/slosc/code/sloc/samples/wsdl/addNumbers.wsdl'.
+
+package org.apache.handlers;
+Resources for org.apache.handlers:[org, apache, handlers]
+
+
+import org.apache.handlers.types;
+Resources for org.apache.handlers.types:[org, apache, handlers, types]
+
+
+public interface AddNumbersService {
+
+	int addNumbers(int arg0, int arg1) throws FaultDetail;
+	Resources for addNumbers:[add, Numbers]
+}
+Resources for AddNumbersService:[Add, Numbers, Service]
+
+
+
+Retrieving document at 'file:/C:/Thushan/slosc/code/sloc/samples/wsdl/bank.wsdl'.
+
+package org.apache.handlers;
+Resources for org.apache.handlers:[org, apache, handlers]
+
+
+import org.apache.handlers.types;
+Resources for org.apache.handlers.types:[org, apache, handlers, types]
+
+
+public interface AddNumbersService {
+
+	int addNumbers(int arg0, int arg1) throws FaultDetail;
+	Resources for addNumbers:[add, Numbers]
+}
+Resources for AddNumbersService:[Add, Numbers, Service]
+
+
+
+
+package org.apache.cxf.schemas.cxf.idl.bank;
+Resources for org.apache.cxf.schemas.cxf.idl.bank:[org, apache, cxf, schemas, idl, bank]
+
+
+import org.apache.cxf.schemas.cxf.idl.bank;
+Resources for org.apache.cxf.schemas.cxf.idl.bank:[org, apache, cxf, schemas, idl, bank]
+
+
+public interface BankCORBAService {
+
+	Account getAccount(String name) throws AccountNotFoundExceptionType;
+	Resources for getAccount:[get, Account]
+	boolean createAccount(String name) throws AccountAlreadyExistsExceptionType;
+	Resources for createAccount:[create, Account]
+}
+Resources for BankCORBAService:[Bank, Service]
+
+
+
+
+package org.apache.cxf.schemas.cxf.idl.bank;
+Resources for org.apache.cxf.schemas.cxf.idl.bank:[org, apache, cxf, schemas, idl, bank]
+
+
+import org.apache.cxf.schemas.cxf.idl.bank;
+Resources for org.apache.cxf.schemas.cxf.idl.bank:[org, apache, cxf, schemas, idl, bank]
+
+
+public interface BankSOAPService {
+
+	Account getAccount(String name) throws AccountNotFoundExceptionType;
+	Resources for getAccount:[get, Account]
+	boolean createAccount(String name) throws AccountAlreadyExistsExceptionType;
+	Resources for createAccount:[create, Account]
+}
+Resources for BankSOAPService:[Bank, Service]
+
+
+
+
+package org.apache.handlers;
+Resources for org.apache.handlers:[org, apache, handlers]
+
+
+import org.apache.handlers.types;
+Resources for org.apache.handlers.types:[org, apache, handlers, types]
+
+
+public interface AddNumbersService {
+
+	int addNumbers(int arg0, int arg1) throws FaultDetail;
+	Resources for addNumbers:[add, Numbers]
+}
+Resources for AddNumbersService:[Add, Numbers, Service]
+
+
+
+Retrieving document at 'file:/C:/Thushan/slosc/code/sloc/samples/wsdl/HelloWorld.wsdl'.
+
+package org.apache.handlers;
+Resources for org.apache.handlers:[org, apache, handlers]
+
+
+import org.apache.handlers.types;
+Resources for org.apache.handlers.types:[org, apache, handlers, types]
+
+
+public interface AddNumbersService {
+
+	int addNumbers(int arg0, int arg1) throws FaultDetail;
+	Resources for addNumbers:[add, Numbers]
+}
+Resources for AddNumbersService:[Add, Numbers, Service]
+
+
+
+
+package org.apache.cxf.schemas.cxf.idl.bank;
+Resources for org.apache.cxf.schemas.cxf.idl.bank:[org, apache, cxf, schemas, idl, bank]
+
+
+import org.apache.cxf.schemas.cxf.idl.bank;
+Resources for org.apache.cxf.schemas.cxf.idl.bank:[org, apache, cxf, schemas, idl, bank]
+
+
+public interface BankCORBAService {
+
+	Account getAccount(String name) throws AccountNotFoundExceptionType;
+	Resources for getAccount:[get, Account]
+	boolean createAccount(String name) throws AccountAlreadyExistsExceptionType;
+	Resources for createAccount:[create, Account]
+}
+Resources for BankCORBAService:[Bank, Service]
+
+
+
+
+package org.apache.cxf.schemas.cxf.idl.bank;
+Resources for org.apache.cxf.schemas.cxf.idl.bank:[org, apache, cxf, schemas, idl, bank]
+
+
+import org.apache.cxf.schemas.cxf.idl.bank;
+Resources for org.apache.cxf.schemas.cxf.idl.bank:[org, apache, cxf, schemas, idl, bank]
+
+
+public interface BankSOAPService {
+
+	Account getAccount(String name) throws AccountNotFoundExceptionType;
+	Resources for getAccount:[get, Account]
+	boolean createAccount(String name) throws AccountAlreadyExistsExceptionType;
+	Resources for createAccount:[create, Account]
+}
+Resources for BankSOAPService:[Bank, Service]
+
+
+
+
+package org.apache.handlers;
+Resources for org.apache.handlers:[org, apache, handlers]
+
+
+import org.apache.handlers.types;
+Resources for org.apache.handlers.types:[org, apache, handlers, types]
+
+
+public interface AddNumbersService {
+
+	int addNumbers(int arg0, int arg1) throws FaultDetail;
+	Resources for addNumbers:[add, Numbers]
+}
+Resources for AddNumbersService:[Add, Numbers, Service]
+
+
+
+
+package org.apache.cxf.schemas.cxf.idl.bank;
+Resources for org.apache.cxf.schemas.cxf.idl.bank:[org, apache, cxf, schemas, idl, bank]
+
+
+import org.apache.cxf.schemas.cxf.idl.bank;
+Resources for org.apache.cxf.schemas.cxf.idl.bank:[org, apache, cxf, schemas, idl, bank]
+
+
+public interface BankCORBAService {
+
+	Account getAccount(String name) throws AccountNotFoundExceptionType;
+	Resources for getAccount:[get, Account]
+	boolean createAccount(String name) throws AccountAlreadyExistsExceptionType;
+	Resources for createAccount:[create, Account]
+}
+Resources for BankCORBAService:[Bank, Service]
+
+
+
+
+package org.apache.cxf.schemas.cxf.idl.bank;
+Resources for org.apache.cxf.schemas.cxf.idl.bank:[org, apache, cxf, schemas, idl, bank]
+
+
+import org.apache.cxf.schemas.cxf.idl.bank;
+Resources for org.apache.cxf.schemas.cxf.idl.bank:[org, apache, cxf, schemas, idl, bank]
+
+
+public interface BankSOAPService {
+
+	Account getAccount(String name) throws AccountNotFoundExceptionType;
+	Resources for getAccount:[get, Account]
+	boolean createAccount(String name) throws AccountAlreadyExistsExceptionType;
+	Resources for createAccount:[create, Account]
+}
+Resources for BankSOAPService:[Bank, Service]
+
+
+
+
+package org.apache.handlers;
+Resources for org.apache.handlers:[org, apache, handlers]
+
+
+import org.apache.handlers.types;
+Resources for org.apache.handlers.types:[org, apache, handlers, types]
+
+
+public interface AddNumbersService {
+
+	int addNumbers(int arg0, int arg1) throws FaultDetail;
+	Resources for addNumbers:[add, Numbers]
+}
+Resources for AddNumbersService:[Add, Numbers, Service]
+
+
+
+Retrieving document at 'file:/C:/Thushan/slosc/code/sloc/samples/wsdl/hello_world.wsdl'.
+
+package org.apache.handlers;
+Resources for org.apache.handlers:[org, apache, handlers]
+
+
+import org.apache.handlers.types;
+Resources for org.apache.handlers.types:[org, apache, handlers, types]
+
+
+public interface AddNumbersService {
+
+	int addNumbers(int arg0, int arg1) throws FaultDetail;
+	Resources for addNumbers:[add, Numbers]
+}
+Resources for AddNumbersService:[Add, Numbers, Service]
+
+
+
+
+package org.apache.cxf.schemas.cxf.idl.bank;
+Resources for org.apache.cxf.schemas.cxf.idl.bank:[org, apache, cxf, schemas, idl, bank]
+
+
+import org.apache.cxf.schemas.cxf.idl.bank;
+Resources for org.apache.cxf.schemas.cxf.idl.bank:[org, apache, cxf, schemas, idl, bank]
+
+
+public interface BankCORBAService {
+
+	Account getAccount(String name) throws AccountNotFoundExceptionType;
+	Resources for getAccount:[get, Account]
+	boolean createAccount(String name) throws AccountAlreadyExistsExceptionType;
+	Resources for createAccount:[create, Account]
+}
+Resources for BankCORBAService:[Bank, Service]
+
+
+
+
+package org.apache.cxf.schemas.cxf.idl.bank;
+Resources for org.apache.cxf.schemas.cxf.idl.bank:[org, apache, cxf, schemas, idl, bank]
+
+
+import org.apache.cxf.schemas.cxf.idl.bank;
+Resources for org.apache.cxf.schemas.cxf.idl.bank:[org, apache, cxf, schemas, idl, bank]
+
+
+public interface BankSOAPService {
+
+	Account getAccount(String name) throws AccountNotFoundExceptionType;
+	Resources for getAccount:[get, Account]
+	boolean createAccount(String name) throws AccountAlreadyExistsExceptionType;
+	Resources for createAccount:[create, Account]
+}
+Resources for BankSOAPService:[Bank, Service]
+
+
+
+
+package org.apache.handlers;
+Resources for org.apache.handlers:[org, apache, handlers]
+
+
+import org.apache.handlers.types;
+Resources for org.apache.handlers.types:[org, apache, handlers, types]
+
+
+public interface AddNumbersService {
+
+	int addNumbers(int arg0, int arg1) throws FaultDetail;
+	Resources for addNumbers:[add, Numbers]
+}
+Resources for AddNumbersService:[Add, Numbers, Service]
+
+
+
+
+package org.apache.cxf.schemas.cxf.idl.bank;
+Resources for org.apache.cxf.schemas.cxf.idl.bank:[org, apache, cxf, schemas, idl, bank]
+
+
+import org.apache.cxf.schemas.cxf.idl.bank;
+Resources for org.apache.cxf.schemas.cxf.idl.bank:[org, apache, cxf, schemas, idl, bank]
+
+
+public interface BankCORBAService {
+
+	Account getAccount(String name) throws AccountNotFoundExceptionType;
+	Resources for getAccount:[get, Account]
+	boolean createAccount(String name) throws AccountAlreadyExistsExceptionType;
+	Resources for createAccount:[create, Account]
+}
+Resources for BankCORBAService:[Bank, Service]
+
+
+
+
+package org.apache.cxf.schemas.cxf.idl.bank;
+Resources for org.apache.cxf.schemas.cxf.idl.bank:[org, apache, cxf, schemas, idl, bank]
+
+
+import org.apache.cxf.schemas.cxf.idl.bank;
+Resources for org.apache.cxf.schemas.cxf.idl.bank:[org, apache, cxf, schemas, idl, bank]
+
+
+public interface BankSOAPService {
+
+	Account getAccount(String name) throws AccountNotFoundExceptionType;
+	Resources for getAccount:[get, Account]
+	boolean createAccount(String name) throws AccountAlreadyExistsExceptionType;
+	Resources for createAccount:[create, Account]
+}
+Resources for BankSOAPService:[Bank, Service]
+
+
+
+
+package org.apache.handlers;
+Resources for org.apache.handlers:[org, apache, handlers]
+
+
+import org.apache.handlers.types;
+Resources for org.apache.handlers.types:[org, apache, handlers, types]
+
+
+public interface AddNumbersService {
+
+	int addNumbers(int arg0, int arg1) throws FaultDetail;
+	Resources for addNumbers:[add, Numbers]
+}
+Resources for AddNumbersService:[Add, Numbers, Service]
+
+
+
+
+package org.apache.cxf.schemas.cxf.idl.bank;
+Resources for org.apache.cxf.schemas.cxf.idl.bank:[org, apache, cxf, schemas, idl, bank]
+
+
+import org.apache.cxf.schemas.cxf.idl.bank;
+Resources for org.apache.cxf.schemas.cxf.idl.bank:[org, apache, cxf, schemas, idl, bank]
+
+
+public interface BankCORBAService {
+
+	Account getAccount(String name) throws AccountNotFoundExceptionType;
+	Resources for getAccount:[get, Account]
+	boolean createAccount(String name) throws AccountAlreadyExistsExceptionType;
+	Resources for createAccount:[create, Account]
+}
+Resources for BankCORBAService:[Bank, Service]
+
+
+
+
+package org.apache.hello_world_soap_http;
+Resources for org.apache.hello_world_soap_http:[org, apache, hello, world, soap, http]
+
+
+import org.apache.hello_world_soap_http.types;
+Resources for org.apache.hello_world_soap_http.types:[org, apache, hello, world, soap, http, types]
+
+
+public interface SOAPService {
+
+	null sayHi();
+	Resources for sayHi:[say, Hi]
+	null greetMe();
+	Resources for greetMe:[greet, Me]
+	null greetMeOneWay();
+	Resources for greetMeOneWay:[greet, Me, One, Way]
+	null pingMe() throws FaultDetailElement;
+	Resources for pingMe:[ping, Me]
+}
+Resources for SOAPService:[Service]
+
+
+
+
+package org.apache.cxf.schemas.cxf.idl.bank;
+Resources for org.apache.cxf.schemas.cxf.idl.bank:[org, apache, cxf, schemas, idl, bank]
+
+
+import org.apache.cxf.schemas.cxf.idl.bank;
+Resources for org.apache.cxf.schemas.cxf.idl.bank:[org, apache, cxf, schemas, idl, bank]
+
+
+public interface BankSOAPService {
+
+	Account getAccount(String name) throws AccountNotFoundExceptionType;
+	Resources for getAccount:[get, Account]
+	boolean createAccount(String name) throws AccountAlreadyExistsExceptionType;
+	Resources for createAccount:[create, Account]
+}
+Resources for BankSOAPService:[Bank, Service]
+
+
+
+
+package org.apache.handlers;
+Resources for org.apache.handlers:[org, apache, handlers]
+
+
+import org.apache.handlers.types;
+Resources for org.apache.handlers.types:[org, apache, handlers, types]
+
+
+public interface AddNumbersService {
+
+	int addNumbers(int arg0, int arg1) throws FaultDetail;
+	Resources for addNumbers:[add, Numbers]
+}
+Resources for AddNumbersService:[Add, Numbers, Service]
+
+
+
+Retrieving document at 'file:/C:/Thushan/slosc/code/sloc/samples/wsdl/hello_world_async.wsdl'.
+
+package org.apache.handlers;
+Resources for org.apache.handlers:[org, apache, handlers]
+
+
+import org.apache.handlers.types;
+Resources for org.apache.handlers.types:[org, apache, handlers, types]
+
+
+public interface AddNumbersService {
+
+	int addNumbers(int arg0, int arg1) throws FaultDetail;
+	Resources for addNumbers:[add, Numbers]
+}
+Resources for AddNumbersService:[Add, Numbers, Service]
+
+
+
+
+package org.apache.cxf.schemas.cxf.idl.bank;
+Resources for org.apache.cxf.schemas.cxf.idl.bank:[org, apache, cxf, schemas, idl, bank]
+
+
+import org.apache.cxf.schemas.cxf.idl.bank;
+Resources for org.apache.cxf.schemas.cxf.idl.bank:[org, apache, cxf, schemas, idl, bank]
+
+
+public interface BankCORBAService {
+
+	Account getAccount(String name) throws AccountNotFoundExceptionType;
+	Resources for getAccount:[get, Account]
+	boolean createAccount(String name) throws AccountAlreadyExistsExceptionType;
+	Resources for createAccount:[create, Account]
+}
+Resources for BankCORBAService:[Bank, Service]
+
+
+
+
+package org.apache.cxf.schemas.cxf.idl.bank;
+Resources for org.apache.cxf.schemas.cxf.idl.bank:[org, apache, cxf, schemas, idl, bank]
+
+
+import org.apache.cxf.schemas.cxf.idl.bank;
+Resources for org.apache.cxf.schemas.cxf.idl.bank:[org, apache, cxf, schemas, idl, bank]
+
+
+public interface BankSOAPService {
+
+	Account getAccount(String name) throws AccountNotFoundExceptionType;
+	Resources for getAccount:[get, Account]
+	boolean createAccount(String name) throws AccountAlreadyExistsExceptionType;
+	Resources for createAccount:[create, Account]
+}
+Resources for BankSOAPService:[Bank, Service]
+
+
+
+
+package org.apache.handlers;
+Resources for org.apache.handlers:[org, apache, handlers]
+
+
+import org.apache.handlers.types;
+Resources for org.apache.handlers.types:[org, apache, handlers, types]
+
+
+public interface AddNumbersService {
+
+	int addNumbers(int arg0, int arg1) throws FaultDetail;
+	Resources for addNumbers:[add, Numbers]
+}
+Resources for AddNumbersService:[Add, Numbers, Service]
+
+
+
+
+package org.apache.cxf.schemas.cxf.idl.bank;
+Resources for org.apache.cxf.schemas.cxf.idl.bank:[org, apache, cxf, schemas, idl, bank]
+
+
+import org.apache.cxf.schemas.cxf.idl.bank;
+Resources for org.apache.cxf.schemas.cxf.idl.bank:[org, apache, cxf, schemas, idl, bank]
+
+
+public interface BankCORBAService {
+
+	Account getAccount(String name) throws AccountNotFoundExceptionType;
+	Resources for getAccount:[get, Account]
+	boolean createAccount(String name) throws AccountAlreadyExistsExceptionType;
+	Resources for createAccount:[create, Account]
+}
+Resources for BankCORBAService:[Bank, Service]
+
+
+
+
+package org.apache.cxf.schemas.cxf.idl.bank;
+Resources for org.apache.cxf.schemas.cxf.idl.bank:[org, apache, cxf, schemas, idl, bank]
+
+
+import org.apache.cxf.schemas.cxf.idl.bank;
+Resources for org.apache.cxf.schemas.cxf.idl.bank:[org, apache, cxf, schemas, idl, bank]
+
+
+public interface BankSOAPService {
+
+	Account getAccount(String name) throws AccountNotFoundExceptionType;
+	Resources for getAccount:[get, Account]
+	boolean createAccount(String name) throws AccountAlreadyExistsExceptionType;
+	Resources for createAccount:[create, Account]
+}
+Resources for BankSOAPService:[Bank, Service]
+
+
+
+
+package org.apache.handlers;
+Resources for org.apache.handlers:[org, apache, handlers]
+
+
+import org.apache.handlers.types;
+Resources for org.apache.handlers.types:[org, apache, handlers, types]
+
+
+public interface AddNumbersService {
+
+	int addNumbers(int arg0, int arg1) throws FaultDetail;
+	Resources for addNumbers:[add, Numbers]
+}
+Resources for AddNumbersService:[Add, Numbers, Service]
+
+
+
+
+package org.apache.cxf.schemas.cxf.idl.bank;
+Resources for org.apache.cxf.schemas.cxf.idl.bank:[org, apache, cxf, schemas, idl, bank]
+
+
+import org.apache.cxf.schemas.cxf.idl.bank;
+Resources for org.apache.cxf.schemas.cxf.idl.bank:[org, apache, cxf, schemas, idl, bank]
+
+
+public interface BankCORBAService {
+
+	Account getAccount(String name) throws AccountNotFoundExceptionType;
+	Resources for getAccount:[get, Account]
+	boolean createAccount(String name) throws AccountAlreadyExistsExceptionType;
+	Resources for createAccount:[create, Account]
+}
+Resources for BankCORBAService:[Bank, Service]
+
+
+
+
+package org.apache.hello_world_soap_http;
+Resources for org.apache.hello_world_soap_http:[org, apache, hello, world, soap, http]
+
+
+import org.apache.hello_world_soap_http.types;
+Resources for org.apache.hello_world_soap_http.types:[org, apache, hello, world, soap, http, types]
+
+
+public interface SOAPService {
+
+	null sayHi();
+	Resources for sayHi:[say, Hi]
+	null greetMe();
+	Resources for greetMe:[greet, Me]
+	null greetMeOneWay();
+	Resources for greetMeOneWay:[greet, Me, One, Way]
+	null pingMe() throws FaultDetailElement;
+	Resources for pingMe:[ping, Me]
+}
+Resources for SOAPService:[Service]
+
+
+
+
+package org.apache.cxf.schemas.cxf.idl.bank;
+Resources for org.apache.cxf.schemas.cxf.idl.bank:[org, apache, cxf, schemas, idl, bank]
+
+
+import org.apache.cxf.schemas.cxf.idl.bank;
+Resources for org.apache.cxf.schemas.cxf.idl.bank:[org, apache, cxf, schemas, idl, bank]
+
+
+public interface BankSOAPService {
+
+	Account getAccount(String name) throws AccountNotFoundExceptionType;
+	Resources for getAccount:[get, Account]
+	boolean createAccount(String name) throws AccountAlreadyExistsExceptionType;
+	Resources for createAccount:[create, Account]
+}
+Resources for BankSOAPService:[Bank, Service]
+
+
+
+
+package org.apache.handlers;
+Resources for org.apache.handlers:[org, apache, handlers]
+
+
+import org.apache.handlers.types;
+Resources for org.apache.handlers.types:[org, apache, handlers, types]
+
+
+public interface AddNumbersService {
+
+	int addNumbers(int arg0, int arg1) throws FaultDetail;
+	Resources for addNumbers:[add, Numbers]
+}
+Resources for AddNumbersService:[Add, Numbers, Service]
+
+
+
+
+package org.apache.cxf.schemas.cxf.idl.bank;
+Resources for org.apache.cxf.schemas.cxf.idl.bank:[org, apache, cxf, schemas, idl, bank]
+
+
+import org.apache.cxf.schemas.cxf.idl.bank;
+Resources for org.apache.cxf.schemas.cxf.idl.bank:[org, apache, cxf, schemas, idl, bank]
+
+
+public interface BankCORBAService {
+
+	Account getAccount(String name) throws AccountNotFoundExceptionType;
+	Resources for getAccount:[get, Account]
+	boolean createAccount(String name) throws AccountAlreadyExistsExceptionType;
+	Resources for createAccount:[create, Account]
+}
+Resources for BankCORBAService:[Bank, Service]
+
+
+
+
+package org.apache.hello_world_async_soap_http;
+Resources for org.apache.hello_world_async_soap_http:[org, apache, hello, world, async, soap, http]
+
+
+
+
+public interface SOAPService {
+
+	String greetMeSometime(String requestType);
+	Resources for greetMeSometime:[greet, Me, Sometime]
+}
+Resources for SOAPService:[Service]
+
+
+
+
+package org.apache.cxf.schemas.cxf.idl.bank;
+Resources for org.apache.cxf.schemas.cxf.idl.bank:[org, apache, cxf, schemas, idl, bank]
+
+
+import org.apache.cxf.schemas.cxf.idl.bank;
+Resources for org.apache.cxf.schemas.cxf.idl.bank:[org, apache, cxf, schemas, idl, bank]
+
+
+public interface BankSOAPService {
+
+	Account getAccount(String name) throws AccountNotFoundExceptionType;
+	Resources for getAccount:[get, Account]
+	boolean createAccount(String name) throws AccountAlreadyExistsExceptionType;
+	Resources for createAccount:[create, Account]
+}
+Resources for BankSOAPService:[Bank, Service]
+
+
+
+
+package org.apache.handlers;
+Resources for org.apache.handlers:[org, apache, handlers]
+
+
+import org.apache.handlers.types;
+Resources for org.apache.handlers.types:[org, apache, handlers, types]
+
+
+public interface AddNumbersService {
+
+	int addNumbers(int arg0, int arg1) throws FaultDetail;
+	Resources for addNumbers:[add, Numbers]
+}
+Resources for AddNumbersService:[Add, Numbers, Service]
+
+
+
+Retrieving document at 'file:/C:/Thushan/slosc/code/sloc/samples/wsdl/sample.wsdl'.
+
+package org.apache.handlers;
+Resources for org.apache.handlers:[org, apache, handlers]
+
+
+import org.apache.handlers.types;
+Resources for org.apache.handlers.types:[org, apache, handlers, types]
+
+
+public interface AddNumbersService {
+
+	int addNumbers(int arg0, int arg1) throws FaultDetail;
+	Resources for addNumbers:[add, Numbers]
+}
+Resources for AddNumbersService:[Add, Numbers, Service]
+
+
+
+
+package org.apache.cxf.schemas.cxf.idl.bank;
+Resources for org.apache.cxf.schemas.cxf.idl.bank:[org, apache, cxf, schemas, idl, bank]
+
+
+import org.apache.cxf.schemas.cxf.idl.bank;
+Resources for org.apache.cxf.schemas.cxf.idl.bank:[org, apache, cxf, schemas, idl, bank]
+
+
+public interface BankCORBAService {
+
+	Account getAccount(String name) throws AccountNotFoundExceptionType;
+	Resources for getAccount:[get, Account]
+	boolean createAccount(String name) throws AccountAlreadyExistsExceptionType;
+	Resources for createAccount:[create, Account]
+}
+Resources for BankCORBAService:[Bank, Service]
+
+
+
+
+package org.apache.cxf.schemas.cxf.idl.bank;
+Resources for org.apache.cxf.schemas.cxf.idl.bank:[org, apache, cxf, schemas, idl, bank]
+
+
+import org.apache.cxf.schemas.cxf.idl.bank;
+Resources for org.apache.cxf.schemas.cxf.idl.bank:[org, apache, cxf, schemas, idl, bank]
+
+
+public interface BankSOAPService {
+
+	Account getAccount(String name) throws AccountNotFoundExceptionType;
+	Resources for getAccount:[get, Account]
+	boolean createAccount(String name) throws AccountAlreadyExistsExceptionType;
+	Resources for createAccount:[create, Account]
+}
+Resources for BankSOAPService:[Bank, Service]
+
+
+
+
+package org.apache.handlers;
+Resources for org.apache.handlers:[org, apache, handlers]
+
+
+import org.apache.handlers.types;
+Resources for org.apache.handlers.types:[org, apache, handlers, types]
+
+
+public interface AddNumbersService {
+
+	int addNumbers(int arg0, int arg1) throws FaultDetail;
+	Resources for addNumbers:[add, Numbers]
+}
+Resources for AddNumbersService:[Add, Numbers, Service]
+
+
+
+
+package org.apache.cxf.schemas.cxf.idl.bank;
+Resources for org.apache.cxf.schemas.cxf.idl.bank:[org, apache, cxf, schemas, idl, bank]
+
+
+import org.apache.cxf.schemas.cxf.idl.bank;
+Resources for org.apache.cxf.schemas.cxf.idl.bank:[org, apache, cxf, schemas, idl, bank]
+
+
+public interface BankCORBAService {
+
+	Account getAccount(String name) throws AccountNotFoundExceptionType;
+	Resources for getAccount:[get, Account]
+	boolean createAccount(String name) throws AccountAlreadyExistsExceptionType;
+	Resources for createAccount:[create, Account]
+}
+Resources for BankCORBAService:[Bank, Service]
+
+
+
+
+package org.apache.cxf.schemas.cxf.idl.bank;
+Resources for org.apache.cxf.schemas.cxf.idl.bank:[org, apache, cxf, schemas, idl, bank]
+
+
+import org.apache.cxf.schemas.cxf.idl.bank;
+Resources for org.apache.cxf.schemas.cxf.idl.bank:[org, apache, cxf, schemas, idl, bank]
+
+
+public interface BankSOAPService {
+
+	Account getAccount(String name) throws AccountNotFoundExceptionType;
+	Resources for getAccount:[get, Account]
+	boolean createAccount(String name) throws AccountAlreadyExistsExceptionType;
+	Resources for createAccount:[create, Account]
+}
+Resources for BankSOAPService:[Bank, Service]
+
+
+
+
+package org.apache.handlers;
+Resources for org.apache.handlers:[org, apache, handlers]
+
+
+import org.apache.handlers.types;
+Resources for org.apache.handlers.types:[org, apache, handlers, types]
+
+
+public interface AddNumbersService {
+
+	int addNumbers(int arg0, int arg1) throws FaultDetail;
+	Resources for addNumbers:[add, Numbers]
+}
+Resources for AddNumbersService:[Add, Numbers, Service]
+
+
+
+
+package org.apache.cxf.schemas.cxf.idl.bank;
+Resources for org.apache.cxf.schemas.cxf.idl.bank:[org, apache, cxf, schemas, idl, bank]
+
+
+import org.apache.cxf.schemas.cxf.idl.bank;
+Resources for org.apache.cxf.schemas.cxf.idl.bank:[org, apache, cxf, schemas, idl, bank]
+
+
+public interface BankCORBAService {
+
+	Account getAccount(String name) throws AccountNotFoundExceptionType;
+	Resources for getAccount:[get, Account]
+	boolean createAccount(String name) throws AccountAlreadyExistsExceptionType;
+	Resources for createAccount:[create, Account]
+}
+Resources for BankCORBAService:[Bank, Service]
+
+
+
+
+package org.apache.hello_world_soap_http;
+Resources for org.apache.hello_world_soap_http:[org, apache, hello, world, soap, http]
+
+
+import org.apache.hello_world_soap_http.types;
+Resources for org.apache.hello_world_soap_http.types:[org, apache, hello, world, soap, http, types]
+
+
+public interface SOAPService {
+
+	null sayHi();
+	Resources for sayHi:[say, Hi]
+	null greetMe();
+	Resources for greetMe:[greet, Me]
+	null greetMeOneWay();
+	Resources for greetMeOneWay:[greet, Me, One, Way]
+	null pingMe() throws FaultDetailElement;
+	Resources for pingMe:[ping, Me]
+}
+Resources for SOAPService:[Service]
+
+
+
+
+package org.apache.cxf.schemas.cxf.idl.bank;
+Resources for org.apache.cxf.schemas.cxf.idl.bank:[org, apache, cxf, schemas, idl, bank]
+
+
+import org.apache.cxf.schemas.cxf.idl.bank;
+Resources for org.apache.cxf.schemas.cxf.idl.bank:[org, apache, cxf, schemas, idl, bank]
+
+
+public interface BankSOAPService {
+
+	Account getAccount(String name) throws AccountNotFoundExceptionType;
+	Resources for getAccount:[get, Account]
+	boolean createAccount(String name) throws AccountAlreadyExistsExceptionType;
+	Resources for createAccount:[create, Account]
+}
+Resources for BankSOAPService:[Bank, Service]
+
+
+
+
+package org.apache.handlers;
+Resources for org.apache.handlers:[org, apache, handlers]
+
+
+import org.apache.handlers.types;
+Resources for org.apache.handlers.types:[org, apache, handlers, types]
+
+
+public interface AddNumbersService {
+
+	int addNumbers(int arg0, int arg1) throws FaultDetail;
+	Resources for addNumbers:[add, Numbers]
+}
+Resources for AddNumbersService:[Add, Numbers, Service]
+
+
+
+
+package org.apache.cxf.schemas.cxf.idl.bank;
+Resources for org.apache.cxf.schemas.cxf.idl.bank:[org, apache, cxf, schemas, idl, bank]
+
+
+import org.apache.cxf.schemas.cxf.idl.bank;
+Resources for org.apache.cxf.schemas.cxf.idl.bank:[org, apache, cxf, schemas, idl, bank]
+
+
+public interface BankCORBAService {
+
+	Account getAccount(String name) throws AccountNotFoundExceptionType;
+	Resources for getAccount:[get, Account]
+	boolean createAccount(String name) throws AccountAlreadyExistsExceptionType;
+	Resources for createAccount:[create, Account]
+}
+Resources for BankCORBAService:[Bank, Service]
+
+
+
+
+package org.apache.hello_world_async_soap_http;
+Resources for org.apache.hello_world_async_soap_http:[org, apache, hello, world, async, soap, http]
+
+
+
+
+public interface SOAPService {
+
+	String greetMeSometime(String requestType);
+	Resources for greetMeSometime:[greet, Me, Sometime]
+}
+Resources for SOAPService:[Service]
+
+
+
+
+package org.apache.cxf.schemas.cxf.idl.bank;
+Resources for org.apache.cxf.schemas.cxf.idl.bank:[org, apache, cxf, schemas, idl, bank]
+
+
+import org.apache.cxf.schemas.cxf.idl.bank;
+Resources for org.apache.cxf.schemas.cxf.idl.bank:[org, apache, cxf, schemas, idl, bank]
+
+
+public interface BankSOAPService {
+
+	Account getAccount(String name) throws AccountNotFoundExceptionType;
+	Resources for getAccount:[get, Account]
+	boolean createAccount(String name) throws AccountAlreadyExistsExceptionType;
+	Resources for createAccount:[create, Account]
+}
+Resources for BankSOAPService:[Bank, Service]
+
+
+
+
+package org.apache.handlers;
+Resources for org.apache.handlers:[org, apache, handlers]
+
+
+import org.apache.handlers.types;
+Resources for org.apache.handlers.types:[org, apache, handlers, types]
+
+
+public interface AddNumbersService {
+
+	int addNumbers(int arg0, int arg1) throws FaultDetail;
+	Resources for addNumbers:[add, Numbers]
+}
+Resources for AddNumbersService:[Add, Numbers, Service]
+
+
+
+
+package org.apache.cxf.schemas.cxf.idl.bank;
+Resources for org.apache.cxf.schemas.cxf.idl.bank:[org, apache, cxf, schemas, idl, bank]
+
+
+import org.apache.cxf.schemas.cxf.idl.bank;
+Resources for org.apache.cxf.schemas.cxf.idl.bank:[org, apache, cxf, schemas, idl, bank]
+
+
+public interface BankCORBAService {
+
+	Account getAccount(String name) throws AccountNotFoundExceptionType;
+	Resources for getAccount:[get, Account]
+	boolean createAccount(String name) throws AccountAlreadyExistsExceptionType;
+	Resources for createAccount:[create, Account]
+}
+Resources for BankCORBAService:[Bank, Service]
+
+
+
+
+package org.apache.hello_world_async_soap_http;
+Resources for org.apache.hello_world_async_soap_http:[org, apache, hello, world, async, soap, http]
+
+
+
+
+public interface SOAPService {
+
+	String greetMeSometime(String requestType);
+	Resources for greetMeSometime:[greet, Me, Sometime]
+}
+Resources for SOAPService:[Service]
+
+
+
+
+package org.apache.cxf.schemas.cxf.idl.bank;
+Resources for org.apache.cxf.schemas.cxf.idl.bank:[org, apache, cxf, schemas, idl, bank]
+
+
+import org.apache.cxf.schemas.cxf.idl.bank;
+Resources for org.apache.cxf.schemas.cxf.idl.bank:[org, apache, cxf, schemas, idl, bank]
+
+
+public interface BankSOAPService {
+
+	Account getAccount(String name) throws AccountNotFoundExceptionType;
+	Resources for getAccount:[get, Account]
+	boolean createAccount(String name) throws AccountAlreadyExistsExceptionType;
+	Resources for createAccount:[create, Account]
+}
+Resources for BankSOAPService:[Bank, Service]
+
+
+
+
+package ;
+Resources for :[]
+
+
+
+
+public interface StockQuoteService {
+
+	null getQuote();
+	Resources for getQuote:[get, Quote]
+}
+Resources for StockQuoteService:[Stock, Quote, Service]
+
+
+
+
+package org.apache.handlers;
+Resources for org.apache.handlers:[org, apache, handlers]
+
+
+import org.apache.handlers.types;
+Resources for org.apache.handlers.types:[org, apache, handlers, types]
+
+
+public interface AddNumbersService {
+
+	int addNumbers(int arg0, int arg1) throws FaultDetail;
+	Resources for addNumbers:[add, Numbers]
+}
+Resources for AddNumbersService:[Add, Numbers, Service]
+
+
+
+Retrieving document at 'file:/C:/Thushan/slosc/code/sloc/samples/wsdl/soap_header.wsdl'.
+
+package org.apache.handlers;
+Resources for org.apache.handlers:[org, apache, handlers]
+
+
+import org.apache.handlers.types;
+Resources for org.apache.handlers.types:[org, apache, handlers, types]
+
+
+public interface AddNumbersService {
+
+	int addNumbers(int arg0, int arg1) throws FaultDetail;
+	Resources for addNumbers:[add, Numbers]
+}
+Resources for AddNumbersService:[Add, Numbers, Service]
+
+
+
+
+package org.apache.cxf.schemas.cxf.idl.bank;
+Resources for org.apache.cxf.schemas.cxf.idl.bank:[org, apache, cxf, schemas, idl, bank]
+
+
+import org.apache.cxf.schemas.cxf.idl.bank;
+Resources for org.apache.cxf.schemas.cxf.idl.bank:[org, apache, cxf, schemas, idl, bank]
+
+
+public interface BankCORBAService {
+
+	Account getAccount(String name) throws AccountNotFoundExceptionType;
+	Resources for getAccount:[get, Account]
+	boolean createAccount(String name) throws AccountAlreadyExistsExceptionType;
+	Resources for createAccount:[create, Account]
+}
+Resources for BankCORBAService:[Bank, Service]
+
+
+
+
+package org.apache.cxf.schemas.cxf.idl.bank;
+Resources for org.apache.cxf.schemas.cxf.idl.bank:[org, apache, cxf, schemas, idl, bank]
+
+
+import org.apache.cxf.schemas.cxf.idl.bank;
+Resources for org.apache.cxf.schemas.cxf.idl.bank:[org, apache, cxf, schemas, idl, bank]
+
+
+public interface BankSOAPService {
+
+	Account getAccount(String name) throws AccountNotFoundExceptionType;
+	Resources for getAccount:[get, Account]
+	boolean createAccount(String name) throws AccountAlreadyExistsExceptionType;
+	Resources for createAccount:[create, Account]
+}
+Resources for BankSOAPService:[Bank, Service]
+
+
+
+
+package org.apache.handlers;
+Resources for org.apache.handlers:[org, apache, handlers]
+
+
+import org.apache.handlers.types;
+Resources for org.apache.handlers.types:[org, apache, handlers, types]
+
+
+public interface AddNumbersService {
+
+	int addNumbers(int arg0, int arg1) throws FaultDetail;
+	Resources for addNumbers:[add, Numbers]
+}
+Resources for AddNumbersService:[Add, Numbers, Service]
+
+
+
+
+package org.apache.cxf.schemas.cxf.idl.bank;
+Resources for org.apache.cxf.schemas.cxf.idl.bank:[org, apache, cxf, schemas, idl, bank]
+
+
+import org.apache.cxf.schemas.cxf.idl.bank;
+Resources for org.apache.cxf.schemas.cxf.idl.bank:[org, apache, cxf, schemas, idl, bank]
+
+
+public interface BankCORBAService {
+
+	Account getAccount(String name) throws AccountNotFoundExceptionType;
+	Resources for getAccount:[get, Account]
+	boolean createAccount(String name) throws AccountAlreadyExistsExceptionType;
+	Resources for createAccount:[create, Account]
+}
+Resources for BankCORBAService:[Bank, Service]
+
+
+
+
+package org.apache.cxf.schemas.cxf.idl.bank;
+Resources for org.apache.cxf.schemas.cxf.idl.bank:[org, apache, cxf, schemas, idl, bank]
+
+
+import org.apache.cxf.schemas.cxf.idl.bank;
+Resources for org.apache.cxf.schemas.cxf.idl.bank:[org, apache, cxf, schemas, idl, bank]
+
+
+public interface BankSOAPService {
+
+	Account getAccount(String name) throws AccountNotFoundExceptionType;
+	Resources for getAccount:[get, Account]
+	boolean createAccount(String name) throws AccountAlreadyExistsExceptionType;
+	Resources for createAccount:[create, Account]
+}
+Resources for BankSOAPService:[Bank, Service]
+
+
+
+
+package org.apache.handlers;
+Resources for org.apache.handlers:[org, apache, handlers]
+
+
+import org.apache.handlers.types;
+Resources for org.apache.handlers.types:[org, apache, handlers, types]
+
+
+public interface AddNumbersService {
+
+	int addNumbers(int arg0, int arg1) throws FaultDetail;
+	Resources for addNumbers:[add, Numbers]
+}
+Resources for AddNumbersService:[Add, Numbers, Service]
+
+
+
+
+package org.apache.cxf.schemas.cxf.idl.bank;
+Resources for org.apache.cxf.schemas.cxf.idl.bank:[org, apache, cxf, schemas, idl, bank]
+
+
+import org.apache.cxf.schemas.cxf.idl.bank;
+Resources for org.apache.cxf.schemas.cxf.idl.bank:[org, apache, cxf, schemas, idl, bank]
+
+
+public interface BankCORBAService {
+
+	Account getAccount(String name) throws AccountNotFoundExceptionType;
+	Resources for getAccount:[get, Account]
+	boolean createAccount(String name) throws AccountAlreadyExistsExceptionType;
+	Resources for createAccount:[create, Account]
+}
+Resources for BankCORBAService:[Bank, Service]
+
+
+
+
+package org.apache.hello_world_soap_http;
+Resources for org.apache.hello_world_soap_http:[org, apache, hello, world, soap, http]
+
+
+import org.apache.hello_world_soap_http.types;
+Resources for org.apache.hello_world_soap_http.types:[org, apache, hello, world, soap, http, types]
+
+
+public interface SOAPService {
+
+	null sayHi();
+	Resources for sayHi:[say, Hi]
+	null greetMe();
+	Resources for greetMe:[greet, Me]
+	null greetMeOneWay();
+	Resources for greetMeOneWay:[greet, Me, One, Way]
+	null pingMe() throws FaultDetailElement;
+	Resources for pingMe:[ping, Me]
+}
+Resources for SOAPService:[Service]
+
+
+
+
+package org.apache.cxf.schemas.cxf.idl.bank;
+Resources for org.apache.cxf.schemas.cxf.idl.bank:[org, apache, cxf, schemas, idl, bank]
+
+
+import org.apache.cxf.schemas.cxf.idl.bank;
+Resources for org.apache.cxf.schemas.cxf.idl.bank:[org, apache, cxf, schemas, idl, bank]
+
+
+public interface BankSOAPService {
+
+	Account getAccount(String name) throws AccountNotFoundExceptionType;
+	Resources for getAccount:[get, Account]
+	boolean createAccount(String name) throws AccountAlreadyExistsExceptionType;
+	Resources for createAccount:[create, Account]
+}
+Resources for BankSOAPService:[Bank, Service]
+
+
+
+
+package org.apache.handlers;
+Resources for org.apache.handlers:[org, apache, handlers]
+
+
+import org.apache.handlers.types;
+Resources for org.apache.handlers.types:[org, apache, handlers, types]
+
+
+public interface AddNumbersService {
+
+	int addNumbers(int arg0, int arg1) throws FaultDetail;
+	Resources for addNumbers:[add, Numbers]
+}
+Resources for AddNumbersService:[Add, Numbers, Service]
+
+
+
+
+package org.apache.cxf.schemas.cxf.idl.bank;
+Resources for org.apache.cxf.schemas.cxf.idl.bank:[org, apache, cxf, schemas, idl, bank]
+
+
+import org.apache.cxf.schemas.cxf.idl.bank;
+Resources for org.apache.cxf.schemas.cxf.idl.bank:[org, apache, cxf, schemas, idl, bank]
+
+
+public interface BankCORBAService {
+
+	Account getAccount(String name) throws AccountNotFoundExceptionType;
+	Resources for getAccount:[get, Account]
+	boolean createAccount(String name) throws AccountAlreadyExistsExceptionType;
+	Resources for createAccount:[create, Account]
+}
+Resources for BankCORBAService:[Bank, Service]
+
+
+
+
+package org.apache.hello_world_async_soap_http;
+Resources for org.apache.hello_world_async_soap_http:[org, apache, hello, world, async, soap, http]
+
+
+
+
+public interface SOAPService {
+
+	String greetMeSometime(String requestType);
+	Resources for greetMeSometime:[greet, Me, Sometime]
+}
+Resources for SOAPService:[Service]
+
+
+
+
+package org.apache.cxf.schemas.cxf.idl.bank;
+Resources for org.apache.cxf.schemas.cxf.idl.bank:[org, apache, cxf, schemas, idl, bank]
+
+
+import org.apache.cxf.schemas.cxf.idl.bank;
+Resources for org.apache.cxf.schemas.cxf.idl.bank:[org, apache, cxf, schemas, idl, bank]
+
+
+public interface BankSOAPService {
+
+	Account getAccount(String name) throws AccountNotFoundExceptionType;
+	Resources for getAccount:[get, Account]
+	boolean createAccount(String name) throws AccountAlreadyExistsExceptionType;
+	Resources for createAccount:[create, Account]
+}
+Resources for BankSOAPService:[Bank, Service]
+
+
+
+
+package org.apache.handlers;
+Resources for org.apache.handlers:[org, apache, handlers]
+
+
+import org.apache.handlers.types;
+Resources for org.apache.handlers.types:[org, apache, handlers, types]
+
+
+public interface AddNumbersService {
+
+	int addNumbers(int arg0, int arg1) throws FaultDetail;
+	Resources for addNumbers:[add, Numbers]
+}
+Resources for AddNumbersService:[Add, Numbers, Service]
+
+
+
+
+package org.apache.cxf.schemas.cxf.idl.bank;
+Resources for org.apache.cxf.schemas.cxf.idl.bank:[org, apache, cxf, schemas, idl, bank]
+
+
+import org.apache.cxf.schemas.cxf.idl.bank;
+Resources for org.apache.cxf.schemas.cxf.idl.bank:[org, apache, cxf, schemas, idl, bank]
+
+
+public interface BankCORBAService {
+
+	Account getAccount(String name) throws AccountNotFoundExceptionType;
+	Resources for getAccount:[get, Account]
+	boolean createAccount(String name) throws AccountAlreadyExistsExceptionType;
+	Resources for createAccount:[create, Account]
+}
+Resources for BankCORBAService:[Bank, Service]
+
+
+
+
+package org.apache.hello_world_async_soap_http;
+Resources for org.apache.hello_world_async_soap_http:[org, apache, hello, world, async, soap, http]
+
+
+
+
+public interface SOAPService {
+
+	String greetMeSometime(String requestType);
+	Resources for greetMeSometime:[greet, Me, Sometime]
+}
+Resources for SOAPService:[Service]
+
+
+
+
+package org.apache.cxf.schemas.cxf.idl.bank;
+Resources for org.apache.cxf.schemas.cxf.idl.bank:[org, apache, cxf, schemas, idl, bank]
+
+
+import org.apache.cxf.schemas.cxf.idl.bank;
+Resources for org.apache.cxf.schemas.cxf.idl.bank:[org, apache, cxf, schemas, idl, bank]
+
+
+public interface BankSOAPService {
+
+	Account getAccount(String name) throws AccountNotFoundExceptionType;
+	Resources for getAccount:[get, Account]
+	boolean createAccount(String name) throws AccountAlreadyExistsExceptionType;
+	Resources for createAccount:[create, Account]
+}
+Resources for BankSOAPService:[Bank, Service]
+
+
+
+
+package ;
+Resources for :[]
+
+
+
+
+public interface StockQuoteService {
+
+	null getQuote();
+	Resources for getQuote:[get, Quote]
+}
+Resources for StockQuoteService:[Stock, Quote, Service]
+
+
+
+
+package org.apache.handlers;
+Resources for org.apache.handlers:[org, apache, handlers]
+
+
+import org.apache.handlers.types;
+Resources for org.apache.handlers.types:[org, apache, handlers, types]
+
+
+public interface AddNumbersService {
+
+	int addNumbers(int arg0, int arg1) throws FaultDetail;
+	Resources for addNumbers:[add, Numbers]
+}
+Resources for AddNumbersService:[Add, Numbers, Service]
+
+
+
+
+package org.apache.cxf.schemas.cxf.idl.bank;
+Resources for org.apache.cxf.schemas.cxf.idl.bank:[org, apache, cxf, schemas, idl, bank]
+
+
+import org.apache.cxf.schemas.cxf.idl.bank;
+Resources for org.apache.cxf.schemas.cxf.idl.bank:[org, apache, cxf, schemas, idl, bank]
+
+
+public interface BankCORBAService {
+
+	Account getAccount(String name) throws AccountNotFoundExceptionType;
+	Resources for getAccount:[get, Account]
+	boolean createAccount(String name) throws AccountAlreadyExistsExceptionType;
+	Resources for createAccount:[create, Account]
+}
+Resources for BankCORBAService:[Bank, Service]
+
+
+
+
+package org.apache.headers;
+Resources for org.apache.headers:[org, apache, headers]
+
+
+import org.apache.headers;
+Resources for org.apache.headers:[org, apache, headers]
+import org.apache.headers;
+Resources for org.apache.headers:[org, apache, headers]
+
+
+public interface HeaderService {
+
+	String inHeader(InHeaderElement me, SOAPHeaderData header_info);
+	Resources for inHeader:[in, Header]
+	OutHeaderResponseElement outHeader(String requestType);
+	Resources for outHeader:[out, Header]
+	InoutHeaderResponseElement inoutHeader(InoutHeaderElement me, SOAPHeaderData header_info);
+	Resources for inoutHeader:[inout, Header]
+}
+Resources for HeaderService:[Header, Service]
+
+
+
+
+package org.apache.hello_world_async_soap_http;
+Resources for org.apache.hello_world_async_soap_http:[org, apache, hello, world, async, soap, http]
+
+
+
+
+public interface SOAPService {
+
+	String greetMeSometime(String requestType);
+	Resources for greetMeSometime:[greet, Me, Sometime]
+}
+Resources for SOAPService:[Service]
+
+
+
+
+package org.apache.cxf.schemas.cxf.idl.bank;
+Resources for org.apache.cxf.schemas.cxf.idl.bank:[org, apache, cxf, schemas, idl, bank]
+
+
+import org.apache.cxf.schemas.cxf.idl.bank;
+Resources for org.apache.cxf.schemas.cxf.idl.bank:[org, apache, cxf, schemas, idl, bank]
+
+
+public interface BankSOAPService {
+
+	Account getAccount(String name) throws AccountNotFoundExceptionType;
+	Resources for getAccount:[get, Account]
+	boolean createAccount(String name) throws AccountAlreadyExistsExceptionType;
+	Resources for createAccount:[create, Account]
+}
+Resources for BankSOAPService:[Bank, Service]
+
+
+
+
+package ;
+Resources for :[]
+
+
+
+
+public interface StockQuoteService {
+
+	null getQuote();
+	Resources for getQuote:[get, Quote]
+}
+Resources for StockQuoteService:[Stock, Quote, Service]
+
+
+
+
+package org.apache.handlers;
+Resources for org.apache.handlers:[org, apache, handlers]
+
+
+import org.apache.handlers.types;
+Resources for org.apache.handlers.types:[org, apache, handlers, types]
+
+
+public interface AddNumbersService {
+
+	int addNumbers(int arg0, int arg1) throws FaultDetail;
+	Resources for addNumbers:[add, Numbers]
+}
+Resources for AddNumbersService:[Add, Numbers, Service]
+
+
+
+Retrieving document at 'file:/C:/Thushan/slosc/code/sloc/samples/wsdl/test.wsdl'.
+
+package org.apache.handlers;
+Resources for org.apache.handlers:[org, apache, handlers]
+
+
+import org.apache.handlers.types;
+Resources for org.apache.handlers.types:[org, apache, handlers, types]
+
+
+public interface AddNumbersService {
+
+	int addNumbers(int arg0, int arg1) throws FaultDetail;
+	Resources for addNumbers:[add, Numbers]
+}
+Resources for AddNumbersService:[Add, Numbers, Service]
+
+
+
+
+package org.apache.cxf.schemas.cxf.idl.bank;
+Resources for org.apache.cxf.schemas.cxf.idl.bank:[org, apache, cxf, schemas, idl, bank]
+
+
+import org.apache.cxf.schemas.cxf.idl.bank;
+Resources for org.apache.cxf.schemas.cxf.idl.bank:[org, apache, cxf, schemas, idl, bank]
+
+
+public interface BankCORBAService {
+
+	Account getAccount(String name) throws AccountNotFoundExceptionType;
+	Resources for getAccount:[get, Account]
+	boolean createAccount(String name) throws AccountAlreadyExistsExceptionType;
+	Resources for createAccount:[create, Account]
+}
+Resources for BankCORBAService:[Bank, Service]
+
+
+
+
+package org.apache.cxf.schemas.cxf.idl.bank;
+Resources for org.apache.cxf.schemas.cxf.idl.bank:[org, apache, cxf, schemas, idl, bank]
+
+
+import org.apache.cxf.schemas.cxf.idl.bank;
+Resources for org.apache.cxf.schemas.cxf.idl.bank:[org, apache, cxf, schemas, idl, bank]
+
+
+public interface BankSOAPService {
+
+	Account getAccount(String name) throws AccountNotFoundExceptionType;
+	Resources for getAccount:[get, Account]
+	boolean createAccount(String name) throws AccountAlreadyExistsExceptionType;
+	Resources for createAccount:[create, Account]
+}
+Resources for BankSOAPService:[Bank, Service]
+
+
+
+
+package org.apache.handlers;
+Resources for org.apache.handlers:[org, apache, handlers]
+
+
+import org.apache.handlers.types;
+Resources for org.apache.handlers.types:[org, apache, handlers, types]
+
+
+public interface AddNumbersService {
+
+	int addNumbers(int arg0, int arg1) throws FaultDetail;
+	Resources for addNumbers:[add, Numbers]
+}
+Resources for AddNumbersService:[Add, Numbers, Service]
+
+
+
+
+package org.apache.cxf.schemas.cxf.idl.bank;
+Resources for org.apache.cxf.schemas.cxf.idl.bank:[org, apache, cxf, schemas, idl, bank]
+
+
+import org.apache.cxf.schemas.cxf.idl.bank;
+Resources for org.apache.cxf.schemas.cxf.idl.bank:[org, apache, cxf, schemas, idl, bank]
+
+
+public interface BankCORBAService {
+
+	Account getAccount(String name) throws AccountNotFoundExceptionType;
+	Resources for getAccount:[get, Account]
+	boolean createAccount(String name) throws AccountAlreadyExistsExceptionType;
+	Resources for createAccount:[create, Account]
+}
+Resources for BankCORBAService:[Bank, Service]
+
+
+
+
+package org.apache.cxf.schemas.cxf.idl.bank;
+Resources for org.apache.cxf.schemas.cxf.idl.bank:[org, apache, cxf, schemas, idl, bank]
+
+
+import org.apache.cxf.schemas.cxf.idl.bank;
+Resources for org.apache.cxf.schemas.cxf.idl.bank:[org, apache, cxf, schemas, idl, bank]
+
+
+public interface BankSOAPService {
+
+	Account getAccount(String name) throws AccountNotFoundExceptionType;
+	Resources for getAccount:[get, Account]
+	boolean createAccount(String name) throws AccountAlreadyExistsExceptionType;
+	Resources for createAccount:[create, Account]
+}
+Resources for BankSOAPService:[Bank, Service]
+
+
+
+
+package org.apache.handlers;
+Resources for org.apache.handlers:[org, apache, handlers]
+
+
+import org.apache.handlers.types;
+Resources for org.apache.handlers.types:[org, apache, handlers, types]
+
+
+public interface AddNumbersService {
+
+	int addNumbers(int arg0, int arg1) throws FaultDetail;
+	Resources for addNumbers:[add, Numbers]
+}
+Resources for AddNumbersService:[Add, Numbers, Service]
+
+
+
+
+package org.apache.cxf.schemas.cxf.idl.bank;
+Resources for org.apache.cxf.schemas.cxf.idl.bank:[org, apache, cxf, schemas, idl, bank]
+
+
+import org.apache.cxf.schemas.cxf.idl.bank;
+Resources for org.apache.cxf.schemas.cxf.idl.bank:[org, apache, cxf, schemas, idl, bank]
+
+
+public interface BankCORBAService {
+
+	Account getAccount(String name) throws AccountNotFoundExceptionType;
+	Resources for getAccount:[get, Account]
+	boolean createAccount(String name) throws AccountAlreadyExistsExceptionType;
+	Resources for createAccount:[create, Account]
+}
+Resources for BankCORBAService:[Bank, Service]
+
+
+
+
+package org.apache.hello_world_soap_http;
+Resources for org.apache.hello_world_soap_http:[org, apache, hello, world, soap, http]
+
+
+import org.apache.hello_world_soap_http.types;
+Resources for org.apache.hello_world_soap_http.types:[org, apache, hello, world, soap, http, types]
+
+
+public interface SOAPService {
+
+	null sayHi();
+	Resources for sayHi:[say, Hi]
+	null greetMe();
+	Resources for greetMe:[greet, Me]
+	null greetMeOneWay();
+	Resources for greetMeOneWay:[greet, Me, One, Way]
+	null pingMe() throws FaultDetailElement;
+	Resources for pingMe:[ping, Me]
+}
+Resources for SOAPService:[Service]
+
+
+
+
+package org.apache.cxf.schemas.cxf.idl.bank;
+Resources for org.apache.cxf.schemas.cxf.idl.bank:[org, apache, cxf, schemas, idl, bank]
+
+
+import org.apache.cxf.schemas.cxf.idl.bank;
+Resources for org.apache.cxf.schemas.cxf.idl.bank:[org, apache, cxf, schemas, idl, bank]
+
+
+public interface BankSOAPService {
+
+	Account getAccount(String name) throws AccountNotFoundExceptionType;
+	Resources for getAccount:[get, Account]
+	boolean createAccount(String name) throws AccountAlreadyExistsExceptionType;
+	Resources for createAccount:[create, Account]
+}
+Resources for BankSOAPService:[Bank, Service]
+
+
+
+
+package org.apache.handlers;
+Resources for org.apache.handlers:[org, apache, handlers]
+
+
+import org.apache.handlers.types;
+Resources for org.apache.handlers.types:[org, apache, handlers, types]
+
+
+public interface AddNumbersService {
+
+	int addNumbers(int arg0, int arg1) throws FaultDetail;
+	Resources for addNumbers:[add, Numbers]
+}
+Resources for AddNumbersService:[Add, Numbers, Service]
+
+
+
+
+package org.apache.cxf.schemas.cxf.idl.bank;
+Resources for org.apache.cxf.schemas.cxf.idl.bank:[org, apache, cxf, schemas, idl, bank]
+
+
+import org.apache.cxf.schemas.cxf.idl.bank;
+Resources for org.apache.cxf.schemas.cxf.idl.bank:[org, apache, cxf, schemas, idl, bank]
+
+
+public interface BankCORBAService {
+
+	Account getAccount(String name) throws AccountNotFoundExceptionType;
+	Resources for getAccount:[get, Account]
+	boolean createAccount(String name) throws AccountAlreadyExistsExceptionType;
+	Resources for createAccount:[create, Account]
+}
+Resources for BankCORBAService:[Bank, Service]
+
+
+
+
+package org.apache.hello_world_async_soap_http;
+Resources for org.apache.hello_world_async_soap_http:[org, apache, hello, world, async, soap, http]
+
+
+
+
+public interface SOAPService {
+
+	String greetMeSometime(String requestType);
+	Resources for greetMeSometime:[greet, Me, Sometime]
+}
+Resources for SOAPService:[Service]
+
+
+
+
+package org.apache.cxf.schemas.cxf.idl.bank;
+Resources for org.apache.cxf.schemas.cxf.idl.bank:[org, apache, cxf, schemas, idl, bank]
+
+
+import org.apache.cxf.schemas.cxf.idl.bank;
+Resources for org.apache.cxf.schemas.cxf.idl.bank:[org, apache, cxf, schemas, idl, bank]
+
+
+public interface BankSOAPService {
+
+	Account getAccount(String name) throws AccountNotFoundExceptionType;
+	Resources for getAccount:[get, Account]
+	boolean createAccount(String name) throws AccountAlreadyExistsExceptionType;
+	Resources for createAccount:[create, Account]
+}
+Resources for BankSOAPService:[Bank, Service]
+
+
+
+
+package org.apache.handlers;
+Resources for org.apache.handlers:[org, apache, handlers]
+
+
+import org.apache.handlers.types;
+Resources for org.apache.handlers.types:[org, apache, handlers, types]
+
+
+public interface AddNumbersService {
+
+	int addNumbers(int arg0, int arg1) throws FaultDetail;
+	Resources for addNumbers:[add, Numbers]
+}
+Resources for AddNumbersService:[Add, Numbers, Service]
+
+
+
+
+package org.apache.cxf.schemas.cxf.idl.bank;
+Resources for org.apache.cxf.schemas.cxf.idl.bank:[org, apache, cxf, schemas, idl, bank]
+
+
+import org.apache.cxf.schemas.cxf.idl.bank;
+Resources for org.apache.cxf.schemas.cxf.idl.bank:[org, apache, cxf, schemas, idl, bank]
+
+
+public interface BankCORBAService {
+
+	Account getAccount(String name) throws AccountNotFoundExceptionType;
+	Resources for getAccount:[get, Account]
+	boolean createAccount(String name) throws AccountAlreadyExistsExceptionType;
+	Resources for createAccount:[create, Account]
+}
+Resources for BankCORBAService:[Bank, Service]
+
+
+
+
+package org.apache.hello_world_async_soap_http;
+Resources for org.apache.hello_world_async_soap_http:[org, apache, hello, world, async, soap, http]
+
+
+
+
+public interface SOAPService {
+
+	String greetMeSometime(String requestType);
+	Resources for greetMeSometime:[greet, Me, Sometime]
+}
+Resources for SOAPService:[Service]
+
+
+
+
+package org.apache.cxf.schemas.cxf.idl.bank;
+Resources for org.apache.cxf.schemas.cxf.idl.bank:[org, apache, cxf, schemas, idl, bank]
+
+
+import org.apache.cxf.schemas.cxf.idl.bank;
+Resources for org.apache.cxf.schemas.cxf.idl.bank:[org, apache, cxf, schemas, idl, bank]
+
+
+public interface BankSOAPService {
+
+	Account getAccount(String name) throws AccountNotFoundExceptionType;
+	Resources for getAccount:[get, Account]
+	boolean createAccount(String name) throws AccountAlreadyExistsExceptionType;
+	Resources for createAccount:[create, Account]
+}
+Resources for BankSOAPService:[Bank, Service]
+
+
+
+
+package ;
+Resources for :[]
+
+
+
+
+public interface StockQuoteService {
+
+	null getQuote();
+	Resources for getQuote:[get, Quote]
+}
+Resources for StockQuoteService:[Stock, Quote, Service]
+
+
+
+
+package org.apache.handlers;
+Resources for org.apache.handlers:[org, apache, handlers]
+
+
+import org.apache.handlers.types;
+Resources for org.apache.handlers.types:[org, apache, handlers, types]
+
+
+public interface AddNumbersService {
+
+	int addNumbers(int arg0, int arg1) throws FaultDetail;
+	Resources for addNumbers:[add, Numbers]
+}
+Resources for AddNumbersService:[Add, Numbers, Service]
+
+
+
+
+package org.apache.cxf.schemas.cxf.idl.bank;
+Resources for org.apache.cxf.schemas.cxf.idl.bank:[org, apache, cxf, schemas, idl, bank]
+
+
+import org.apache.cxf.schemas.cxf.idl.bank;
+Resources for org.apache.cxf.schemas.cxf.idl.bank:[org, apache, cxf, schemas, idl, bank]
+
+
+public interface BankCORBAService {
+
+	Account getAccount(String name) throws AccountNotFoundExceptionType;
+	Resources for getAccount:[get, Account]
+	boolean createAccount(String name) throws AccountAlreadyExistsExceptionType;
+	Resources for createAccount:[create, Account]
+}
+Resources for BankCORBAService:[Bank, Service]
+
+
+
+
+package org.apache.headers;
+Resources for org.apache.headers:[org, apache, headers]
+
+
+import org.apache.headers;
+Resources for org.apache.headers:[org, apache, headers]
+import org.apache.headers;
+Resources for org.apache.headers:[org, apache, headers]
+
+
+public interface HeaderService {
+
+	String inHeader(InHeaderElement me, SOAPHeaderData header_info);
+	Resources for inHeader:[in, Header]
+	OutHeaderResponseElement outHeader(String requestType);
+	Resources for outHeader:[out, Header]
+	InoutHeaderResponseElement inoutHeader(InoutHeaderElement me, SOAPHeaderData header_info);
+	Resources for inoutHeader:[inout, Header]
+}
+Resources for HeaderService:[Header, Service]
+
+
+
+
+package org.apache.hello_world_async_soap_http;
+Resources for org.apache.hello_world_async_soap_http:[org, apache, hello, world, async, soap, http]
+
+
+
+
+public interface SOAPService {
+
+	String greetMeSometime(String requestType);
+	Resources for greetMeSometime:[greet, Me, Sometime]
+}
+Resources for SOAPService:[Service]
+
+
+
+
+package org.apache.cxf.schemas.cxf.idl.bank;
+Resources for org.apache.cxf.schemas.cxf.idl.bank:[org, apache, cxf, schemas, idl, bank]
+
+
+import org.apache.cxf.schemas.cxf.idl.bank;
+Resources for org.apache.cxf.schemas.cxf.idl.bank:[org, apache, cxf, schemas, idl, bank]
+
+
+public interface BankSOAPService {
+
+	Account getAccount(String name) throws AccountNotFoundExceptionType;
+	Resources for getAccount:[get, Account]
+	boolean createAccount(String name) throws AccountAlreadyExistsExceptionType;
+	Resources for createAccount:[create, Account]
+}
+Resources for BankSOAPService:[Bank, Service]
+
+
+
+
+package ;
+Resources for :[]
+
+
+
+
+public interface StockQuoteService {
+
+	null getQuote();
+	Resources for getQuote:[get, Quote]
+}
+Resources for StockQuoteService:[Stock, Quote, Service]
+
+
+
+
+package org.apache.handlers;
+Resources for org.apache.handlers:[org, apache, handlers]
+
+
+import org.apache.handlers.types;
+Resources for org.apache.handlers.types:[org, apache, handlers, types]
+
+
+public interface AddNumbersService {
+
+	int addNumbers(int arg0, int arg1) throws FaultDetail;
+	Resources for addNumbers:[add, Numbers]
+}
+Resources for AddNumbersService:[Add, Numbers, Service]
+
+
+
+
+package org.apache.cxf.schemas.cxf.idl.bank;
+Resources for org.apache.cxf.schemas.cxf.idl.bank:[org, apache, cxf, schemas, idl, bank]
+
+
+import org.apache.cxf.schemas.cxf.idl.bank;
+Resources for org.apache.cxf.schemas.cxf.idl.bank:[org, apache, cxf, schemas, idl, bank]
+
+
+public interface BankCORBAService {
+
+	Account getAccount(String name) throws AccountNotFoundExceptionType;
+	Resources for getAccount:[get, Account]
+	boolean createAccount(String name) throws AccountAlreadyExistsExceptionType;
+	Resources for createAccount:[create, Account]
+}
+Resources for BankCORBAService:[Bank, Service]
+
+
+
+
+package org.apache.headers;
+Resources for org.apache.headers:[org, apache, headers]
+
+
+import org.apache.headers;
+Resources for org.apache.headers:[org, apache, headers]
+import org.apache.headers;
+Resources for org.apache.headers:[org, apache, headers]
+
+
+public interface HeaderService {
+
+	String inHeader(InHeaderElement me, SOAPHeaderData header_info);
+	Resources for inHeader:[in, Header]
+	OutHeaderResponseElement outHeader(String requestType);
+	Resources for outHeader:[out, Header]
+	InoutHeaderResponseElement inoutHeader(InoutHeaderElement me, SOAPHeaderData header_info);
+	Resources for inoutHeader:[inout, Header]
+}
+Resources for HeaderService:[Header, Service]
+
+
+
+
+package com.hp.www.go.coffei;
+Resources for com.hp.www.go.coffei:[com, hp, www, go, coffei]
+
+
+import com.hp.coffei.sc.exception;
+Resources for com.hp.coffei.sc.exception:[com, hp, coffei, sc, exception]
+
+
+public interface PatternManagementService {
+
+	CoffeiPatterns allocatePatternForForm([B in9011, String in1, String in2, int in3, String in4) throws CoffeiException;
+	Resources for allocatePatternForForm:[allocate, Pattern, For, Form]
+	CoffeiPatterns allocatePattern([B in0, String in1, int in2) throws CoffeiException;
+	Resources for allocatePattern:[allocate, Pattern]
+	CoffeiPatterns associatePatternToForm([B in0, String in1, String in2, String in3, String in4) throws CoffeiException;
+	Resources for associatePatternToForm:[associate, Pattern, To, Form]
+	null freePattern([B in0, String in1, String in2) throws CoffeiException;
+	Resources for freePattern:[free, Pattern]
+	null blockPattern([B in0, String in1, String in2) throws CoffeiException;
+	Resources for blockPattern:[block, Pattern]
+	null releasePattern([B in0, String in1, String in2) throws CoffeiException;
+	Resources for releasePattern:[release, Pattern]
+	CoffeiPatterns getBlockedPatterns([B in0, String in1, String in2, int in3) throws CoffeiException;
+	Resources for getBlockedPatterns:[get, Blocked, Patterns]
+	CoffeiPattern reallocatePattern([B in0, String in1, String in2) throws CoffeiException;
+	Resources for reallocatePattern:[reallocate, Pattern]
+	null setPatternReuseDelay([B in0, String in1, int in2) throws CoffeiException;
+	Resources for setPatternReuseDelay:[set, Pattern, Reuse, Delay]
+	int getPatternReuseDelay([B in0, String in1) throws CoffeiException;
+	Resources for getPatternReuseDelay:[get, Pattern, Reuse, Delay]
+	PatternUseageReport getDynamicPatternReport([B in0, String in1) throws CoffeiException;
+	Resources for getDynamicPatternReport:[get, Dynamic, Pattern, Report]
+}
+Resources for PatternManagementService:[Pattern, Management, Service]
+
+
+
+
+package org.apache.hello_world_async_soap_http;
+Resources for org.apache.hello_world_async_soap_http:[org, apache, hello, world, async, soap, http]
+
+
+
+
+public interface SOAPService {
+
+	String greetMeSometime(String requestType);
+	Resources for greetMeSometime:[greet, Me, Sometime]
+}
+Resources for SOAPService:[Service]
+
+
+
+
+package org.apache.cxf.schemas.cxf.idl.bank;
+Resources for org.apache.cxf.schemas.cxf.idl.bank:[org, apache, cxf, schemas, idl, bank]
+
+
+import org.apache.cxf.schemas.cxf.idl.bank;
+Resources for org.apache.cxf.schemas.cxf.idl.bank:[org, apache, cxf, schemas, idl, bank]
+
+
+public interface BankSOAPService {
+
+	Account getAccount(String name) throws AccountNotFoundExceptionType;
+	Resources for getAccount:[get, Account]
+	boolean createAccount(String name) throws AccountAlreadyExistsExceptionType;
+	Resources for createAccount:[create, Account]
+}
+Resources for BankSOAPService:[Bank, Service]
+
+
+
+
+package ;
+Resources for :[]
+
+
+
+
+public interface StockQuoteService {
+
+	null getQuote();
+	Resources for getQuote:[get, Quote]
+}
+Resources for StockQuoteService:[Stock, Quote, Service]
+
+
+
+
+package org.apache.handlers;
+Resources for org.apache.handlers:[org, apache, handlers]
+
+
+import org.apache.handlers.types;
+Resources for org.apache.handlers.types:[org, apache, handlers, types]
+
+
+public interface AddNumbersService {
+
+	int addNumbers(int arg0, int arg1) throws FaultDetail;
+	Resources for addNumbers:[add, Numbers]
+}
+Resources for AddNumbersService:[Add, Numbers, Service]
+
+
+
+------------- ---------------- ---------------
+------------- Standard Error -----------------
+log4j:WARN No appenders could be found for logger (org.apache.wsif.*).
+log4j:WARN Please initialize the log4j system properly.
+------------- ---------------- ---------------
+
+Testcase: testProcess took 1.047 sec
