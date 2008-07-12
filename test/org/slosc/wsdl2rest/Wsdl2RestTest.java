@@ -39,7 +39,7 @@ public class Wsdl2RestTest extends TestCase {
         String loc = System.getProperty("org.slosc.wsdl2rest.wsdl.wsdlLocations");
         String targetLoc = System.getProperty("org.slosc.wsdl2rest.wsdl.targetLocation");
         if(loc == null || targetLoc == null ) {
-            System.out.println("No location for wsdls/output");
+            System.out.println("No location defined for wsdls/output");
             return;
         }
         

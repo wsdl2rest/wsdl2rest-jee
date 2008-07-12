@@ -1,16 +1,5 @@
 package org.slosc.wsdl2rest;
 
-import org.slosc.wsdl2rest.wsdl.WSDLProcessor;
-import org.slosc.wsdl2rest.wsdl.ClassDefinition;
-import org.slosc.wsdl2rest.mappings.ResourceMapper;
-import org.slosc.wsdl2rest.codegenerator.ClassGenerator;
-import org.slosc.wsdl2rest.codegenerator.ClassGeneratorImpl;
-import org.slosc.wsdl2rest.util.MessageWriter;
-import org.slosc.wsdl2rest.util.ConsoleMessageWriter;
-
-import java.util.List;
-import java.io.*;
-
 /*
  * Copyright (c) 2008 SL_OpenSource Consortium
  * All Rights Reserved.
@@ -28,6 +17,17 @@ import java.io.*;
  * limitations under the License.
  *
  */
+
+import org.slosc.wsdl2rest.wsdl.WSDLProcessor;
+import org.slosc.wsdl2rest.wsdl.ClassDefinition;
+import org.slosc.wsdl2rest.mappings.ResourceMapper;
+import org.slosc.wsdl2rest.codegenerator.ClassGenerator;
+import org.slosc.wsdl2rest.codegenerator.ClassGeneratorImpl;
+import org.slosc.wsdl2rest.util.MessageWriter;
+import org.slosc.wsdl2rest.util.ConsoleMessageWriter;
+
+import java.util.List;
+import java.io.*;
 
 
 public class Wsdl2Rest {
