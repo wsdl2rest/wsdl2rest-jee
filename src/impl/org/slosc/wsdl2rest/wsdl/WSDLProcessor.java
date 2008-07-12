@@ -436,6 +436,7 @@ public class WSDLProcessor {
     }
 
 
+    //following is a plain vanila test for this class
 
     public static void main(String[] args) {
 
@@ -476,6 +477,6 @@ public class WSDLProcessor {
     }
 
     private static void usage() {
-        log.info("Usage: wsdl2rest <wsdl>");
+        System.out.println("Usage: wsdl2rest <wsdl>");
     }
 }

@@ -3,6 +3,7 @@
 <head>
   <meta content="text/html;charset=ISO-8859-1" http-equiv="Content-Type">
   <title>design.html</title>
+  <link rel="stylesheet" href="styles.css" type="text/css">
 </head>
 <body>
 <big><big><big>Jump from SOAP to REST with WSDL2REST</big></big></big><br>
@@ -13,21 +14,22 @@
 <big><big>1. REST overview</big></big><br>
 <br>
 Representational State Transfer (REST) is an architectural style for
-distributed hypermedia systems. Refer Roy<br>
+distributed hypermedia systems. Refer Roy
 Fielding's [1] for detail on the architectural style. REST
-architectural style has been used to guide the design and<br>
+architectural style has been used to guide the design and
 development of the architecture for the modern Web. It defines how
-resources are defined and addressed.<br>
+resources are defined and addressed.
+<br>
 <br>
 The core abstraction in REST is a remote resource instead of a remote
-procedure call.&nbsp; Rather than inventing an<br>
+procedure call.&nbsp; Rather than inventing an
 exhaustive list of standards, REST uses existing Internet standards,
-including HTTP, XML, and TCP/IP. Instead of every possible<br>
+including HTTP, XML, and TCP/IP. Instead of every possible
 scenario, REST covers the most common problems. <br>
 <br>
 Uses TCP/IP naming standards to name resources on the Web. Queries and
-manipulates those resources with HTTP.<br>
-Uses standard text-based message formats like XML or HTML to structure
+manipulates those resources with HTTP. Uses standard text-based message
+formats like XML or HTML to structure
 data<br>
 <br>
 And well-formed HTML is a subset of XML, satisfying the last REST
@@ -41,7 +43,7 @@ GET&nbsp;&nbsp;&nbsp; - Read<br>
 PUT&nbsp;&nbsp;&nbsp; - Create, Update<br>
 DELETE - Delete<br>
 <br>
-Characteristics of the REST<br>
+Main characteristics of the REST-stlyle services:<br>
 - Request/Response style<br>
 - stateless<br>
 - cache<br>
@@ -49,81 +51,59 @@ Characteristics of the REST<br>
 - interconnected<br>
 - multi-layered<br>
 <br>
-<br>
 Consider a service that allows you to get a stock quote with name
-StockQuoteService, with operation getStockQuote(String<br>
-ticker). The web service makes available a URL to each ticker symbols
-resource. Example, here's how a client requests<br>
-stock quote for ticker XYZ<br>
+<code>StockQuoteService</code>, with operation <code>getStockQuote(String
+ticker)</code>. The web service makes available a URL to each ticker
+symbols
+resource. For an example, here's how a client requests stock quote for
+ticker XYZ.<br>
 <br>
-http://www.stock-example.com/stockquoteservice/StockQuote/XYZ<br>
+<code>http://www.stock-example.com/stockquoteservice/StockQuote/XYZ</code><br>
 <br>
 client would make a HTTP GET request on this URL which would return
 following information:<br>
 <br>
--Last Price<br>
+<code>-Last Price<br>
 -Highest trade today<br>
 -Lowest trade today<br>
--etc.<br>
+-etc.</code><br>
 <br>
 in a say XML document like:<br>
 <br>
-<code>&lt;?xml version="1.0"?&gt;<br>
-&lt;q:StockQuote xmlns:q="http://www.stock-example.com"<br>
-&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
-xmlns:xlink="http://www.w3.org/1999/xlink"&gt;<br>
-&nbsp;&nbsp; &nbsp;&lt;ticker&gt;XYZ&lt;/ticker&gt;<br>
-&nbsp;&nbsp; &nbsp;&lt;last-price
-currency="USD"&gt;10.32&lt;/last-price&gt;<br>
-&nbsp;&nbsp; &nbsp;&lt;highest-trade-today&gt; ...
-&lt;/highest-trade-today&gt;<br>
-&nbsp;&nbsp; &nbsp;&lt;lowest-trade-today&gt; ...
-&lt;/lowest-trade-today&gt;<br>
-&nbsp;&nbsp; &nbsp;&lt;bid
-xlink:href="http://www.stock-example.com/stockbidderservice/bid/XYZ"/&gt;<br>
-&lt;/q:StockQuote&gt;&nbsp;&nbsp; &nbsp;<br>
-&nbsp;&nbsp; &nbsp;&nbsp;&nbsp; &nbsp;&nbsp;&nbsp; &nbsp;</code><br>
-As you could see the retuned XML document has the required infomation
-plus a additional continuation infomation if the<br>
-client<br>
-expected make a bid for the got infomation. This XML could be mapped to
-a object in an object oriented language such<br>
-as java, c# &amp; C++ ... etc. Sor an example in java this could be
-mapped through JAXB (java api for xml binding)<br>
-i.e. returned class could be some what:<br>
+<pre class="codesegment"><code>&lt;?xml version="1.0"?&gt;<br><br>&lt;q:StockQuote xmlns:q="http://www.stock-example.com" xmlns:xlink="http://www.w3.org/1999/xlink"&gt;<br>    &lt;ticker&gt;XYZ&lt;/ticker&gt;<br>    &lt;last-price currency="USD"&gt;10.32&lt;/last-price&gt;<br>    &lt;highest-trade-today&gt; ... &lt;/highest-trade-today&gt;<br>    &lt;lowest-trade-today&gt;  ... &lt;/lowest-trade-today&gt;<br>    &lt;bid xlink:href="http://www.stock-example.com/stockbidderservice/bid/XYZ"/&gt;<br>&lt;/q:StockQuote&gt;    &nbsp;&nbsp; &nbsp;&nbsp;&nbsp; &nbsp;&nbsp;&nbsp; &nbsp;</code>
+</pre>
 <br>
-<code>class StockQuote{<br>
-&nbsp;&nbsp; &nbsp;String ticker;<br>
-&nbsp;&nbsp; &nbsp;String currency;<br>
-&nbsp;&nbsp; &nbsp;BigDecimal lastPrice;<br>
-&nbsp;&nbsp; &nbsp;BigDecimal highestPriceToday;<br>
-&nbsp;&nbsp; &nbsp;BigDecimal lowestPriceToday;<br>
-&nbsp;&nbsp; &nbsp;<br>
-&nbsp;&nbsp; &nbsp;URL bid;<br>
-&nbsp;&nbsp; &nbsp;<br>
-&nbsp;&nbsp; &nbsp;....<br>
-}</code><br>
+As you could see the retuned XML document has the required infomation
+plus a additional continuation infomation for the cleint for the
+purpose of say if the client expected make a bid for the recevied
+infomation. This XML could be mapped to
+a object in an object oriented language such as Java, C#, Ruby, C++ ...
+etc. Sor an example in Java this could be
+mapped through JAXB (Java Api for Xml Binding). i.e. returned class
+could be some what:<br>
+<br>
+<pre class="codesegment"><code></code>class StockQuote{<br>    String ticker;<br>    String currency;<br>    BigDecimal lastPrice;<br>    BigDecimal highestPriceToday;<br>    BigDecimal lowestPriceToday;<br>    <br>    URL bid;<br>    <br>    ....<br>} </pre>
+<br>
 <br>
 Main point in REST architecture is that we need giving a resource id
-for all our entities that need manipulating.<br>
-as in above example the resource id is the ticker which combined with
-the service endpoint forms a URI. Other points are<br>
-all<br>
-calls should be stateless[1]. The resources should be nouns, not verbs.<br>
+for all our entities that need manipulating. As in above example the
+resource id is the ticker which combined with
+the service endpoint forms a URI. Other points are all calls should be
+stateless[1]. The resources should be nouns, not verbs.<br>
 <br>
 It is important that GET method should not modify any resources
-i.e.&nbsp; free of side effects; this maps to readonly<br>
-operations, if write operations are required the HTTP POST, PUT or
+i.e.&nbsp; free of side effects; this maps to readonly operations, if
+write operations are required the HTTP POST, PUT or
 DELETE should be used.<br>
 <br>
 Now consider a that we need some past stock quotes data for a given
-period to do some analytics. For example consider a<br>
-method StockQuote[] getStockQuoteHistory(String ticker, String
-fromDate, String toDate); this could be mapped to a URI<br>
-like:<br>
+period to do some analytics. For example consider a method <code>StockQuote[]
+getStockQuoteHistory(String ticker, String
+fromDate, String toDate)</code>; this could be mapped to a URI like:
 (for simplicity for explanation, here the date is given as a string;
 but we could have used Date object instead)<br>
-http://www.stock-example.com/stockquoteservice/StockQuoteHistory/XYZ/&lt;fromdate&gt;/&lt;todate&gt;<br>
+<br>
+<code>http://www.stock-example.com/stockquoteservice/StockQuoteHistory/XYZ/&lt;fromdate&gt;/&lt;todate&gt;</code><br>
 <br>
 e.g. if we want the stock quote from 01/01/2008 to 01/31/2008 then the
 URI would map to something like this:<br>
@@ -139,33 +119,33 @@ implementation which interprits meaning of this URI.<br>
 <big><big><br>
 2. Mapping SOAP services to RESTful services </big></big>&nbsp;<br>
 <br>
-The approach here explained a as one solution for the migration. It is
+The approach here explained&nbsp; as one solution for the migration. It
+is
 request for comments, suggestion etc.<br>
 <br>
 How do we map SOAP method calls &amp; parameters to resources?<br>
 <br>
 REST is basically represents resources and operations on those
-resources. Where as,<br>
-SOAP more or less hides real resource behind exposed service interface.
-E.g.<br>
-A SOAP service method like getArticle(1) could be maps to GET
-/article/1 of RESTful service. What if an operation like:<br>
+resources. Where as, SOAP more or less hides real resource behind
+exposed service interface.
+E.g. A SOAP service method like <code>getArticle(1)</code> could be
+maps to <code>GET
+/article/1</code> of RESTful service. What if an operation like:<br>
 <br>
-setContactDetails(InvokationContext ctx, String firstName, String
-lastName, String description, String addressLine1,<br>
-String addressLine2, String city, String state, String zipcode, String
-country)<br>
+<code>void setContactDetails(InvokationContext ctx, String firstName,
+String
+lastName, String description, String addressLine1, String addressLine2,
+String city, String state, String zipcode, String
+country)</code><br>
 <br>
-need mapping to REST style.<br>
+needs mapping to REST style service?<br>
 <br>
-Here above the InvokationContext is used to send client credentials,
-context related information etc.<br>
-Consider an example of calling above method with following data<br>
+Here above the <code>InvokationContext </code>is used to send client
+eviroment details, context related information etc. Consider an example
+of calling above method with following data<br>
 <br>
 <code>setContactAddress(ctx, &#8220;John&nbsp; &#8220;ABC Computing Systems
-Inc,&nbsp; Suite 5A-1204&#8221;,<br>
-&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
-&#8220;Orchard Park&#8220;, &#8220;TUCSON&#8221;, &#8220;AZ&#8221;, 85705, USA)</code><br>
+Inc,&nbsp; Suite 5A-1204&#8221;, &#8220;Orchard Park&#8220;, &#8220;TUCSON&#8221;, &#8220;AZ&#8221;, 85705, USA)</code><br>
 <br>
 When this is mapped to REST style resources we might define URL
 something like:<br>
@@ -175,39 +155,39 @@ http://hostname:port/directory-service/ContactAddress/&lt;name(firstname,lastnam
 to store the data we need to POST the data on the above URI. However,
 there is couple of problems:<br>
 <br>
--Based on the above contact address details this URI could grow large;
-As you know some web servers have limitation on<br>
-the URL size.<br>
-- what about InvokationContext, may be we could omit it for the time
-being but, it may also be needed to map, but we<br>
-cannot determine the size or the content in it.<br>
+<ul>
+  <li>Based on the above contact address details this URI could grow
+large;
+As you know some web servers have limitation on the URL size.</li>
+  <li>What about <code>InvokationContext</code>, may be we could omit
+it for the time
+being but, it may also be needed to map, but we cannot determine the
+size or the content in it.</li>
+</ul>
 <br>
 One way to reduce the length as this example is to map resources as
-abstract:<br>
-Say since we know it is contact address we only provide person name
+abstract: Since we know it is contact address we only provide person
+name
 instead of all address fields ids.<br>
 <br>
 Let&#8217;s say now we need obtaining above person&#8217;s country of work from the
-directory service above using HTTP GET. Mmm&#8230; how<br>
-should we issue the resource request??<br>
+directory service above using HTTP GET. Mmm&#8230; how should we issue the
+resource request??<br>
 Either we should retrieve the full contact address or we should request
-it through a parameter on the URL query string<br>
-which latter is wrong in REST style webservices.<br>
-Ideally there should be another URL like this:<br>
-<br>
-<code>http://hostname:port/directory-service/ContactAddress/&lt;name(firstname,lastname)&gt;/country</code>
-and issuing a GET on this URL<br>
-result in the person&#8217;s country of work.<br>
+it through a parameter on the URL query string,&nbsp; how ever the
+latter option is wrong in REST style webservices.<br>
+Ideally there should be another URL like this: <code>http://hostname:port/directory-service/ContactAddress/&lt;name(firstname,lastname)&gt;/country</code>
+and issuing a GET on this URL result in the person&#8217;s country of work.<br>
 <br>
 ok now lets say this person has moved and now we need to update his
-current location address. This need issuing UPDATE<br>
-(or POST) HTTP requests for the person on the following URL.<br>
+current location address. This need issuing UPDATE (or POST) HTTP
+requests for the person on the following URL.<br>
 <br>
 <code>http://hostname:port/directory-service/ContactAddress/&lt;name(firstname,lastname)&gt;</code><br>
 <br>
 Assume that at beginning of this system, directory-service need
-provisioning/register users on the system. So the HTTP<br>
-PUT operation is issued on the URL<br>
+provisioning/register users on the system. So the HTTP PUT operation is
+issued on the URL<br>
 <br>
 <code>http://hostname:port/directory-service/&lt;name(firstname,lastname)&gt;<br>
 <br>
@@ -215,8 +195,8 @@ PUT operation is issued on the URL<br>
 information something like date of birth.<br>
 <br>
 Assume as in above example a SOAP based service has been implemented
-(see reference sample). If we take the respective<br>
-WSDL it has following main components. <br>
+(see reference sample). If we take the respective WSDL it has following
+main components. <br>
 <br>
 <code>&lt;definitions&gt;<br>
 &lt;types&gt;<br>
@@ -279,23 +259,26 @@ endpoints. </li>
 </ul>
 <br>
 <br>
+<big><big><br>
+2.1 HTTP Defintions<br>
 <br>
-<big>HTTP Defintion</big><br>
-<br>
+<small><small>This section describes each HTTP method that applies to
+REST-stlyle services. for further infomation about HTTP method please
+refer RFC 2616.</small></small><br>
+</big></big><br>
 <big>GET</big><br>
 The GET method means retrieve whatever information (in the form of an
-entity) is identified by the Request-URI. If the Request-URI refers to <br>
+entity) is identified by the Request-URI. If the Request-URI refers to
 a data-producing process, it is the produced data which shall be
 returned as the entity in the response and not the source text of the
-process, <br>
-unless that text happens to be the output of the process. <br>
+process, unless that text happens to be the output of the process. <br>
 <br>
 The semantics of the GET method change to a "conditional GET" if the
-request message includes an If-Modified-Since, If-Unmodified-Since, <br>
+request message includes an If-Modified-Since, If-Unmodified-Since,
 If-Match, If-None-Match, or If-Range header field. A conditional GET
 method requests that the entity be transferred only under the
-circumstances <br>
-described by the conditional header field(s). The conditional GET
+circumstances described by the conditional header field(s). The
+conditional GET
 method is intended to reduce unnecessary network usage by allowing
 cached <br>
 entities to be refreshed without requiring multiple requests or
@@ -303,19 +286,118 @@ transferring data already held by the client. <br>
 <br>
 The semantics of the GET method change to a "partial GET" if the
 request message includes a Range header field. A partial GET requests
-that only <br>
-part of the entity be transferred, as described in Section 14.35
-(Range). The partial GET method is intended to reduce unnecessary
-network usage <br>
-by allowing partially-retrieved entities to be completed without
+that only part of the entity be transferred. The partial GET method is
+intended to reduce unnecessary
+network usage by allowing partially-retrieved entities to be completed
+without
 transferring data already held by the client. <br>
 <br>
 The response to a GET request is cacheable if and only if it meets the
-requirements for HTTP caching described in Section 13 (Caching in
-HTTP). <br>
+requirements for HTTP caching reuirements <br>
 <br>
-See Section 15.1.3 (Encoding Sensitive Information in URI's) for
-security considerations when used for forms. <br>
+<br>
+<span style="font-weight: bold;">POST </span><br>
+The POST method is used to request that the origin server accept the
+entity enclosed in the request as a new subordinate of the resource
+identified by the Request-URI in the Request-Line. POST is designed to
+allow a uniform method to cover the following functions: <br>
+<br>
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; - Annotation of existing resources;<br>
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; - Posting a message to a bulletin board,
+newsgroup, mailing list, or similar group of articles;<br>
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; - Providing a block of data, such as the
+result of submitting a form, to a data-handling process;<br>
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; - Extending a database through an append
+operation.<br>
+<br>
+The actual function performed by the POST method is determined by the
+server and is usually dependent on the Request-URI. The posted entity
+is subordinate to that URI in the same way that a file is subordinate
+to a directory containing it, a news article is subordinate to a
+newsgroup to which it is posted, or a record is subordinate to a
+database. <br>
+<br>
+The action performed by the POST method might not result in a resource
+that can be identified by a URI. In this case, either 200 (OK) or 204
+(No Content) is the appropriate response status, depending on whether
+or not the response includes an entity that describes the result. If a
+resource has been created on the origin server, the response SHOULD be
+201 (Created) and contain an entity which describes the status of the
+request and refers to the new resource, and a Location header.<br>
+<br>
+Responses to this method are not cacheable, unless the response
+includes appropriate Cache-Control or Expires header fields. However,
+the 303 (See Other) response can be used to direct the user agent to
+retrieve a cacheable resource.&nbsp; <br>
+<br>
+<br>
+<span style="font-weight: bold;">PUT </span><br>
+The PUT method requests that the enclosed entity be stored under the
+supplied Request-URI. If the Request-URI refers to an already existing
+resource, the enclosed entity SHOULD be considered as a modified
+version of the one residing on the origin server. If the Request-URI
+does not point to an existing resource, and that URI is capable of
+being defined as a new resource by the requesting user agent, the
+origin server can create the resource with that URI. If a new resource
+is created, the origin server MUST inform the user agent via the 201
+(Created) response. If an existing resource is modified, either the 200
+(OK) or 204 (No Content) response codes SHOULD be sent to indicate
+successful completion of the request. If the resource could not be
+created or modified with the Request-URI, an appropriate error response
+SHOULD be given that reflects the nature of the problem. The recipient
+of the entity MUST NOT ignore any Content-* (e.g. Content-Range)
+headers that it does not understand or implement and MUST return a 501
+(Not Implemented) response in such cases. <br>
+<br>
+If the request passes through a cache and the Request-URI identifies
+one or more currently cached entities, those entries SHOULD be treated
+as stale. Responses to this method are not cacheable. <br>
+<br>
+The fundamental difference between the POST and PUT requests is
+reflected in the different meaning of the Request-URI. The URI in a
+POST request identifies the resource that will handle the enclosed
+entity. That resource might be a data-accepting process, a gateway to
+some other protocol, or a separate entity that accepts annotations. In
+contrast, the URI in a PUT request identifies the entity enclosed with
+the request -- the user agent knows what URI is intended and the server
+MUST NOT attempt to apply the request to some other resource. If the
+server desires that the request be applied to a different URI, it MUST
+send a 301 (Moved Permanently) response; the user agent MAY then make
+its own decision regarding whether or not to redirect the request. <br>
+<br>
+A single resource MAY be identified by many different URIs. For
+example, an article might have a URI for identifying "the current
+version" which is separate from the URI identifying each particular
+version. In this case, a PUT request on a general URI might result in
+several other URIs being defined by the origin server. <br>
+<br>
+HTTP/1.1 does not define how a PUT method affects the state of an
+origin server. Unless otherwise specified for a particular
+entity-header, the entity-headers in the PUT request SHOULD be applied
+to the resource created or modified by the PUT. <br>
+<br>
+<br>
+<span style="font-weight: bold;">DELETE </span><br>
+The DELETE method requests that the origin server delete the resource
+identified by the Request-URI. This method MAY be overridden by human
+intervention (or other means) on the origin server. The client cannot
+be guaranteed that the operation has been carried out, even if the
+status code returned from the origin server indicates that the action
+has been completed successfully. However, the server SHOULD NOT
+indicate success unless, at the time the response is given, it intends
+to delete the resource or move it to an inaccessible location. <br>
+<br>
+A successful response SHOULD be 200 (OK) if the response includes an
+entity describing the status, 202 (Accepted) if the action has not yet
+been enacted, or 204 (No Content) if the action has been enacted but
+the response does not include an entity. <br>
+<br>
+If the request passes through a cache and the Request-URI identifies
+one or more currently cached entities, those entries SHOULD be treated
+as stale. Responses to this method are not cacheable. <br>
+<br>
+<br>
+<br>
 <br>
 <br>
 <br>
@@ -325,41 +407,42 @@ security considerations when used for forms. <br>
 High level approach to the solution is outline below:<br>
 <br>
 WSDL -&gt; obtain service API &amp; params etc-&gt; map resources
-(URLs) &amp; http operations -&gt; user refines mapping -&gt; generate<br>
+(URLs) &amp; http operations -&gt; user refines mapping -&gt; generate
 jsr-311 configuration &amp; classes.<br>
 <br>
 Wsdl2java tool generates java binding for the webservices. It creates
-java code for services implementation and<br>
-respective Java code for client side artifacts. The wsdl2java current
-impl. has mechanism to read WSDL document and<br>
-generate it&#8217;s object model and emit respective java code for that.
-Since this tool has the way of reading, understanding<br>
-&amp; creating a respective wsdl representation, we could use it to
-read the WSDL and create us the representation (in<br>
-memory). There is an emitter code which you could plug in to generate
-output of what you need, from that in memory<br>
-representation. This resembles a compiler &amp; a code generator.
-Compiler part include parser which could parse WSDL<br>
-document (including syntax checking etc), and creating the parsed tree
-in memory which could be used for code<br>
-generation. In this case the code generator generates java code. What
-we could do is replace this code generator to<br>
-generate required RESTful services stubs &amp; skeletons implementation
-java code. This seems feasible. i.e. replace the<br>
-java emitter with the emitter to generate RESTful services stubs.<br>
+java code for services implementation and respective Java code for
+client side artifacts. The wsdl2java current
+impl. has mechanism to read WSDL document and generate it&#8217;s object
+model and emit respective java code for that.
+Since this tool has the way of reading, understanding &amp; creating a
+respective wsdl representation, we could use it to
+read the WSDL and create us the representation (in memory). There is an
+emitter code which you could plug in to generate
+output of what you need, from that in memory representation. This
+resembles a compiler &amp; a code generator.
+Compiler part include parser which could parse WSDL document (including
+syntax checking etc), and creating the parsed tree
+in memory which could be used for code generation. In this case the
+code generator generates java code. What
+we could do is replace this code generator to generate required RESTful
+services stubs &amp; skeletons implementation
+java code. This seems feasible. i.e. replace the java emitter with the
+emitter to generate RESTful services stubs.<br>
 <br>
-idea is to target this output for an existing REST supporting tool kit
-like: CXF, Axis etc. for starter.<br>
-i.e. we generate services stubs targeting these tool kits until we
-create one of our own.<br>
-The generated code should follow the JSR-311 specification.<br>
+The idea is to target this output for an existing REST supporting tool
+kit
+like: CXF, Axis etc. for starter. i.e. we generate services stubs
+targeting these tool kits until we
+create one of our own. The generated code should follow the JSR-311
+specification.<br>
 <br>
 Springframework allows us to define &amp; use webservices very simply
-than creating respective tool kit based stubs. So we<br>
-should plan on creating a springframework plug in to make use of our
-generated classes from the wsdl2REST tool kit. Its<br>
-proxy based service definition &amp; invocation model make things
-easier by not wanting to understand a particular tool kit<br>
+than creating respective tool kit based stubs. So we should plan on
+creating a springframework plug in to make use of our
+generated classes from the wsdl2REST tool kit. Its proxy based service
+definition &amp; invocation model make things
+easier by not wanting to understand a particular tool kit
 implementation.<br>
 <br>
 <br>

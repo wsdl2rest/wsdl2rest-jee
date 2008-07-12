@@ -26,6 +26,7 @@ import java.net.MalformedURLException;
 
 
 public class ClassDefinitionImpl implements ClassDefinition {
+    
     private String packageName;
     private List<String> imports;
     private String className;

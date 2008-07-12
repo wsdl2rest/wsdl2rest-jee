@@ -1,4 +1,4 @@
-package org.slosc.wsdl2rest.wsdl;
+package org.slosc.wsdl2rest.util;
 
 /*
  * Copyright (c) 2008 SL_OpenSource Consortium
@@ -18,21 +18,13 @@ package org.slosc.wsdl2rest.wsdl;
  *
  */
 
-public class ParamImpl implements Param {
+public class ConsoleMessageWriter implements MessageWriter {
 
-    private String paramType;
-    private String paramName;
-
-    public ParamImpl(String paramType, String paramName) {
-        this.paramType = paramType;
-        this.paramName = paramName;
+    public void write(TYPE type, String msg) {
+        System.out.print(msg);
     }
 
-    public String getParamType() {
-        return paramType;
-    }
-
-    public String getParamName() {
-        return paramName;
+    public void writeln(TYPE type, String msg) {
+        System.out.println(msg);                
     }
 }

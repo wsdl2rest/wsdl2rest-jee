@@ -23,8 +23,9 @@ import java.util.List;
 
 
 public class MethodInfoImpl implements MethodInfo{
-    private String methodName;
+
     private String returnType;
+    private String methodName;
     private List<Param> params;
     private String exceptionType;
 
