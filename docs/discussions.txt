@@ -1,0 +1,9 @@
+7/20/2008
+Some points were discussed on how to implement resource mapper.
+Don't break Classname and param name.
+Resources list' attribute on all 3 classes.
+Getter and setter on all 3 classes.
+ResouceMapper will be called from Wsdl2Rest class.
+Proper documentation:
+We will maintain dicussions.txt in docs folder where all discussions are summarily jotted down.
+

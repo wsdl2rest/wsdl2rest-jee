@@ -51,6 +51,8 @@ public class Wsdl2Rest {
         wsdlProcessor.process(args[0], args[1], args[2]);
         List<ClassDefinition> svcClasses = wsdlProcessor.getTypeDefs();
 
+        // resource mapper.
+        
         File clazzFileLocation = new File(args[3]);
         if(!clazzFileLocation.exists()) msgWriter.write(MessageWriter.TYPE.WARN, "Existing files will be over writtern ...");
 
