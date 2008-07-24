@@ -78,6 +78,14 @@
     <jar jarfile="${dist}/lib/wsdl2rest-1.0.jar" basedir="${target}"/>
   </target>
 
+	<target name="src-dist" description="generate the src distribution" >
+    <!-- Create the distribution directory -->
+    <mkdir dir="${dist}/src"/>
+
+    <!-- Put everything in ${build} into the MyProject-20061213.jar file -->
+    <jar jarfile="${dist}/src/wsdl2rest-src-1.0.zip" basedir="." excludes=".svn/**,**/.svn,**/.svn/**,dist,dist/**,target,target/**,wsdl2rest.iml,wsdl2rest.ipr,wsdl2rest.iws,config/**,docs/**,samples/**,tools/**,**/*.bak"/>
+               
+  </target>
 
 
   <target name="clean"
@@ -86,4 +94,6 @@
     <delete dir="${target}"/>
     <delete dir="${dist}"/>
   </target>
+  
+  
 </project>
