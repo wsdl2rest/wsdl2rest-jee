@@ -22,7 +22,7 @@ import java.util.List;
 
 
 
-public class MethodInfoImpl implements MethodInfo{
+public class MethodInfoImpl extends ResourceInfo implements MethodInfo{
 
     private String returnType;
     private String methodName;

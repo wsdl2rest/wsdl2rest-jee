@@ -21,6 +21,7 @@ package org.slosc.wsdl2rest;
 import org.slosc.wsdl2rest.wsdl.WSDLProcessor;
 import org.slosc.wsdl2rest.wsdl.ClassDefinition;
 import org.slosc.wsdl2rest.mappings.ResourceMapper;
+import org.slosc.wsdl2rest.mappings.ResourceMapperImp;
 import org.slosc.wsdl2rest.codegenerator.ClassGenerator;
 import org.slosc.wsdl2rest.codegenerator.ClassGeneratorImpl;
 import org.slosc.wsdl2rest.util.MessageWriter;
@@ -51,7 +52,8 @@ public class Wsdl2Rest {
         wsdlProcessor.process(args[0], args[1], args[2]);
         List<ClassDefinition> svcClasses = wsdlProcessor.getTypeDefs();
 
-        // resource mapper.
+        // Assign resources to Class, method and parameter definitions.
+        ResourceMapperImp.assignResources(svcClasses);
         
         File clazzFileLocation = new File(args[3]);
         if(!clazzFileLocation.exists()) msgWriter.write(MessageWriter.TYPE.WARN, "Existing files will be over writtern ...");

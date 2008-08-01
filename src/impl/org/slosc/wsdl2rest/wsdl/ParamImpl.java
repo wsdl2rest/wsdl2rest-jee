@@ -18,7 +18,7 @@ package org.slosc.wsdl2rest.wsdl;
  *
  */
 
-public class ParamImpl implements Param {
+public class ParamImpl extends ResourceInfo implements Param {
 
     private String paramType;
     private String paramName;

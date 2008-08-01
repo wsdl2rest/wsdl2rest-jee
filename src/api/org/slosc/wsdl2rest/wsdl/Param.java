@@ -18,7 +18,11 @@ package org.slosc.wsdl2rest.wsdl;
  *
  */
 
+import java.util.List;
+
 public interface Param {
     String getParamType();
     String getParamName();
+    List<String> getResourceList();
+    void setResourceList(List<String> resources);
 }

@@ -26,4 +26,6 @@ public interface MethodInfo {
     String getReturnType();
     List<Param> getParams();
     String getExceptionType();
+    List<String> getResourceList();
+    void setResourceList(List<String> resources);
 }

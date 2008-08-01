@@ -19,11 +19,12 @@ package org.slosc.wsdl2rest.mappings;
  */
 
 import org.slosc.wsdl2rest.mappings.ResourceMapper;
-
 import java.util.List;
+import java.util.Arrays;
 import java.util.ArrayList;
 import java.util.regex.Pattern;
 import java.util.regex.Matcher;
+import org.slosc.wsdl2rest.wsdl.*;
 
 public class ResourceMapperImp implements ResourceMapper {
 
@@ -49,6 +50,28 @@ public class ResourceMapperImp implements ResourceMapper {
 	
 	public String toString() {
 		return resources.toString();
+	}
+
+	// This method will iterate through Class, Method and Parameter definitions
+	// and assign respective resources to them
+	public static void assignResources(List<ClassDefinition> svcClasses) {
+        for(ClassDefinition clazzDef : svcClasses){
+        	// Don't break up class name
+        	if (clazzDef.getClassName()!=null)
+        		clazzDef.setResourceList(Arrays.asList(clazzDef.getClassName()));
+            for(MethodInfo mInf:clazzDef.getMethods()){
+            	// Parse the method name
+            	//ResourceMapperImp rm = new ResourceMapperImp(mInf.getMethodName());
+            	//mInf.setResourceList(rm.getResources());
+            	if (mInf.getMethodName()!=null)
+            		mInf.setResourceList(Arrays.asList(mInf.getMethodName()));
+                for(Param p : mInf.getParams()){
+                	// Don't break up parameter name
+                	if (p.getParamName()!=null)
+                		p.setResourceList(Arrays.asList(p.getParamName()));
+                }
+            }
+        }
 	}
 
     private void addResources(List<String> resouces) {
