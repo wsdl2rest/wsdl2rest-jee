@@ -12,6 +12,7 @@
   <property name="dist"     value="dist"/>
   <property name="test"     location="test"/>
   <property name="samples"  location="samples"/>
+  <property name="debug"    value="on"/>          <!-- this need to be off for the releases -->
 
   <target name="init">
     <!-- Create the time stamp -->
@@ -23,7 +24,7 @@
   <target name="compile" depends="init"
         description="compile the source " >
     <!-- Compile the java code from ${src} into ${build} -->
-    <javac destdir="${target}">
+    <javac destdir="${target}" debug="${debug}" debuglevel="lines,vars,source">
     	<src path="${src}/api"/>
     	<src path="${src}/impl"/>
     	<classpath>
@@ -91,7 +92,7 @@
   <target name="clean"
         description="clean up" >
     <!-- Delete the ${build} and ${dist} directory trees -->
-    <delete dir="${target}"/>
+    <delete dir="target" includeemptydirs="true"/>
     <delete dir="${dist}"/>
   </target>
   
