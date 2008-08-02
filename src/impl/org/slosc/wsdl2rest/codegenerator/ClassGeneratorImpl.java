@@ -21,6 +21,8 @@ package org.slosc.wsdl2rest.codegenerator;
 import org.slosc.wsdl2rest.wsdl.ClassDefinition;
 import org.slosc.wsdl2rest.wsdl.MethodInfo;
 import org.slosc.wsdl2rest.wsdl.Param;
+import org.slosc.wsdl2rest.util.MessageWriter;
+import org.slosc.wsdl2rest.util.MessageWriterFactory;
 
 import java.util.List;
 import java.io.*;
@@ -28,26 +30,78 @@ import java.io.*;
 
 public class ClassGeneratorImpl implements ClassGenerator {
 
-    private PrintWriter writer;   //do we need a stream? for now NO
+    protected MessageWriter msgWriter = MessageWriterFactory.getMessageWriter();
 
-    public ClassGeneratorImpl(PrintWriter writer){
-        this.writer = writer;
+    protected String outputPath;
+    protected PrintWriter writer = null;
+    protected List<ClassDefinition> svcClasses;
+    protected ClassDefinition clazzDef;
+
+    protected ClassGeneratorImpl(){
+        
+    }
+    public ClassGeneratorImpl(String outputPath){
+        this.outputPath = outputPath;
     }
 
-    public void generateClass(ClassDefinition clazzDef) {
+    public void generateClasses(List<ClassDefinition> svcClassesDefs) {
+        this.svcClasses = svcClassesDefs;
+        for(ClassDefinition classDef : svcClasses){
+            this.clazzDef = classDef;
+            String packageName = clazzDef.getPackageName();
+            packageName = packageName.replace('.', File.separatorChar);
+            File clazzFile = new File(outputPath +packageName+File.separatorChar);
+            clazzFile.mkdirs();
 
-        writer.println("\npackage "+clazzDef.getPackageName()+";\n\n");
-        if(clazzDef.getImports() != null){
-            for(String impo : clazzDef.getImports()){
-              writer.println("import "+impo+";");
+            try {
+                clazzFile = new File(outputPath +packageName+File.separatorChar+clazzDef.getClassName()+".java");
+                writer = new PrintWriter(new BufferedWriter(new FileWriter(clazzFile)));
+            } catch (IOException e) {
+                e.printStackTrace();
+                continue;
             }
+
+            writePackageName(classDef);
+            writeImports(classDef);
+            writeServiceClass(classDef);
+
+            writer.close();
         }
-        writer.print("\n\npublic interface ");
-        writer.println(clazzDef.getClassName()+" {\n");
-        for(MethodInfo mInf:clazzDef.getMethods()){
+    }
+
+    protected void writePackageName(ClassDefinition clazzDef){
+        if(clazzDef.getPackageName() != null) 
+        writer.println("\npackage "+clazzDef.getPackageName()+";\n\n");
+    }
+
+    protected void writeImports(ClassDefinition clazzDef){
+        if(clazzDef.getImports() != null)
+        for(String impo : clazzDef.getImports()){
+          writer.println("import "+impo+";");
+        }
+    }
+
+    protected void writeServiceClass(ClassDefinition clazzDef){
+        if(clazzDef.getClassName() != null){
+            writer.println("\n\npublic interface "+clazzDef.getClassName()+" {\n");
+            writeMethods(clazzDef.getMethods());
+            writer.println("}\n\n\n");
+        }
+    }
+
+    protected void writeMethods(List<? extends  MethodInfo> methods){
+        if(methods == null) return;
+        for(MethodInfo mInf:methods){
             writer.print("\t"+mInf.getReturnType()+" ");
             writer.print(mInf.getMethodName()+"(");
-            List<Param> params = mInf.getParams();
+            writeParams(mInf.getParams());
+            String excep = mInf.getExceptionType() != null?(" throws "+ mInf.getExceptionType()):"";
+            writer.println(")"+excep+";");
+        }
+
+    }
+
+     protected void writeParams(List<Param> params){
             if(params != null) {
                 int i=0; int size = params.size();
                 for(Param p : params){
@@ -55,10 +109,6 @@ public class ClassGeneratorImpl implements ClassGenerator {
                     writer.print(p.getParamType()+" "+p.getParamName()+comma);
                 }
             }
-            String excep = mInf.getExceptionType() != null?(" throws "+ mInf.getExceptionType()):"";
-            writer.println(")"+excep+";");
-        }
-        writer.println("}\n\n\n");
-    }
+     }
 
 }

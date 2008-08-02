@@ -20,12 +20,11 @@ package org.slosc.wsdl2rest;
 
 import org.slosc.wsdl2rest.wsdl.WSDLProcessor;
 import org.slosc.wsdl2rest.wsdl.ClassDefinition;
-import org.slosc.wsdl2rest.mappings.ResourceMapper;
 import org.slosc.wsdl2rest.mappings.ResourceMapperImp;
 import org.slosc.wsdl2rest.codegenerator.ClassGenerator;
 import org.slosc.wsdl2rest.codegenerator.ClassGeneratorImpl;
 import org.slosc.wsdl2rest.util.MessageWriter;
-import org.slosc.wsdl2rest.util.ConsoleMessageWriter;
+import org.slosc.wsdl2rest.util.MessageWriterFactory;
 
 import java.util.List;
 import java.io.*;
@@ -33,7 +32,7 @@ import java.io.*;
 
 public class Wsdl2Rest {
 
-    MessageWriter msgWriter = new ConsoleMessageWriter();
+    private MessageWriter msgWriter = MessageWriterFactory.getMessageWriter();
 
     public static void main(String [] args){
 
@@ -61,29 +60,9 @@ public class Wsdl2Rest {
         clazzFileLocation.delete();
         clazzFileLocation.mkdirs();
 
-        ClassGenerator gen;
-        String outLocation = args[3] + File.separator;
-
-        for(ClassDefinition clazzDef : svcClasses){
-            String packageName = clazzDef.getPackageName();
-            packageName = packageName.replace('.', File.separatorChar);
-            File clazzFile = new File(outLocation +packageName+File.separatorChar);
-            clazzFile.mkdirs();
-            
-            PrintWriter out = null;
-            try {
-                clazzFile = new File(outLocation +packageName+File.separatorChar+clazzDef.getClassName()+".java");
-                out = new PrintWriter(new BufferedWriter(new FileWriter(clazzFile)));
-            } catch (IOException e) {
-                e.printStackTrace();  
-            }
-
-            gen = new ClassGeneratorImpl(out);
-            gen.generateClass(clazzDef);
-
-            out.close();
-        }
-
+        String outputPath = args[3] + File.separator;
+        ClassGenerator gen = new ClassGeneratorImpl(outputPath);
+        gen.generateClasses(svcClasses);
     }
 
     private static void usage() {

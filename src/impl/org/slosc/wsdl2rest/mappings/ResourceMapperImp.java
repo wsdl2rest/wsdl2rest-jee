@@ -57,18 +57,22 @@ public class ResourceMapperImp implements ResourceMapper {
 	public static void assignResources(List<ClassDefinition> svcClasses) {
         for(ClassDefinition clazzDef : svcClasses){
         	// Don't break up class name
-        	if (clazzDef.getClassName()!=null)
+        	if (clazzDef.getClassName()!=null){
         		clazzDef.setResourceList(Arrays.asList(clazzDef.getClassName()));
-            for(MethodInfo mInf:clazzDef.getMethods()){
-            	// Parse the method name
-            	//ResourceMapperImp rm = new ResourceMapperImp(mInf.getMethodName());
-            	//mInf.setResourceList(rm.getResources());
-            	if (mInf.getMethodName()!=null)
-            		mInf.setResourceList(Arrays.asList(mInf.getMethodName()));
-                for(Param p : mInf.getParams()){
-                	// Don't break up parameter name
-                	if (p.getParamName()!=null)
-                		p.setResourceList(Arrays.asList(p.getParamName()));
+                for(MethodInfo mInf:clazzDef.getMethods()){
+                    // Parse the method name
+                    //ResourceMapperImp rm = new ResourceMapperImp(mInf.getMethodName());
+                    //mInf.setResourceList(rm.getResources());
+                    if (mInf.getMethodName()!=null){
+                        mInf.setResourceList(Arrays.asList(mInf.getMethodName()));
+                        if(mInf.getParams()!=null){
+                            for(Param p : mInf.getParams()){
+                                // Don't break up parameter name
+                                if (p.getParamName()!=null)
+                                    p.setResourceList(Arrays.asList(p.getParamName()));
+                            }
+                        }
+                    }
                 }
             }
         }

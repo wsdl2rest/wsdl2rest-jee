@@ -2,6 +2,8 @@ package org.slosc.wsdl2rest.codegenerator;
 
 import org.slosc.wsdl2rest.wsdl.ClassDefinition;
 
+import java.util.List;
+
 /*
  * Copyright (c) 2008 SL_OpenSource Consortium
  * All Rights Reserved.
@@ -22,5 +24,5 @@ import org.slosc.wsdl2rest.wsdl.ClassDefinition;
 
 
 public interface ClassGenerator {
-    void generateClass(ClassDefinition clazzDef);
+    void generateClasses(List<ClassDefinition> clazzDef);
 }
