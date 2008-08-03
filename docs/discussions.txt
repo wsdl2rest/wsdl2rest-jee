@@ -1,3 +1,17 @@
+Discussion notes
+----------------
+
+
+08/03/2008
+- Discussed to add additional fields into ResourceInfo class to hold http method & verbs; this need to align with the jsr-311 final draft.
+  [Thushan suggested to use a ResourceMapper instance in ResourceInfo instead of a field to hols above, which Thushan could evaluate and see if that's a good approach]
+- Thushan will send a UI sketch (mockup) to dicuss (on next week meeting :-))
+- Lilantha to work on the jsr-311 code generator
+- Discussed to add some wsdl samples suitable for initial works that having good verbs to be mapped in resources identifacation.
+- Start implementation according to the jsr-311 final draft.
+
+
+
 7/20/2008
 Some points were discussed on how to implement resource mapper.
 Don't break Classname and param name.
@@ -6,4 +20,7 @@ Getter and setter on all 3 classes.
 ResouceMapper will be called from Wsdl2Rest class.
 Proper documentation:
 We will maintain dicussions.txt in docs folder where all discussions are summarily jotted down.
+
+
+
 
