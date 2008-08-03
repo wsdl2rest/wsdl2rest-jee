@@ -44,6 +44,10 @@ public class ClassGeneratorImpl implements ClassGenerator {
         this.outputPath = outputPath;
     }
 
+    public void setOutputPath(String outputPath) {
+        this.outputPath = outputPath;
+    }
+
     public void generateClasses(List<ClassDefinition> svcClassesDefs) {
         this.svcClasses = svcClassesDefs;
         for(ClassDefinition classDef : svcClasses){
@@ -70,8 +74,10 @@ public class ClassGeneratorImpl implements ClassGenerator {
     }
 
     protected void writePackageName(ClassDefinition clazzDef){
-        if(clazzDef.getPackageName() != null) 
-        writer.println("\npackage "+clazzDef.getPackageName()+";\n\n");
+        final String packName = clazzDef.getPackageName();
+        if( packName!= null && packName.length() != 0 ) 
+            writer.println("\npackage "+packName+";");
+        writer.println("\n\n");
     }
 
     protected void writeImports(ClassDefinition clazzDef){
@@ -79,11 +85,12 @@ public class ClassGeneratorImpl implements ClassGenerator {
         for(String impo : clazzDef.getImports()){
           writer.println("import "+impo+";");
         }
+        writer.println("\n\n");
     }
 
     protected void writeServiceClass(ClassDefinition clazzDef){
         if(clazzDef.getClassName() != null){
-            writer.println("\n\npublic interface "+clazzDef.getClassName()+" {\n");
+            writer.println("public class "+clazzDef.getClassName()+" {\n");
             writeMethods(clazzDef.getMethods());
             writer.println("}\n\n\n");
         }
@@ -92,23 +99,32 @@ public class ClassGeneratorImpl implements ClassGenerator {
     protected void writeMethods(List<? extends  MethodInfo> methods){
         if(methods == null) return;
         for(MethodInfo mInf:methods){
-            writer.print("\t"+mInf.getReturnType()+" ");
+            String retType = mInf.getReturnType();
+            writer.print("\tpublic "+(retType!=null?retType:"void")+" ");
             writer.print(mInf.getMethodName()+"(");
             writeParams(mInf.getParams());
             String excep = mInf.getExceptionType() != null?(" throws "+ mInf.getExceptionType()):"";
             writer.println(")"+excep+";");
         }
-
     }
 
-     protected void writeParams(List<Param> params){
-            if(params != null) {
-                int i=0; int size = params.size();
-                for(Param p : params){
-                    String comma = (++i != size)?", ":"";
-                    writer.print(p.getParamType()+" "+p.getParamName()+comma);
-                }
-            }
-     }
+    protected void writeMethod(MethodInfo mInf){
+        if(mInf == null) return;
+        String retType = mInf.getReturnType();
+        writer.print("\tpublic "+(retType!=null?retType:"void")+" ");
+        writer.print(mInf.getMethodName()+"(");
+        writeParams(mInf.getParams());
+        String excep = mInf.getExceptionType() != null?(" throws "+ mInf.getExceptionType()):"";
+        writer.println(")"+excep+";\n");
+    }
 
+    protected void writeParams(List<Param> params){
+        if(params != null) {
+            int i=0; int size = params.size();
+            for(Param p : params){
+                String comma = (++i != size)?", ":"";
+                writer.print(p.getParamType()+" "+p.getParamName()+comma);
+            }
+        }
+    }
 }

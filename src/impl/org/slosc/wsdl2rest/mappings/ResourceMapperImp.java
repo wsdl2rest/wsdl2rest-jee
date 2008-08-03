@@ -29,8 +29,13 @@ import org.slosc.wsdl2rest.wsdl.*;
 public class ResourceMapperImp implements ResourceMapper {
 
     private List<String> resources;
+    private Pattern pattern = Pattern.compile("([A-Z][a-z]+)|([a-z]+)");
+
+    public ResourceMapperImp(){
+        
+    }
 	
-	public ResourceMapperImp(String resourceName) {
+    public ResourceMapperImp(String resourceName) {
 		resources = new ArrayList<String>();
 		mapResources(resourceName);
 	}
@@ -39,7 +44,7 @@ public class ResourceMapperImp implements ResourceMapper {
     }
 	
 	public void mapResources(String resourceName) {
-        Pattern pattern = Pattern.compile("([A-Z][a-z]+)|([a-z]+)");
+//        Pattern pattern = Pattern.compile("([A-Z][a-z]+)|([a-z]+)");
         Matcher matcher = pattern.matcher(resourceName);
         while (matcher.find()) {
         	if (!matcher.group().equals("")){
@@ -54,7 +59,7 @@ public class ResourceMapperImp implements ResourceMapper {
 
 	// This method will iterate through Class, Method and Parameter definitions
 	// and assign respective resources to them
-	public static void assignResources(List<ClassDefinition> svcClasses) {
+	public void assignResources(List<ClassDefinition> svcClasses) {
         for(ClassDefinition clazzDef : svcClasses){
         	// Don't break up class name
         	if (clazzDef.getClassName()!=null){
@@ -64,7 +69,10 @@ public class ResourceMapperImp implements ResourceMapper {
                     //ResourceMapperImp rm = new ResourceMapperImp(mInf.getMethodName());
                     //mInf.setResourceList(rm.getResources());
                     if (mInf.getMethodName()!=null){
-                        mInf.setResourceList(Arrays.asList(mInf.getMethodName()));
+                        resources = new ArrayList<String>();
+                        mapResources(mInf.getMethodName());
+                        mInf.setResourceList(resources);
+
                         if(mInf.getParams()!=null){
                             for(Param p : mInf.getParams()){
                                 // Don't break up parameter name

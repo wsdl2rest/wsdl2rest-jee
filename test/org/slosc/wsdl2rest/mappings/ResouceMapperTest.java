@@ -60,8 +60,9 @@ public class ResouceMapperTest extends TestCase {
             List<ClassDefinition> svcClasses = wsdlProcessor.getTypeDefs();
             
             // Assign resources
-            ResourceMapperImp.assignResources(svcClasses);
-            
+            ResourceMapper resMapper = new ResourceMapperImp();
+            resMapper.assignResources(svcClasses);
+
             for(ClassDefinition clazzDef : svcClasses){
                 System.out.println("\npackage "+clazzDef.getPackageName()+";");
                 // Get resources of package name

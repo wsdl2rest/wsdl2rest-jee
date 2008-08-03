@@ -28,41 +28,52 @@ import java.util.List;
 
 public class JSR311ClassGenerator extends ClassGeneratorImpl {
 
+    public JSR311ClassGenerator(){
+    }
+    public JSR311ClassGenerator(String outputPath){
+        super(outputPath);
+    }
+
+
+
     protected void writeServiceClass(ClassDefinition clazzDef){
         if(clazzDef.getClassName() != null){
             //write jsr-311 annotations
-            writer.println("@Path(\"/"+clazzDef.getClassName().toLowerCase()+"/");
+            writer.println("@Path(\"/"+clazzDef.getClassName().toLowerCase()+"/\")");
             writer.println("@ProduceMime(\"application/xml\")");
-
-            writer.println("\n\npublic class "+clazzDef.getClassName()+" {\n");
-            writeMethods(clazzDef.getMethods());
-            writer.println("}\n\n\n");
+            
+            super.writeServiceClass(clazzDef);
         }
     }
 
     protected void writeMethods(List<? extends  MethodInfo> methods){
         if(methods == null) return;
         for(MethodInfo mInf:methods){
-            //write jsr-311 annotations
-            
-            writer.print("\tpublic "+mInf.getReturnType()+" ");
-            writer.print(mInf.getMethodName()+"(");
-            writeParams(mInf.getParams());
-            String excep = mInf.getExceptionType() != null?(" throws "+ mInf.getExceptionType()):"";
-            writer.println(")"+excep+";");
+           //write jsr-311 annotations
+           List<String> resouceInf = mInf.getResourceList();
+           if(resouceInf != null && resouceInf.size() >= 2){
+               if(mInf.getResourceList().get(0).equals("get"))
+                    writer.println("\t@GET");
+               else writer.println("\t@POST");
+               StringBuilder path = new StringBuilder();
+               for(int i=1;i<resouceInf.size();i++){
+                   path.append(resouceInf.get(i));
+               }
+               writer.println("\t@Path(\""+path.toString().toLowerCase()+"\")");
+           }
+           writeMethod(mInf);
         }
-
     }
 
      protected void writeParams(List<Param> params){
-            if(params != null) {
-                int i=0; int size = params.size();
-                for(Param p : params){
-                    String comma = (++i != size)?", ":"";
-                    //write jsr-311 annotations
-                    writer.print(p.getParamType()+" "+p.getParamName()+comma);
-                }
+        if(params != null) {
+            int i=0; int size = params.size();
+            for(Param p : params){
+                String comma = (++i != size)?", ":"";
+                //write jsr-311 annotations
+                writer.print(p.getParamType()+" "+p.getParamName()+comma);
             }
+        }
      }
     
 }
