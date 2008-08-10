@@ -1,6 +1,12 @@
 Discussion notes
 ----------------
 
+08/10/2008
+-discussed how to handle meta info (http, resource mapping, and mime etc) and decided to refactor ResouceInfo class by 1. renaming it to MetaInfo, 2. add http mapping, 3 mime mapping attributes, to it.
+- decided to show http method in a list box, default value to be set to the one which we identify programattically - for an example if the method level resource mapping for updateCustomerAddress(String custId, Address addr) is needed, then the programatic guess for the http mapping is going to be POST (since the method prefix "update") - and show the rest of the http methods (GET, PUT etc) in the list, so that if the programatic guess is incorrect user has the option to change it.
+- decided to use a combo box for the resource sugguested. for  an example for updateCustomerAddress(String custId, Address addr) the resouce mapping to be /customer/{custId}/address and /customer/address/{custId} [if updateCustomerAddress(Address addr, String custId) - param order different etc.] this could be edited by the user, given the fact that user is responsible for the change. i.e. if user makes invalid mapping it is users whole responsibility.
+- Thushan to send a UI sketch. 
+- 
 
 08/03/2008
 - Discussed to add additional fields into ResourceInfo class to hold http method & verbs; this need to align with the jsr-311 final draft.
