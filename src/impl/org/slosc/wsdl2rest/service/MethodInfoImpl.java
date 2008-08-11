@@ -1,4 +1,4 @@
-package org.slosc.wsdl2rest.wsdl;
+package org.slosc.wsdl2rest.service;
 
 /*
  * Copyright (c) 2008 SL_OpenSource Consortium
@@ -18,11 +18,14 @@ package org.slosc.wsdl2rest.wsdl;
  *
  */
 
+import org.slosc.wsdl2rest.service.MethodInfo;
+import org.slosc.wsdl2rest.service.Param;
+
 import java.util.List;
 
 
 
-public class MethodInfoImpl extends MetaInfo implements MethodInfo{
+public class MethodInfoImpl extends MetaInfo implements MethodInfo {
 
     private String returnType;
     private String methodName;

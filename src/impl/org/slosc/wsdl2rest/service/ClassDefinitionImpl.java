@@ -1,4 +1,4 @@
-package org.slosc.wsdl2rest.wsdl;
+package org.slosc.wsdl2rest.service;
 
 /*
  * Copyright (c) 2008 SL_OpenSource Consortium
@@ -17,6 +17,9 @@ package org.slosc.wsdl2rest.wsdl;
  * limitations under the License.
  *
  */
+
+import org.slosc.wsdl2rest.service.ClassDefinition;
+import org.slosc.wsdl2rest.service.MethodInfo;
 
 import java.util.List;
 import java.util.ArrayList;
@@ -74,7 +77,7 @@ public class ClassDefinitionImpl extends MetaInfo implements ClassDefinition {
         this.className = className;
     }
 
-    public List<? extends  MethodInfo> getMethods() {
+    public List<? extends MethodInfo> getMethods() {
         return methods;
     }
 

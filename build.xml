@@ -13,6 +13,8 @@
   <property name="test"     location="test"/>
   <property name="samples"  location="samples"/>
   <property name="debug"    value="on"/>          <!-- this need to be off for the releases -->
+  
+  <property name="release-version"    value="0.1"/>
 
 
   <target name="init">
@@ -73,22 +75,28 @@
 
 
   </target>
+  
+  
 
   <target name="dist" depends="compile" description="generate the distribution" >
     <!-- Create the distribution directory -->
     <mkdir dir="${dist}/lib"/>
 
     <!-- Put everything in ${build} into the MyProject-20061213.jar file -->
-    <jar jarfile="${dist}/lib/wsdl2rest-1.0.jar" basedir="${target}"/>
+    <jar jarfile="${dist}/lib/wsdl2rest-${release-version}.jar" basedir="${target}"/>
   </target>
 
 	<target name="src-dist" description="generate the src distribution" >
     <!-- Create the distribution directory -->
     <mkdir dir="${dist}/src"/>
 
-    <!-- Put everything in ${build} into the *.jar file -->
-    <jar jarfile="${dist}/src/wsdl2rest-src-1.0.zip" basedir="." excludes=".svn/**,**/.svn,**/.svn/**,dist,dist/**,target,target/**,wsdl2rest.iml,wsdl2rest.ipr,wsdl2rest.iws,config/**,docs/**,samples/**,tools/**,**/*.bak"/>
-               
+    <!-- Put everything in ${build} into the *.tar.gz file -->
+    <tar destfile="${dist}/src/wsdl2rest-src-${release-version}.tar.gz" compression="gzip" basedir="." 
+    excludes=".svn/**,**/.svn,**/.svn/**,dist,dist/**,target,target/**,wsdl2rest.iml,wsdl2rest.ipr,wsdl2rest.iws,config/**,docs/**,samples/**,tools/**,**/*.bak"/>
+    
+    <zip destfile="${dist}/src/wsdl2rest-src-${release-version}.zip" basedir="." 
+    excludes=".svn/**,**/.svn,**/.svn/**,dist,dist/**,target,target/**,wsdl2rest.iml,wsdl2rest.ipr,wsdl2rest.iws,config/**,docs/**,samples/**,tools/**,**/*.bak"/>
+		           
   </target>
 
 

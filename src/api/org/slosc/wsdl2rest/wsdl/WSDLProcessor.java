@@ -18,16 +18,17 @@ package org.slosc.wsdl2rest.wsdl;
  *
  */
 
+import org.slosc.wsdl2rest.service.ClassDefinition;
+
+import java.util.Map;
 import java.util.List;
 
+public interface WSDLProcessor {
+    Map process(String wsdlURI, String username, String password);
 
-public interface ClassDefinition {
+    Map process(String wsdlURI);
 
-    String getPackageName();
-    List<String> getImports();
-    String getClassName();
-    List<String> getResources();
-    void setResources(List<String> resources);
+    List<ClassDefinition> getTypeDefs();
 
-    List<? extends  MethodInfo> getMethods();
+    Map<String, ClassDefinition> getServiceDef();
 }

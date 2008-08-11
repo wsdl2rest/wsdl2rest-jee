@@ -1,4 +1,4 @@
-package org.slosc.wsdl2rest.wsdl;
+package org.slosc.wsdl2rest.service;
 
 /*
  * Copyright (c) 2008 SL_OpenSource Consortium

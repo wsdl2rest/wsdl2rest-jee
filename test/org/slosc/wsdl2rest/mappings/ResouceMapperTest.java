@@ -20,11 +20,11 @@ package org.slosc.wsdl2rest.mappings;
  */
 
 import junit.framework.*;
-import org.slosc.wsdl2rest.wsdl.WSDLProcessor;
-import org.slosc.wsdl2rest.wsdl.ClassDefinition;
-import org.slosc.wsdl2rest.wsdl.MethodInfo;
-import org.slosc.wsdl2rest.wsdl.Param;
+import org.slosc.wsdl2rest.wsdl.*;
 import org.slosc.wsdl2rest.mappings.ResourceMapperImp;
+import org.slosc.wsdl2rest.service.ClassDefinition;
+import org.slosc.wsdl2rest.service.MethodInfo;
+import org.slosc.wsdl2rest.service.Param;
 
 import java.util.List;
 import java.io.File;
@@ -53,7 +53,7 @@ public class ResouceMapperTest extends TestCase {
 
         File [] files = wsdlLoc.listFiles(new WSDLFiles());
 
-        WSDLProcessor wsdlProcessor = new WSDLProcessor();
+        WSDLProcessor wsdlProcessor = new WSDLProcessorImpl();
 
         for(File f:files){
             wsdlProcessor.process(f.getAbsolutePath(), "testUName", "testPassword");

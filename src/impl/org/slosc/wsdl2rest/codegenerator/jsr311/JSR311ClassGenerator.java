@@ -1,12 +1,5 @@
 package org.slosc.wsdl2rest.codegenerator.jsr311;
 
-import org.slosc.wsdl2rest.codegenerator.ClassGeneratorImpl;
-import org.slosc.wsdl2rest.wsdl.ClassDefinition;
-import org.slosc.wsdl2rest.wsdl.MethodInfo;
-import org.slosc.wsdl2rest.wsdl.Param;
-
-import java.util.List;
-
 /*
  * Copyright (c) 2008 SL_OpenSource Consortium
  * All Rights Reserved.
@@ -25,6 +18,12 @@ import java.util.List;
  *
  */
 
+import org.slosc.wsdl2rest.codegenerator.ClassGeneratorImpl;
+import org.slosc.wsdl2rest.service.ClassDefinition;
+import org.slosc.wsdl2rest.service.MethodInfo;
+import org.slosc.wsdl2rest.service.Param;
+
+import java.util.List;
 
 public class JSR311ClassGenerator extends ClassGeneratorImpl {
 
@@ -46,7 +45,7 @@ public class JSR311ClassGenerator extends ClassGeneratorImpl {
         }
     }
 
-    protected void writeMethods(List<? extends  MethodInfo> methods){
+    protected void writeMethods(List<? extends MethodInfo> methods){
         if(methods == null) return;
         for(MethodInfo mInf:methods){
            //write jsr-311 annotations

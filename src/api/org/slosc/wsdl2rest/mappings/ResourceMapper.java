@@ -18,7 +18,7 @@ package org.slosc.wsdl2rest.mappings;
  *
  */
 
-import org.slosc.wsdl2rest.wsdl.ClassDefinition;
+import org.slosc.wsdl2rest.service.ClassDefinition;
 
 import java.util.List;
 

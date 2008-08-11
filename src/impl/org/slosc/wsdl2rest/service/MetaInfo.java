@@ -1,6 +1,7 @@
-package org.slosc.wsdl2rest.wsdl;
+package org.slosc.wsdl2rest.service;
 
-/*Copyright (c) 2008 SL_OpenSource Consortium
+/*
+ * Copyright (c) 2008 SL_OpenSource Consortium
  * All Rights Reserved.
  *
  * Licensed under the Apache License, Version 2.0 (the "License");

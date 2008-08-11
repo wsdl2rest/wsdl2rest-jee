@@ -1,4 +1,4 @@
-package org.slosc.wsdl2rest.codegenerator;
+package org.slosc.wsdl2rest.service;
 
 /*
  * Copyright (c) 2008 SL_OpenSource Consortium
@@ -18,10 +18,23 @@ package org.slosc.wsdl2rest.codegenerator;
  *
  */
 
-import org.slosc.wsdl2rest.service.ClassDefinition;
+import org.slosc.wsdl2rest.service.Param;
 
-import java.util.List;
+public class ParamImpl extends MetaInfo implements Param {
 
-public interface ClassGenerator {
-    void generateClasses(List<ClassDefinition> clazzDef);
+    private String paramType;
+    private String paramName;
+
+    public ParamImpl(String paramType, String paramName) {
+        this.paramType = paramType;
+        this.paramName = paramName;
+    }
+
+    public String getParamType() {
+        return paramType;
+    }
+
+    public String getParamName() {
+        return paramName;
+    }
 }

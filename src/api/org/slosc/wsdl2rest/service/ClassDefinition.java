@@ -1,4 +1,4 @@
-package org.slosc.wsdl2rest.wsdl;
+package org.slosc.wsdl2rest.service;
 
 /*
  * Copyright (c) 2008 SL_OpenSource Consortium
@@ -18,21 +18,16 @@ package org.slosc.wsdl2rest.wsdl;
  *
  */
 
-public class ParamImpl extends MetaInfo implements Param {
+import java.util.List;
 
-    private String paramType;
-    private String paramName;
 
-    public ParamImpl(String paramType, String paramName) {
-        this.paramType = paramType;
-        this.paramName = paramName;
-    }
+public interface ClassDefinition {
 
-    public String getParamType() {
-        return paramType;
-    }
+    String getPackageName();
+    List<String> getImports();
+    String getClassName();
+    List<String> getResources();
+    void setResources(List<String> resources);
 
-    public String getParamName() {
-        return paramName;
-    }
+    List<? extends  MethodInfo> getMethods();
 }

@@ -24,7 +24,10 @@ import java.util.Arrays;
 import java.util.ArrayList;
 import java.util.regex.Pattern;
 import java.util.regex.Matcher;
-import org.slosc.wsdl2rest.wsdl.*;
+
+import org.slosc.wsdl2rest.service.ClassDefinition;
+import org.slosc.wsdl2rest.service.MethodInfo;
+import org.slosc.wsdl2rest.service.Param;
 
 public class ResourceMapperImp implements ResourceMapper {
 

@@ -1,7 +1,5 @@
 package org.slosc.wsdl2rest.codegenerator;
 
-import org.slosc.wsdl2rest.codegenerator.jsr311.JSR311ClassGenerator;
-
 /*
  * Copyright (c) 2008 SL_OpenSource Consortium
  * All Rights Reserved.
@@ -20,6 +18,7 @@ import org.slosc.wsdl2rest.codegenerator.jsr311.JSR311ClassGenerator;
  *
  */
 
+import org.slosc.wsdl2rest.codegenerator.jsr311.JSR311ClassGenerator;
 
 public class ClassGeneratorFactory {
     public static ClassGenerator getClassGenerator(String type){

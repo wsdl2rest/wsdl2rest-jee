@@ -20,7 +20,6 @@ package org.slosc.wsdl2rest;
 
 import junit.framework.*;
 import org.slosc.wsdl2rest.Wsdl2Rest;
-import org.slosc.wsdl2rest.wsdl.WSDLProcessor;
 
 import java.io.File;
 import java.io.FileFilter;

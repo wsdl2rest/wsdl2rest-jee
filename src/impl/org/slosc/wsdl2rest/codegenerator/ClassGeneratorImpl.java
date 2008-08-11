@@ -18,9 +18,9 @@ package org.slosc.wsdl2rest.codegenerator;
  *
  */
 
-import org.slosc.wsdl2rest.wsdl.ClassDefinition;
-import org.slosc.wsdl2rest.wsdl.MethodInfo;
-import org.slosc.wsdl2rest.wsdl.Param;
+import org.slosc.wsdl2rest.service.ClassDefinition;
+import org.slosc.wsdl2rest.service.MethodInfo;
+import org.slosc.wsdl2rest.service.Param;
 import org.slosc.wsdl2rest.util.MessageWriter;
 import org.slosc.wsdl2rest.util.MessageWriterFactory;
 

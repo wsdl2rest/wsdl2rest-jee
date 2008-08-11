@@ -23,18 +23,16 @@ import org.w3c.dom.NodeList;
 import org.w3c.dom.Node;
 import org.apache.wsif.schema.Parser;
 import org.apache.wsif.util.WSIFUtils;
-import org.apache.wsif.WSIFException;
 import org.apache.commons.logging.Log;
 import org.apache.commons.logging.LogFactory;
+import org.slosc.wsdl2rest.service.*;
 
 import javax.wsdl.*;
-import javax.wsdl.extensions.UnknownExtensibilityElement;
 import javax.wsdl.extensions.ExtensibilityElement;
 //import javax.wsdl.extensions.schema.Schema;
 import javax.wsdl.factory.*;
 import javax.wsdl.xml.*;
 import javax.xml.namespace.QName;
-import javax.xml.validation.Schema;
 import java.util.*;
 import java.io.File;
 
@@ -42,9 +40,9 @@ import java.io.File;
  * Following class process WSDL document and generate a list of service interfaces & methods
  * It follows  JSR-101 specifications
  */
-public class WSDLProcessor {
+public class WSDLProcessorImpl implements WSDLProcessor {
 
-    private static Log log = LogFactory.getLog(WSDLProcessor.class);
+    private static Log log = LogFactory.getLog(WSDLProcessorImpl.class);
     
     private static final String xsdURI = "http://www.w3.org/2001/XMLSchema";
 
@@ -64,13 +62,13 @@ public class WSDLProcessor {
 
     private static Map typeRegistry = new HashMap();
 
-    private Map<String, ClassDefinitionImpl> serviceDef = new HashMap<String, ClassDefinitionImpl>();
+    private Map<String, ClassDefinition> serviceDef = new HashMap<String, ClassDefinition>();
     private List<ClassDefinition> typeDefs = new ArrayList<ClassDefinition>();
     private Stack svc = new Stack();
     private Stack operation = new Stack();
 
 
-    public WSDLProcessor(){
+    public WSDLProcessorImpl(){
         //TODO - fix this list
 //        typeRegistry.put("string", String.class.getName());
 //        typeRegistry.put("normalizedString", String.class.getName());
@@ -98,14 +96,14 @@ public class WSDLProcessor {
         return process(wsdlURI);
     }
 
-    public Map process(String wsdl){
+    public Map process(String wsdlURI){
 
         try{
             WSDLFactory factory = WSDLFactory.newInstance();
             WSDLReader reader = factory.newWSDLReader();
             reader.setFeature("javax.wsdl.verbose", true);
             reader.setFeature("javax.wsdl.importDocuments", true);
-            Definition def = reader.readWSDL(null, wsdl);
+            Definition def = reader.readWSDL(null, wsdlURI);
 
             prcessSchemaTypes(def);
             processServices(def);
@@ -123,7 +121,7 @@ public class WSDLProcessor {
         return typeDefs;
     }
 
-    public Map<String, ClassDefinitionImpl> getServiceDef() {
+    public Map<String, ClassDefinition> getServiceDef() {
         return serviceDef;
     }
 
@@ -206,7 +204,7 @@ public class WSDLProcessor {
             String operation = oper.getName();
             log.info("\t\tOperation: " + operation);
             
-            ClassDefinitionImpl svcDef = serviceDef.get(this.svc.peek());
+            ClassDefinitionImpl svcDef = (ClassDefinitionImpl) serviceDef.get(this.svc.peek());
             svcDef.addMethod(operation);
             List paramOrder = oper.getParameterOrdering();
 //            if(paramOrder.get(0))
@@ -312,7 +310,7 @@ public class WSDLProcessor {
                }
            }
            if(indx >= 0){
-               ClassDefinitionImpl svcDef = serviceDef.get(this.svc.peek());
+               ClassDefinitionImpl svcDef = (ClassDefinitionImpl) serviceDef.get(this.svc.peek());
                MethodInfoImpl mInf = svcDef.getMethodInfo(operation);
                switch(type){
                    case 0: mInf.setParams(params); break;
@@ -444,7 +442,7 @@ public class WSDLProcessor {
             usage();
         }
 
-        WSDLProcessor wsdlProcessor = new WSDLProcessor();
+        WSDLProcessor wsdlProcessor = new WSDLProcessorImpl();
         wsdlProcessor.process(args[0], args[1], args[2]);
         List<ClassDefinition> svcClasses = wsdlProcessor.getTypeDefs();
 

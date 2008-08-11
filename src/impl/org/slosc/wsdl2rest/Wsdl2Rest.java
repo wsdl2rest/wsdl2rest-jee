@@ -18,12 +18,12 @@ package org.slosc.wsdl2rest;
  *
  */
 
+import org.slosc.wsdl2rest.wsdl.WSDLProcessorImpl;
+import org.slosc.wsdl2rest.service.ClassDefinition;
 import org.slosc.wsdl2rest.wsdl.WSDLProcessor;
-import org.slosc.wsdl2rest.wsdl.ClassDefinition;
 import org.slosc.wsdl2rest.mappings.ResourceMapperImp;
 import org.slosc.wsdl2rest.mappings.ResourceMapper;
 import org.slosc.wsdl2rest.codegenerator.ClassGenerator;
-import org.slosc.wsdl2rest.codegenerator.ClassGeneratorImpl;
 import org.slosc.wsdl2rest.codegenerator.ClassGeneratorFactory;
 import org.slosc.wsdl2rest.util.MessageWriter;
 import org.slosc.wsdl2rest.util.MessageWriterFactory;
@@ -49,7 +49,7 @@ public class Wsdl2Rest {
     }
 
     public void process(String... args){
-        WSDLProcessor wsdlProcessor = new WSDLProcessor();
+        WSDLProcessor wsdlProcessor = new WSDLProcessorImpl();
         wsdlProcessor.process(args[0], args[1], args[2]);
         List<ClassDefinition> svcClasses = wsdlProcessor.getTypeDefs();
 
@@ -59,16 +59,15 @@ public class Wsdl2Rest {
         
         File clazzFileLocation = new File(args[3]);
         if(!clazzFileLocation.exists()) msgWriter.write(MessageWriter.TYPE.WARN, "Existing files will be over writtern ...");
-
+        String outputPath = args[3] + File.separator;
         clazzFileLocation.delete();
         clazzFileLocation.mkdirs();
 
-        String outputPath = args[3] + File.separator;
         ClassGenerator gen = ClassGeneratorFactory.getClassGenerator("jsr-311", outputPath);
         gen.generateClasses(svcClasses);
     }
 
     private static void usage() {
-        System.out.println("Usage: java -cp <classpath> org.slosc.wsdl2rest.Wsdl2Rest <wsdl-file> <username> <password>");
+        System.out.println("Usage: java -cp <classpath> org.slosc.wsdl2rest.Wsdl2Rest <wsdl-file> <username> <password> <outputpath>");
     }
 }
