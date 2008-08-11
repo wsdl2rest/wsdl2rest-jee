@@ -29,7 +29,14 @@ import org.slosc.wsdl2rest.wsdl.*;
 public class ResourceMapperImp implements ResourceMapper {
 
     private List<String> resources;
-    private Pattern pattern = Pattern.compile("([A-Z][a-z]+)|([a-z]+)");
+    private String httpGetWords 	= "([Gg]et|[Rr]ead|[Ff]etch)";
+    private String httpPostWords 	= "([Pp]ost|[Aa]dd|[Cc]reate)";
+    private String httpDeleteWords 	= "([Dd]elete|[Rr]emove)";
+    private String httpPutWords 	= "([Pp]ut|[Uu]pdate|[Cc]hange|[Mm]odify)";
+    private String httpAllWords		= httpGetWords + "|" + httpPostWords + "|" + httpDeleteWords + "|" + httpPutWords;
+    
+    private Pattern httpMethodPattern = Pattern.compile(httpAllWords);
+    private Pattern resourcePattern = Pattern.compile("([A-Z][a-z]+)|([a-z]+)&&[^"+httpAllWords+"]");
 
     public ResourceMapperImp(){
         
@@ -44,13 +51,19 @@ public class ResourceMapperImp implements ResourceMapper {
     }
 	
 	public void mapResources(String resourceName) {
-//        Pattern pattern = Pattern.compile("([A-Z][a-z]+)|([a-z]+)");
-        Matcher matcher = pattern.matcher(resourceName);
-        while (matcher.find()) {
-        	if (!matcher.group().equals("")){
-        		addResource(matcher.group());
+//        Pattern resourcePattern = Pattern.compile("([A-Z][a-z]+)|([a-z]+)");
+        Matcher resourceMatcher = resourcePattern.matcher(resourceName);
+        while (resourceMatcher.find()) {
+        	if (!resourceMatcher.group().equals("")){
+        		addResource(resourceMatcher.group());
         	}
         }
+//        Matcher httpMethodMatcher = httpMethodPattern.matcher(resourceName);
+//        while (httpMethodMatcher.find()) {
+//        	if (!httpMethodMatcher.group().equals("")){
+//        		addResource(httpMethodMatcher.group());
+//        	}
+//        }
 	}
 	
 	public String toString() {
@@ -63,21 +76,19 @@ public class ResourceMapperImp implements ResourceMapper {
         for(ClassDefinition clazzDef : svcClasses){
         	// Don't break up class name
         	if (clazzDef.getClassName()!=null){
-        		clazzDef.setResourceList(Arrays.asList(clazzDef.getClassName()));
+        		clazzDef.setResources(Arrays.asList(clazzDef.getClassName()));
                 for(MethodInfo mInf:clazzDef.getMethods()){
-                    // Parse the method name
-                    //ResourceMapperImp rm = new ResourceMapperImp(mInf.getMethodName());
-                    //mInf.setResourceList(rm.getResources());
                     if (mInf.getMethodName()!=null){
+                        // Parse the method name
                         resources = new ArrayList<String>();
                         mapResources(mInf.getMethodName());
-                        mInf.setResourceList(resources);
+                        mInf.setResources(resources);
 
                         if(mInf.getParams()!=null){
                             for(Param p : mInf.getParams()){
                                 // Don't break up parameter name
                                 if (p.getParamName()!=null)
-                                    p.setResourceList(Arrays.asList(p.getParamName()));
+                                    p.setResources(Arrays.asList(p.getParamName()));
                             }
                         }
                     }

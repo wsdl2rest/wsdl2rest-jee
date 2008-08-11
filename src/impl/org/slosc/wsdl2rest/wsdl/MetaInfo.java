@@ -19,14 +19,32 @@ package org.slosc.wsdl2rest.wsdl;
 
 import java.util.List;
 
-class ResourceInfo {
+class MetaInfo {
 	private List<String> resources;
+	private String httpMethod;
+	private String mimeType;
 	
-	public List<String> getResourceList() {
-		return this.resources;
+	public String getHttpMethod() {
+		return httpMethod;
 	}
 
-	public void setResourceList(List<String> rsc) {
-		this.resources = rsc;
+	public void setHttpMethod(String httpMethod) {
+		this.httpMethod = httpMethod;
+	}
+
+	public String getMimeType() {
+		return mimeType;
+	}
+
+	public void setMimeType(String mimeType) {
+		this.mimeType = mimeType;
+	}
+
+	public List<String> getResources() {
+		return resources;
+	}
+
+	public void setResources(List<String> resources) {
+		this.resources = resources;
 	}
 }

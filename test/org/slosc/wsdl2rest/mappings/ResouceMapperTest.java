@@ -67,7 +67,7 @@ public class ResouceMapperTest extends TestCase {
                 System.out.println("\npackage "+clazzDef.getPackageName()+";");
                 // Get resources of package name
                 System.out.print("Resources for " + clazzDef.getPackageName() + ":");
-                System.out.println(clazzDef.getResourceList().toString() + "\n\n");
+                System.out.println(clazzDef.getResources().toString() + "\n\n");
                 
                 if(clazzDef.getImports() != null){
                     for(String impo : clazzDef.getImports()){
@@ -91,7 +91,7 @@ public class ResouceMapperTest extends TestCase {
                     System.out.println(")"+excep+";");
                     // Get resources of methods
                     System.out.print("\t"+"Resources for " + mInf.getMethodName() + ":");
-                    System.out.println(mInf.getResourceList().toString());
+                    System.out.println(mInf.getResources().toString());
                 }
                 System.out.println("}");
             }

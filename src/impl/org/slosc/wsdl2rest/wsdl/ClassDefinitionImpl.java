@@ -25,7 +25,7 @@ import java.net.MalformedURLException;
 
 
 
-public class ClassDefinitionImpl extends ResourceInfo implements ClassDefinition {
+public class ClassDefinitionImpl extends MetaInfo implements ClassDefinition {
     
     private String packageName;
     private List<String> imports;

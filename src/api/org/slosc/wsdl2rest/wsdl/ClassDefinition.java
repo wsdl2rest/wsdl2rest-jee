@@ -26,8 +26,8 @@ public interface ClassDefinition {
     String getPackageName();
     List<String> getImports();
     String getClassName();
-    List<String> getResourceList();
-    void setResourceList(List<String> resources);
+    List<String> getResources();
+    void setResources(List<String> resources);
 
     List<? extends  MethodInfo> getMethods();
 }
