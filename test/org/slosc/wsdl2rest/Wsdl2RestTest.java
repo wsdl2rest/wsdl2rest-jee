@@ -20,19 +20,12 @@ package org.slosc.wsdl2rest;
 
 import junit.framework.*;
 import org.slosc.wsdl2rest.Wsdl2Rest;
+import org.slosc.wsdl2rest.util.WSDLFileFilter;
 
 import java.io.File;
-import java.io.FileFilter;
 
 public class Wsdl2RestTest extends TestCase {
     Wsdl2Rest wsdl2Rest;
-
-    class WSDLFiles implements FileFilter {
-        public boolean accept(File pathname) {
-//            System.out.println("Processin wsdl: "+pathname.getName());
-            return pathname.getName().endsWith(".wsdl");
-        }
-    }
 
     public void testMain() throws Exception {
         String loc = System.getProperty("org.slosc.wsdl2rest.wsdl.wsdlLocations");
@@ -45,7 +38,7 @@ public class Wsdl2RestTest extends TestCase {
         File wsdlLoc = new File(loc);
         if(!wsdlLoc.isDirectory()) return;
 
-        File [] files = wsdlLoc.listFiles(new WSDLFiles());
+        File [] files = wsdlLoc.listFiles(new WSDLFileFilter());
         Wsdl2Rest wsdl2rest = new Wsdl2Rest();
         for(File f:files){
             wsdl2rest.process(f.getAbsolutePath(), "testUName", "testPassword", targetLoc);

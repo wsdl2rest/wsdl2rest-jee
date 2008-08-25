@@ -25,6 +25,7 @@ import org.slosc.wsdl2rest.mappings.ResourceMapperImp;
 import org.slosc.wsdl2rest.service.ClassDefinition;
 import org.slosc.wsdl2rest.service.MethodInfo;
 import org.slosc.wsdl2rest.service.Param;
+import org.slosc.wsdl2rest.util.WSDLFileFilter;
 
 import java.util.List;
 import java.io.File;
@@ -32,13 +33,6 @@ import java.io.FileFilter;
 
 public class ResouceMapperTest extends TestCase {
     WSDLProcessor wsdlProcessor;
-
-    class WSDLFiles implements FileFilter {
-        public boolean accept(File pathname) {
-//            System.out.println("Processin wsdl: "+pathname.getName());
-            return pathname.getName().endsWith(".wsdl");
-        }
-    }
 
     public void testProcess() throws Exception {
 //        System.out.println("testProcess:");
@@ -51,7 +45,7 @@ public class ResouceMapperTest extends TestCase {
         File wsdlLoc = new File(loc);
         if(!wsdlLoc.isDirectory()) return;
 
-        File [] files = wsdlLoc.listFiles(new WSDLFiles());
+        File [] files = wsdlLoc.listFiles(new WSDLFileFilter());
 
         WSDLProcessor wsdlProcessor = new WSDLProcessorImpl();
 

@@ -27,6 +27,7 @@ import org.slosc.wsdl2rest.codegenerator.ClassGenerator;
 import org.slosc.wsdl2rest.codegenerator.ClassGeneratorFactory;
 import org.slosc.wsdl2rest.util.MessageWriter;
 import org.slosc.wsdl2rest.util.MessageWriterFactory;
+import org.slosc.wsdl2rest.ui.Wsdl2RestForm;
 
 import java.util.List;
 import java.io.*;
@@ -35,31 +36,28 @@ import java.io.*;
 public class Wsdl2Rest {
 
     private MessageWriter msgWriter = MessageWriterFactory.getMessageWriter();
-
-    public static void main(String [] args){
-
-        if(args.length < 4){
-            usage();
-        }
-
-        Wsdl2Rest wsdl2rest = new Wsdl2Rest();
-
-        wsdl2rest.process(args);
-
-    }
+    private List<ClassDefinition> svcClasses; 
 
     public void process(String... args){
         WSDLProcessor wsdlProcessor = new WSDLProcessorImpl();
         wsdlProcessor.process(args[0], args[1], args[2]);
-        List<ClassDefinition> svcClasses = wsdlProcessor.getTypeDefs();
+        svcClasses = wsdlProcessor.getTypeDefs();
 
         // Assign resources to Class, method and parameter definitions.
         ResourceMapper resMapper = new ResourceMapperImp();
         resMapper.assignResources(svcClasses);
+    }
+
+    public List<ClassDefinition> getSvcClasses() {
+        return svcClasses;
+    }
+
+    public void generateClasses(String toLocation){
+        if(toLocation == null || toLocation.length() == 0) return;
         
-        File clazzFileLocation = new File(args[3]);
+        File clazzFileLocation = new File(toLocation);
         if(!clazzFileLocation.exists()) msgWriter.write(MessageWriter.TYPE.WARN, "Existing files will be over writtern ...");
-        String outputPath = args[3] + File.separator;
+        String outputPath = toLocation + File.separator;
         clazzFileLocation.delete();
         clazzFileLocation.mkdirs();
 
@@ -69,5 +67,19 @@ public class Wsdl2Rest {
 
     private static void usage() {
         System.out.println("Usage: java -cp <classpath> org.slosc.wsdl2rest.Wsdl2Rest <wsdl-file> <username> <password> <outputpath>");
+    }
+
+    public static void main(String [] args){
+
+        if(args.length < 4){
+            usage();
+           System.exit(-1);
+        }
+
+        Wsdl2Rest wsdl2rest = new Wsdl2Rest();
+
+        wsdl2rest.process(args);
+        wsdl2rest.generateClasses(args[3]);
+
     }
 }

@@ -21,10 +21,8 @@ package org.slosc.wsdl2rest.ui;
 import org.slosc.wsdl2rest.service.ClassDefinition;
 
 import javax.swing.*;
-import javax.swing.tree.DefaultMutableTreeNode;
-import javax.swing.tree.TreeSelectionModel;
-import javax.swing.tree.DefaultTreeCellRenderer;
-import javax.swing.tree.TreeNode;
+import javax.swing.filechooser.FileFilter;
+import javax.swing.tree.*;
 import javax.swing.event.TreeSelectionListener;
 import javax.swing.event.TreeSelectionEvent;
 import java.util.List;
@@ -36,6 +34,8 @@ import java.io.File;
 import org.slosc.wsdl2rest.service.ClassDefinition;
 import org.slosc.wsdl2rest.service.MethodInfo;
 import org.slosc.wsdl2rest.service.Param;
+import org.slosc.wsdl2rest.util.WSDLFileFilter;
+import org.slosc.wsdl2rest.Wsdl2Rest;
 
 public class Wsdl2RestForm extends JPanel
                       implements TreeSelectionListener, ActionListener {
@@ -43,18 +43,19 @@ public class Wsdl2RestForm extends JPanel
     private JTree serviceMethods;
     private JTable methodDetails;
 
-    protected List<ClassDefinition> svcClasses;
-    protected ClassDefinition clazzDef;
+    protected List<ClassDefinition> svcClasses = null;
+    protected ClassDefinition clazzDef = null;
     private static String lineStyle = "Horizontal";
     protected JTextField fileName;
     private JFileChooser fc;
     private JButton openButton;
+    private Wsdl2Rest wsdl2rest;
+    private DefaultMutableTreeNode topServiceTree;
 
 
-    public Wsdl2RestForm(List<ClassDefinition> svcClassesDefs) {
+    public Wsdl2RestForm() {
 
         super(new GridLayout(1,0));
-        svcClasses = svcClassesDefs;
         
         fileName = new JTextField(20);
         fileName.addActionListener(this);
@@ -68,25 +69,35 @@ public class Wsdl2RestForm extends JPanel
 
         textControlsPane.setLayout(gridbag);
 
-        c.anchor = GridBagConstraints.EAST;
-        c.gridwidth = GridBagConstraints.RELATIVE; //next-to-last
-        c.fill = GridBagConstraints.NONE;      //reset to default
-        c.weightx = 0.0;                       //reset to default
+//        c.anchor = GridBagConstraints.EAST;
+//        c.gridwidth = GridBagConstraints.RELATIVE; //next-to-last
+//        c.fill = GridBagConstraints.NONE;      //reset to default
+//        c.weightx = 0.0;                       //reset to default
+        c.gridx = 0;
+        c.gridy = 0;
+
         textControlsPane.add(textFieldLabel, c);
-        //c.anchor = GridBagConstraints.CENTER;
-        c.gridwidth = GridBagConstraints.RELATIVE;    
+//        //c.anchor = GridBagConstraints.CENTER;
+        c.gridwidth = GridBagConstraints.RELATIVE;
         c.fill = GridBagConstraints.HORIZONTAL;
         c.weightx = 1.0;
+        c.gridx = 1;
+        c.gridy = 0;
         textControlsPane.add(fileName, c);
 
         //Create a file chooser
         fc = new JFileChooser();
+        FileFilter filter = new WSDLFileFilter();
+        fc.setFileFilter(filter);
         openButton = new JButton("Browse");
         openButton.addActionListener(this);
 
-        c.gridwidth = GridBagConstraints.RELATIVE;     //end row
-        c.fill = GridBagConstraints.HORIZONTAL;
-        c.weightx = 2.0;
+        c.gridwidth = GridBagConstraints.RELATIVE; //next-to-last
+        c.fill = GridBagConstraints.NONE;      //reset to default
+        c.anchor = GridBagConstraints.WEST;
+//        c.weightx = 2.0;
+        c.gridx = 2;
+        c.gridy = 0;
         textControlsPane.add(openButton, c);
 
         textControlsPane.setBorder(
@@ -94,11 +105,9 @@ public class Wsdl2RestForm extends JPanel
                                 BorderFactory.createTitledBorder("WSDL"),
                                 BorderFactory.createEmptyBorder(5,5,5,5)));
 
-        DefaultMutableTreeNode top =
-            new DefaultMutableTreeNode("Webservice Methods");
-       //generateServiceTree(top);
+        topServiceTree =  new DefaultMutableTreeNode("Webservice Methods");
         //Create a tree that allows one selection at a time.
-        serviceMethods = new JTree(top);
+        serviceMethods = new JTree(topServiceTree);
         serviceMethods.getSelectionModel().setSelectionMode
                 (TreeSelectionModel.SINGLE_TREE_SELECTION);
 
@@ -129,7 +138,7 @@ public class Wsdl2RestForm extends JPanel
         add(splitPane);
     }
 
-    public static void createAndShowGUI(List<ClassDefinition> svcClassesDefs) {
+    public static void createAndShowGUI() {
 //        try {
 //            UIManager.setLookAndFeel(
 //                UIManager.getSystemLookAndFeelClassName());
@@ -142,7 +151,7 @@ public class Wsdl2RestForm extends JPanel
         frame.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
 
         //Create and set up the content pane.
-        Wsdl2RestForm newContentPane = new Wsdl2RestForm(svcClassesDefs);
+        Wsdl2RestForm newContentPane = new Wsdl2RestForm();
         newContentPane.setOpaque(true); //content panes must be opaque
         frame.setContentPane(newContentPane);
 
@@ -151,15 +160,22 @@ public class Wsdl2RestForm extends JPanel
         frame.setVisible(true);
     }
 
-    public void generateServiceTree(DefaultMutableTreeNode top) {
-        for(ClassDefinition classDef : svcClasses){
+    public void generateServiceTree() {
+       if(fileName.getText() == null && fileName.getText().length() == 0) return;
+        
+       wsdl2rest = new Wsdl2Rest();
+       wsdl2rest.process(fileName.getText(), "", "");
+        svcClasses = wsdl2rest.getSvcClasses();
+
+       for(ClassDefinition classDef : svcClasses){
             this.clazzDef = classDef;
             String packageName = clazzDef.getPackageName();
 
             if(clazzDef.getClassName() != null){
 
                 DefaultMutableTreeNode svcClass = new DefaultMutableTreeNode(packageName + "."+clazzDef.getClassName());
-                top.add(svcClass);
+                topServiceTree.add(svcClass);
+                //serviceMethods.scrollPathToVisible(new TreePath(svcClass.getPath()));
                 
                 writeMethods(clazzDef.getMethods(), svcClass);
             }
@@ -168,10 +184,15 @@ public class Wsdl2RestForm extends JPanel
 
     protected void writeMethods(List<? extends  MethodInfo> methods, DefaultMutableTreeNode svcClass){
         if(methods == null) return;
+        boolean visible = false;
         for(MethodInfo mInf:methods){
             DefaultMutableTreeNode method = new DefaultMutableTreeNode(mInf.getMethodName());
             svcClass.add(method);
-
+//            if(!visible){
+//                visible = true;
+//                serviceMethods.scrollPathToVisible(new TreePath(method.getParent()));
+//            }
+            
 //            ImageIcon leafIcon = new ImageIcon("images/middle.gif");
 //            if (leafIcon != null) {
 //                DefaultTreeCellRenderer renderer =
@@ -205,7 +226,7 @@ public class Wsdl2RestForm extends JPanel
         if(params != null) {
             int i=0; int size = params.size();
             for(Param p : params){
-                String comma = (++i != size)?", ":"";
+//                String comma = (++i != size)?", ":"";
 //                writer.print(p.getParamType()+" "+p.getParamName()+comma);
             }
         }
@@ -215,20 +236,36 @@ public class Wsdl2RestForm extends JPanel
 
     }
 
+    class WSDLFileFilter  extends FileFilter {
+        public WSDLFileFilter() {
+        }
+
+        public boolean accept(File pathname) {
+            return pathname.isDirectory() || pathname.isFile() && pathname.getName().endsWith(".wsdl");
+        }
+
+        public String getDescription() {
+            return "WSDL Files";
+        }
+    }
 
     public void actionPerformed(ActionEvent e) {
 
         //Handle open button action.
         if (e.getSource() == openButton) {
+
             int returnVal = fc.showOpenDialog(this);
 
             if (returnVal == JFileChooser.APPROVE_OPTION) {
                 File file = fc.getSelectedFile();
                 //This is where a real application would open the file.
                 fileName.setText(file.getAbsolutePath());
+                generateServiceTree();
+            } else{
+                JOptionPane.showMessageDialog(this, "Please select a WSDL file..."); // ,"warning",  JOptionPane.WARNING_MESSAGE);
             }
-        //Handle save button action.
-        //} else if (e.getSource() == ) {
+
+            //else if (e.getSource() == ) {
 
         }
     }
@@ -236,7 +273,7 @@ public class Wsdl2RestForm extends JPanel
     public static void main(String[] args) {
         javax.swing.SwingUtilities.invokeLater(new Runnable() {
             public void run() {
-                Wsdl2RestForm.createAndShowGUI(null);
+                createAndShowGUI();
             }
         });
 
