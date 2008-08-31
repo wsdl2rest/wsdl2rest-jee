@@ -28,4 +28,6 @@ public interface MethodInfo {
     String getExceptionType();
     List<String> getResources();
     void setResources(List<String> resources);
+    String getHttpMethod();
+    void setHttpMethod(String httpMethod);
 }

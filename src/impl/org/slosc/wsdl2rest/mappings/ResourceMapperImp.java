@@ -32,14 +32,21 @@ import org.slosc.wsdl2rest.service.Param;
 public class ResourceMapperImp implements ResourceMapper {
 
     private List<String> resources;
-    private String httpGetWords 	= "([Gg]et|[Rr]ead|[Ff]etch)";
-    private String httpPostWords 	= "([Pp]ost|[Aa]dd|[Cc]reate)";
-    private String httpDeleteWords 	= "([Dd]elete|[Rr]emove)";
-    private String httpPutWords 	= "([Pp]ut|[Uu]pdate|[Cc]hange|[Mm]odify)";
-    private String httpAllWords		= httpGetWords + "|" + httpPostWords + "|" + httpDeleteWords + "|" + httpPutWords;
+    private String httpMethod;
     
-    private Pattern httpMethodPattern = Pattern.compile(httpAllWords);
-    private Pattern resourcePattern = Pattern.compile("([A-Z][a-z]+)|([a-z]+)&&[^"+httpAllWords+"]");
+    private String httpGetWords 	= "[Gg]et|[Rr]ead|[Ff]etch";
+    private String httpPostWords 	= "[Pp]ost|[Aa]dd|[Cc]reate";
+    private String httpDeleteWords 	= "[Dd]elete|[Rr]emove";
+    private String httpPutWords 	= "[Pp]ut|[Ss]et|[Uu]pdate|[Cc]hange|[Mm]odify";
+    private String httpAllWords		= httpGetWords + "|" + httpPostWords + "|" + httpDeleteWords + "|" + httpPutWords;
+    private String notHttpAllWords	= "(?!"+httpAllWords+").*";
+    
+    private Pattern httpGetWordsPattern 	= Pattern.compile(httpGetWords);
+    private Pattern httpPostWordsPattern 	= Pattern.compile(httpPostWords);
+    private Pattern httpDeleteWordsPattern 	= Pattern.compile(httpDeleteWords);
+    private Pattern httpPutWordsPattern 	= Pattern.compile(httpPutWords);
+//    private Pattern resourcePattern = Pattern.compile("([A-Z][a-z]+)&&"+notHttpAllWords+"|([a-z]+)&&"+notHttpAllWords);
+    private Pattern resourcePattern = Pattern.compile("[A-Z][a-z]+|[a-z]+");
 
     public ResourceMapperImp(){
         
@@ -56,17 +63,36 @@ public class ResourceMapperImp implements ResourceMapper {
 	public void mapResources(String resourceName) {
 //        Pattern resourcePattern = Pattern.compile("([A-Z][a-z]+)|([a-z]+)");
         Matcher resourceMatcher = resourcePattern.matcher(resourceName);
+        Matcher httpMethodMatcher;
         while (resourceMatcher.find()) {
         	if (!resourceMatcher.group().equals("")){
         		addResource(resourceMatcher.group());
+
+        		httpMethodMatcher = httpGetWordsPattern.matcher(resourceMatcher.group());
+        		if (httpMethodMatcher.find() && !httpMethodMatcher.group().equals("")) {
+        			this.httpMethod = "GET";
+        			return;
+        		}
+        		httpMethodMatcher.usePattern(httpPostWordsPattern);
+        		if (httpMethodMatcher.find() && !httpMethodMatcher.group().equals("")) {
+        			this.httpMethod = "POST";
+        			return;
+        		}
+        		httpMethodMatcher.usePattern(httpDeleteWordsPattern);
+        		if (httpMethodMatcher.find() && !httpMethodMatcher.group().equals("")) {
+        			this.httpMethod = "DELETE";
+        			return;
+        		}
+        		httpMethodMatcher.usePattern(httpPutWordsPattern);
+        		if (httpMethodMatcher.find() && !httpMethodMatcher.group().equals("")) {
+        			this.httpMethod = "PUT";
+        			return;
+        		}
+        		
+        		// Set default http method as GET
+        		this.httpMethod = "GET";
         	}
         }
-//        Matcher httpMethodMatcher = httpMethodPattern.matcher(resourceName);
-//        while (httpMethodMatcher.find()) {
-//        	if (!httpMethodMatcher.group().equals("")){
-//        		addResource(httpMethodMatcher.group());
-//        	}
-//        }
 	}
 	
 	public String toString() {
@@ -86,6 +112,7 @@ public class ResourceMapperImp implements ResourceMapper {
                         resources = new ArrayList<String>();
                         mapResources(mInf.getMethodName());
                         mInf.setResources(resources);
+                        mInf.setHttpMethod(httpMethod);
 
                         if(mInf.getParams()!=null){
                             for(Param p : mInf.getParams()){

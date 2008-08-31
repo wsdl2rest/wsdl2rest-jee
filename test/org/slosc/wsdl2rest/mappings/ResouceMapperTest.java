@@ -86,6 +86,8 @@ public class ResouceMapperTest extends TestCase {
                     // Get resources of methods
                     System.out.print("\t"+"Resources for " + mInf.getMethodName() + ":");
                     System.out.println(mInf.getResources().toString());
+                    System.out.print("\t"+"HTTP Method for " + mInf.getMethodName() + ":");
+                    System.out.println(mInf.getHttpMethod());
                 }
                 System.out.println("}");
             }
