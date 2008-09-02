@@ -46,7 +46,7 @@ public class ResourceMapperImp implements ResourceMapper {
     private Pattern httpDeleteWordsPattern 	= Pattern.compile(httpDeleteWords);
     private Pattern httpPutWordsPattern 	= Pattern.compile(httpPutWords);
 //    private Pattern resourcePattern = Pattern.compile("([A-Z][a-z]+)&&"+notHttpAllWords+"|([a-z]+)&&"+notHttpAllWords);
-    private Pattern resourcePattern = Pattern.compile("[A-Z][a-z]+|[a-z]+");
+    private Pattern resourcePattern = Pattern.compile("[a-z]+|([A-Z][a-z]+)*");
 
     public ResourceMapperImp(){
         
@@ -64,34 +64,43 @@ public class ResourceMapperImp implements ResourceMapper {
 //        Pattern resourcePattern = Pattern.compile("([A-Z][a-z]+)|([a-z]+)");
         Matcher resourceMatcher = resourcePattern.matcher(resourceName);
         Matcher httpMethodMatcher;
+        boolean foundHttpMethod = false;
+        
         while (resourceMatcher.find()) {
         	if (!resourceMatcher.group().equals("")){
         		addResource(resourceMatcher.group());
 
-        		httpMethodMatcher = httpGetWordsPattern.matcher(resourceMatcher.group());
-        		if (httpMethodMatcher.find() && !httpMethodMatcher.group().equals("")) {
-        			this.httpMethod = "GET";
-        			return;
-        		}
-        		httpMethodMatcher.usePattern(httpPostWordsPattern);
-        		if (httpMethodMatcher.find() && !httpMethodMatcher.group().equals("")) {
-        			this.httpMethod = "POST";
-        			return;
-        		}
-        		httpMethodMatcher.usePattern(httpDeleteWordsPattern);
-        		if (httpMethodMatcher.find() && !httpMethodMatcher.group().equals("")) {
-        			this.httpMethod = "DELETE";
-        			return;
-        		}
-        		httpMethodMatcher.usePattern(httpPutWordsPattern);
-        		if (httpMethodMatcher.find() && !httpMethodMatcher.group().equals("")) {
-        			this.httpMethod = "PUT";
-        			return;
-        		}
-        		
-        		// Set default http method as GET
-        		this.httpMethod = "GET";
-        	}
+                if(!foundHttpMethod){
+                    httpMethodMatcher = httpGetWordsPattern.matcher(resourceMatcher.group());
+                    if (httpMethodMatcher.find() && !httpMethodMatcher.group().equals("")) {
+                        this.httpMethod = "GET";
+                        foundHttpMethod = true;
+                        continue;
+                    }
+                    httpMethodMatcher.usePattern(httpPostWordsPattern);
+                    if (httpMethodMatcher.find() && !httpMethodMatcher.group().equals("")) {
+                        this.httpMethod = "POST";
+                        foundHttpMethod = true;
+                        continue;
+                    }
+                    httpMethodMatcher.usePattern(httpDeleteWordsPattern);
+                    if (httpMethodMatcher.find() && !httpMethodMatcher.group().equals("")) {
+                        this.httpMethod = "DELETE";
+                        foundHttpMethod = true;
+                        continue;
+                    }
+                    httpMethodMatcher.usePattern(httpPutWordsPattern);
+                    if (httpMethodMatcher.find() && !httpMethodMatcher.group().equals("")) {
+                        this.httpMethod = "PUT";
+                        foundHttpMethod = true;
+                        continue;
+                    }
+
+                    // Set default http method as GET
+                    if(httpMethod == null)
+                        this.httpMethod = "GET";
+                }
+            }
         }
 	}
 	

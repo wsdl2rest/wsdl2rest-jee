@@ -51,14 +51,17 @@ public class JSR311ClassGenerator extends ClassGeneratorImpl {
            //write jsr-311 annotations
            List<String> resouceInf = mInf.getResources();
            if(resouceInf != null && resouceInf.size() >= 2){
-               if(mInf.getResources().get(0).equals("get"))
-                    writer.println("\t@GET");
-               else writer.println("\t@POST");
+//               if(mInf.getResources().get(0).equals("get"))
+//                    writer.println("\t@GET");
+//               else writer.println("\t@POST");
+               writer.println("\t@"+mInf.getHttpMethod());
                StringBuilder path = new StringBuilder();
                for(int i=1;i<resouceInf.size();i++){
                    path.append(resouceInf.get(i));
                }
                writer.println("\t@Path(\""+path.toString().toLowerCase()+"\")");
+           }else{
+               
            }
            writeMethod(mInf);
         }

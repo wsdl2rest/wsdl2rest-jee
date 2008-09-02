@@ -23,6 +23,8 @@ import org.slosc.wsdl2rest.service.MethodInfo;
 import org.slosc.wsdl2rest.service.Param;
 import org.slosc.wsdl2rest.util.MessageWriter;
 import org.slosc.wsdl2rest.util.MessageWriterFactory;
+import org.apache.commons.logging.Log;
+import org.apache.commons.logging.LogFactory;
 
 import java.util.List;
 import java.io.*;
@@ -30,6 +32,7 @@ import java.io.*;
 
 public class ClassGeneratorImpl implements ClassGenerator {
 
+    private static Log log = LogFactory.getLog(ClassGeneratorImpl.class);
     protected MessageWriter msgWriter = MessageWriterFactory.getMessageWriter();
 
     protected String outputPath;
@@ -61,7 +64,7 @@ public class ClassGeneratorImpl implements ClassGenerator {
                 clazzFile = new File(outputPath +packageName+File.separatorChar+clazzDef.getClassName()+".java");
                 writer = new PrintWriter(new BufferedWriter(new FileWriter(clazzFile)));
             } catch (IOException e) {
-                e.printStackTrace();
+                log.warn(e.getStackTrace());
                 continue;
             }
 

@@ -41,7 +41,8 @@ public class Wsdl2RestTest extends TestCase {
         File [] files = wsdlLoc.listFiles(new WSDLFileFilter());
         Wsdl2Rest wsdl2rest = new Wsdl2Rest();
         for(File f:files){
-            wsdl2rest.process(f.getAbsolutePath(), "testUName", "testPassword", targetLoc);
+            wsdl2rest.process(f.getAbsolutePath(), "testUName", "testPassword");
+            wsdl2rest.generateClasses(targetLoc);
         }
     }
 }
