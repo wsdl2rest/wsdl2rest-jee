@@ -68,8 +68,6 @@ public class ResourceMapperImp implements ResourceMapper {
         
         while (resourceMatcher.find()) {
         	if (!resourceMatcher.group().equals("")){
-        		addResource(resourceMatcher.group());
-
                 if(!foundHttpMethod){
                     httpMethodMatcher = httpGetWordsPattern.matcher(resourceMatcher.group());
                     if (httpMethodMatcher.find() && !httpMethodMatcher.group().equals("")) {
@@ -100,6 +98,7 @@ public class ResourceMapperImp implements ResourceMapper {
                     if(httpMethod == null)
                         this.httpMethod = "GET";
                 }
+        		addResource(resourceMatcher.group());
             }
         }
 	}
