@@ -76,7 +76,14 @@
 
   </target>
   
-  
+  <target name="testui" depends="compile" description="compile and run UI" >
+    <java classname="org.slosc.wsdl2rest.ui.Wsdl2RestForm" fork="yes">
+        <classpath>
+          <pathelement location="${target}"/>
+          <fileset refid="allLibs"/>
+        </classpath>
+    </java>
+  </target>
 
   <target name="dist" depends="compile" description="generate the distribution" >
     <!-- Create the distribution directory -->
