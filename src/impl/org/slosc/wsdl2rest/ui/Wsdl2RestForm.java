@@ -21,6 +21,7 @@ package org.slosc.wsdl2rest.ui;
 import org.slosc.wsdl2rest.service.ClassDefinition;
 
 import javax.swing.*;
+import javax.swing.border.TitledBorder;
 import javax.swing.filechooser.FileFilter;
 import javax.swing.tree.*;
 import javax.swing.event.TreeSelectionListener;
@@ -51,6 +52,10 @@ public class Wsdl2RestForm extends JPanel
     private JButton openButton;
     private Wsdl2Rest wsdl2rest;
     private DefaultMutableTreeNode topServiceTree;
+
+    private JComboBox resources;
+	private JComboBox httpMethod;
+	private JComboBox mimeType;
 
 
     public Wsdl2RestForm() {
@@ -119,23 +124,54 @@ public class Wsdl2RestForm extends JPanel
         //Create the scroll pane and add the tree to it.
         JScrollPane treeView = new JScrollPane(serviceMethods);
 
+        JSplitPane mainSplitPane = new JSplitPane(JSplitPane.HORIZONTAL_SPLIT);
+        mainSplitPane.setLeftComponent(treeView);
+        mainSplitPane.setRightComponent(addEditPane());
+        mainSplitPane.setDividerLocation(300);
+
         //Add the scroll panes to a split pane.
         JSplitPane splitPane = new JSplitPane(JSplitPane.VERTICAL_SPLIT);
 
         splitPane.setTopComponent(textControlsPane);
-        splitPane.setBottomComponent(treeView);
+        splitPane.setBottomComponent(mainSplitPane);
 
-        Dimension minimumSize = new Dimension(500, 300);
+        Dimension minimumSize = new Dimension(300, 300);
         treeView.setMinimumSize(minimumSize);
         splitPane.setDividerLocation(100); //XXX: ignored in some releases
                                            //of Swing. bug 4101306
         //workaround for bug 4101306:
         //treeView.setPreferredSize(new Dimension(100, 100));
 
-        splitPane.setPreferredSize(new Dimension(500, 300));
+        splitPane.setPreferredSize(new Dimension(700, 400));
 
         //Add the split pane to this panel.
         add(splitPane);
+    }
+
+    private Component addEditPane() {
+        JPanel mainEditPane = new JPanel(new GridLayout(3,2));
+        JPanel editPane = new JPanel(new GridLayout(3,2));
+        JLabel lbl1 = new JLabel("Resources: ");
+        lbl1.setLabelFor(resources);
+        JLabel lbl2 = new JLabel("HTTP Method: ");
+        lbl2.setLabelFor(httpMethod);
+        JLabel lbl3 = new JLabel("MIME type: ");
+        lbl3.setLabelFor(mimeType);
+        resources = new JComboBox();
+        httpMethod = new JComboBox();
+        mimeType = new JComboBox();
+
+        editPane.add(lbl1);
+        editPane.add(resources);
+        editPane.add(lbl2);
+        editPane.add(httpMethod);
+        editPane.add(lbl3);
+        editPane.add(mimeType);
+//        editPane.setMaximumSize(new Dimension(400, 100));
+//        editPane.setPreferredSize(new Dimension(400, 100));
+        editPane.setBorder(new TitledBorder("REST definitions"));
+        mainEditPane.add(editPane);
+        return mainEditPane;
     }
 
     public static void createAndShowGUI() {
