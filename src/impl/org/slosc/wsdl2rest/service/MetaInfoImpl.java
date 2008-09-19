@@ -20,7 +20,7 @@ package org.slosc.wsdl2rest.service;
 
 import java.util.List;
 
-class MetaInfo {
+class MetaInfoImpl implements MetaInfo {
 	private List<String> resources;
 	private String httpMethod;
 	private String mimeType;

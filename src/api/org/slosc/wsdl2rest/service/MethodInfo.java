@@ -21,7 +21,7 @@ package org.slosc.wsdl2rest.service;
 import java.util.List;
 
 
-public interface MethodInfo {
+public interface MethodInfo extends MetaInfo {
     String getMethodName();
     String getReturnType();
     List<Param> getParams();

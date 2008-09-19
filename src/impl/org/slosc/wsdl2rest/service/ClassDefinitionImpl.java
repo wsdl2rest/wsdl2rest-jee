@@ -28,7 +28,7 @@ import java.net.MalformedURLException;
 
 
 
-public class ClassDefinitionImpl extends MetaInfo implements ClassDefinition {
+public class ClassDefinitionImpl extends MetaInfoImpl implements ClassDefinition {
     
     private String packageName;
     private List<String> imports;
@@ -116,4 +116,8 @@ public class ClassDefinitionImpl extends MetaInfo implements ClassDefinition {
         methods.add(mi);
         return mi;
     }
- }
+
+    public String toString() {
+        return packageName+"."+className;
+    }
+}

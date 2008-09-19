@@ -25,7 +25,7 @@ import java.util.List;
 
 
 
-public class MethodInfoImpl extends MetaInfo implements MethodInfo {
+public class MethodInfoImpl extends MetaInfoImpl implements MethodInfo {
 
     private String returnType;
     private String methodName;
@@ -69,5 +69,9 @@ public class MethodInfoImpl extends MetaInfo implements MethodInfo {
 
     public void setExceptionType(String exceptionType) {
         this.exceptionType = exceptionType;
+    }
+
+    public String toString() {
+        return methodName;
     }
 }

@@ -20,7 +20,7 @@ package org.slosc.wsdl2rest.service;
 
 import org.slosc.wsdl2rest.service.Param;
 
-public class ParamImpl extends MetaInfo implements Param {
+public class ParamImpl extends MetaInfoImpl implements Param {
 
     private String paramType;
     private String paramName;

@@ -21,7 +21,7 @@ package org.slosc.wsdl2rest.service;
 import java.util.List;
 
 
-public interface ClassDefinition {
+public interface ClassDefinition extends MetaInfo{
 
     String getPackageName();
     List<String> getImports();

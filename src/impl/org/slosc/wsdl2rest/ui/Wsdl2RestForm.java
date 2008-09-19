@@ -209,8 +209,12 @@ public class Wsdl2RestForm extends JPanel
 
             if(clazzDef.getClassName() != null){
 
-                DefaultMutableTreeNode svcClass = new DefaultMutableTreeNode(packageName + "."+clazzDef.getClassName());
+                DefaultMutableTreeNode svcClass = new DefaultMutableTreeNode(clazzDef);
                 topServiceTree.add(svcClass);
+//                for(String r: clazzDef.getResources())
+//                    resources.addItem(r);
+//                httpMethod.addItem(clazzDef.getHttpMethod());
+//                mimeType.addItem(clazzDef.getMimeType());
                 //serviceMethods.scrollPathToVisible(new TreePath(svcClass.getPath()));
                 
                 writeMethods(clazzDef.getMethods(), svcClass);
@@ -222,7 +226,7 @@ public class Wsdl2RestForm extends JPanel
         if(methods == null) return;
         boolean visible = false;
         for(MethodInfo mInf:methods){
-            DefaultMutableTreeNode method = new DefaultMutableTreeNode(mInf.getMethodName());
+            DefaultMutableTreeNode method = new DefaultMutableTreeNode(mInf);
             svcClass.add(method);
 //            if(!visible){
 //                visible = true;
@@ -239,39 +243,67 @@ public class Wsdl2RestForm extends JPanel
 
             
 
-            String retType = mInf.getReturnType();
+//            String retType = mInf.getReturnType();
 //            writer.print("\tpublic "+(retType!=null?retType:"void")+" ");
 //            writer.print(mInf.getMethodName()+"(");
-            writeParams(mInf.getParams());
-            String excep = mInf.getExceptionType() != null?(" throws "+ mInf.getExceptionType()):"";
+//            writeParams(mInf.getParams());
+//            String excep = mInf.getExceptionType() != null?(" throws "+ mInf.getExceptionType()):"";
 //            writer.println(")"+excep+";");
         }
     }
 
-    protected void writeMethod(MethodInfo mInf){
-        if(mInf == null) return;
-        String retType = mInf.getReturnType();
-//        writer.print("\tpublic "+(retType!=null?retType:"void")+" ");
-//        writer.print(mInf.getMethodName()+"(");
-        writeParams(mInf.getParams());
-        String excep = mInf.getExceptionType() != null?(" throws "+ mInf.getExceptionType()):"";
-//        writer.println(")"+excep+";\n");
-    }
+//    protected void writeMethod(MethodInfo mInf){
+//        if(mInf == null) return;
+//        String retType = mInf.getReturnType();
+////        writer.print("\tpublic "+(retType!=null?retType:"void")+" ");
+////        writer.print(mInf.getMethodName()+"(");
+//        writeParams(mInf.getParams());
+//        String excep = mInf.getExceptionType() != null?(" throws "+ mInf.getExceptionType()):"";
+////        writer.println(")"+excep+";\n");
+//    }
+//
+//    protected void writeParams(List<Param> params){
+//        if(params != null) {
+//            int i=0; int size = params.size();
+//            for(Param p : params){
+////                String comma = (++i != size)?", ":"";
+////                writer.print(p.getParamType()+" "+p.getParamName()+comma);
+//            }
+//        }
+//    }
 
-    protected void writeParams(List<Param> params){
-        if(params != null) {
-            int i=0; int size = params.size();
-            for(Param p : params){
-//                String comma = (++i != size)?", ":"";
-//                writer.print(p.getParamType()+" "+p.getParamName()+comma);
+    /** Required by TreeSelectionListener interface. */
+    public void valueChanged(TreeSelectionEvent e) {
+        DefaultMutableTreeNode node = (DefaultMutableTreeNode)
+                           serviceMethods.getLastSelectedPathComponent();
+
+        if (node == null) return;
+
+        Object nodeInfo = node.getUserObject();
+        if (node.isLeaf() && nodeInfo instanceof MethodInfo) {
+            MethodInfo method = (MethodInfo)nodeInfo;
+            resources.removeAllItems();
+            httpMethod.removeAllItems();
+            mimeType.removeAllItems();
+            for(String r: method.getResources()){
+                resources.addItem(r);
             }
+//            resources.setSelectedIndex(1);
+            httpMethod.addItem(method.getHttpMethod() == null?"POST":method.getHttpMethod());
+            mimeType.addItem(method.getMimeType());
+        }else if(nodeInfo instanceof ClassDefinition){
+            ClassDefinition cl = (ClassDefinition)nodeInfo;
+            resources.removeAllItems();
+            httpMethod.removeAllItems();
+            mimeType.removeAllItems();
+            for(String r: cl.getResources()){
+                resources.addItem(r);
+            }
+//            resources.setSelectedIndex(1);
+            httpMethod.addItem(cl.getHttpMethod() == null?"POST":cl.getHttpMethod());
+            mimeType.addItem(cl.getMimeType() == null?"application/xml":cl.getMimeType());
         }
     }
-
-    public void valueChanged(TreeSelectionEvent e) {
-
-    }
-
     class WSDLFileFilter  extends FileFilter {
         public WSDLFileFilter() {
         }

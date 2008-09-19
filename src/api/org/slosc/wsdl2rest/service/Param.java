@@ -20,7 +20,7 @@ package org.slosc.wsdl2rest.service;
 
 import java.util.List;
 
-public interface Param {
+public interface Param extends MetaInfo {
     String getParamType();
     String getParamName();
     List<String> getResources();
