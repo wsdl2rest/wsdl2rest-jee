@@ -151,13 +151,11 @@ public class Wsdl2RestForm extends JPanel
         lbl3.setLabelFor(mimeType);
         resources = new JComboBox();
         resources.setEditable(true);
-        resources.addActionListener(this);
         httpMethod = new JComboBox();
         httpMethod.setEditable(true);
-        httpMethod.addActionListener(this);
         mimeType = new JComboBox();
         mimeType.setEditable(true);
-        mimeType.addActionListener(this);
+
 
         editPane.add(lbl1);
         editPane.add(resources);
@@ -258,6 +256,42 @@ public class Wsdl2RestForm extends JPanel
         }
     }
 
+    private void updateResourcePane(MetaInfo inf){
+        resources.removeActionListener(this);
+        httpMethod.removeActionListener(this);
+        mimeType.removeActionListener(this);
+        resources.removeAllItems();
+        httpMethod.removeAllItems();
+        mimeType.removeAllItems();
+        if(inf.getPreferredResource() != null){
+            resources.addItem(inf.getPreferredResource());
+            resources.setSelectedItem(inf.getPreferredResource());
+        }
+        for(String r: inf.getResources()){
+            if(inf.getPreferredResource() != null && r.equals(inf.getPreferredResource())) continue;
+            resources.addItem(r);
+        }
+
+        if(inf.getPreferredHttpMethod() != null){
+            httpMethod.removeItem(inf.getPreferredHttpMethod());//if already exists
+            httpMethod.addItem(inf.getPreferredHttpMethod());
+            httpMethod.setSelectedItem(inf.getPreferredHttpMethod());
+            if(!inf.getHttpMethod().equals(inf.getPreferredHttpMethod()))httpMethod.addItem(inf.getHttpMethod() == null?"":inf.getHttpMethod());
+
+        }else httpMethod.addItem(inf.getHttpMethod() == null?"":inf.getHttpMethod());
+
+        if(inf.getPreferredMimeType() != null){
+            mimeType.removeItem(inf.getPreferredMimeType());//if already exists
+            mimeType.addItem(inf.getPreferredMimeType());
+            mimeType.setSelectedItem(inf.getPreferredMimeType());
+            if(!inf.getMimeType().equals(inf.getPreferredMimeType()))mimeType.addItem(inf.getMimeType());
+        }else mimeType.addItem(inf.getMimeType());
+
+        resources.addActionListener(this);
+        httpMethod.addActionListener(this);
+        mimeType.addActionListener(this);
+    }
+
     /** Required by TreeSelectionListener interface. */
     public void valueChanged(TreeSelectionEvent e) {
         DefaultMutableTreeNode node = (DefaultMutableTreeNode)
@@ -266,29 +300,8 @@ public class Wsdl2RestForm extends JPanel
         if (node == null) return;
 
         currentTreeNode = node.getUserObject();
-        if (node.isLeaf() && currentTreeNode instanceof MethodInfo) {
-            MethodInfo method = (MethodInfo)currentTreeNode;
-            resources.removeAllItems();
-            httpMethod.removeAllItems();
-            mimeType.removeAllItems();
-            for(String r: method.getResources()){
-                resources.addItem(r);
-            }
-            if(method.getResources().size() > 1) resources.setSelectedIndex(1);
-            httpMethod.addItem(method.getHttpMethod() == null?"POST":method.getHttpMethod());
-            mimeType.addItem(method.getMimeType());
-            methodDetails.updateUI();
-
-        }else if(currentTreeNode instanceof ClassDefinition){
-            ClassDefinition cl = (ClassDefinition)currentTreeNode;
-            resources.removeAllItems();
-            httpMethod.removeAllItems();
-            mimeType.removeAllItems();
-            for(String r: cl.getResources()){
-                resources.addItem(r);
-            }
-            httpMethod.addItem("");
-            mimeType.addItem(cl.getMimeType() == null?"application/xml":cl.getMimeType());
+        if (currentTreeNode instanceof MetaInfo) {
+            updateResourcePane((MetaInfo)currentTreeNode);
             methodDetails.updateUI();
         }
     }
@@ -298,6 +311,7 @@ public class Wsdl2RestForm extends JPanel
 
         //Handle open button action.
         final Object src = e.getSource();
+        
         if (src == openButton) {
 
             int returnVal = fc.showOpenDialog(this);
@@ -312,12 +326,6 @@ public class Wsdl2RestForm extends JPanel
             } else{
                 JOptionPane.showMessageDialog(this, "Please select a WSDL file..."); // ,"warning",  JOptionPane.WARNING_MESSAGE);
             }
-        }else if (src == resources && resources.getSelectedItem() != null) {
-            ((MetaInfo)currentTreeNode).setPreferredResource((String) resources.getSelectedItem());
-        }else if (src == httpMethod && httpMethod.getSelectedItem() != null) {
-            ((MetaInfo)currentTreeNode).setPreferredHttpMethod((String) httpMethod.getSelectedItem());
-        }else if (src == mimeType && mimeType.getSelectedItem() != null) {
-            ((MetaInfo)currentTreeNode).setPreferredMimeType((String) mimeType.getSelectedItem());
         }else if(src == generateButton){
             if(outputLocation.getText().length() > 0)
                 wsdl2rest.generateClasses(outputLocation.getText());    
@@ -335,6 +343,12 @@ public class Wsdl2RestForm extends JPanel
             } else{
                 JOptionPane.showMessageDialog(this, "Please select a output location ..."); 
             }
+        }else if (src == resources && resources.getSelectedItem() != null) {
+            ((MetaInfo)currentTreeNode).setPreferredResource((String) resources.getSelectedItem());
+        }else if (src == httpMethod && httpMethod.getSelectedItem() != null) {
+            ((MetaInfo)currentTreeNode).setPreferredHttpMethod((String) httpMethod.getSelectedItem());
+        }else if (src == mimeType && mimeType.getSelectedItem() != null) {
+            ((MetaInfo)currentTreeNode).setPreferredMimeType((String) mimeType.getSelectedItem());
         }
     }
 
@@ -344,49 +358,8 @@ public class Wsdl2RestForm extends JPanel
         for(MethodInfo mInf:methods){
             DefaultMutableTreeNode method = new DefaultMutableTreeNode(mInf);
             svcClass.add(method);
-//            if(!visible){
-//                visible = true;
-//                serviceMethods.scrollPathToVisible(new TreePath(method.getParent()));
-//            }
-
-//            ImageIcon leafIcon = new ImageIcon("images/middle.gif");
-//            if (leafIcon != null) {
-//                DefaultTreeCellRenderer renderer =
-//                new DefaultTreeCellRenderer();
-//                renderer.setLeafIcon(leafIcon);
-//                tree.setCellRenderer(renderer);
-//            }
-
-            
-
-//            String retType = mInf.getReturnType();
-//            writer.print("\tpublic "+(retType!=null?retType:"void")+" ");
-//            writer.print(mInf.getMethodName()+"(");
-//            writeParams(mInf.getParams());
-//            String excep = mInf.getExceptionType() != null?(" throws "+ mInf.getExceptionType()):"";
-//            writer.println(")"+excep+";");
         }
     }
-
-//    protected void writeMethod(MethodInfo mInf){
-//        if(mInf == null) return;
-//        String retType = mInf.getReturnType();
-////        writer.print("\tpublic "+(retType!=null?retType:"void")+" ");
-////        writer.print(mInf.getMethodName()+"(");
-//        writeParams(mInf.getParams());
-//        String excep = mInf.getExceptionType() != null?(" throws "+ mInf.getExceptionType()):"";
-////        writer.println(")"+excep+";\n");
-//    }
-//
-//    protected void writeParams(List<Param> params){
-//        if(params != null) {
-//            int i=0; int size = params.size();
-//            for(Param p : params){
-////                String comma = (++i != size)?", ":"";
-////                writer.print(p.getParamType()+" "+p.getParamName()+comma);
-//            }
-//        }
-//    }
 
     class WSDLFileFilter  extends FileFilter {
         public WSDLFileFilter() {
@@ -401,7 +374,7 @@ public class Wsdl2RestForm extends JPanel
         }
     }
 
-        public static void createAndShowGUI() {
+    public static void createAndShowGUI() {
 //        try {
 //            UIManager.setLookAndFeel(
 //                UIManager.getSystemLookAndFeelClassName());
@@ -422,6 +395,7 @@ public class Wsdl2RestForm extends JPanel
         frame.pack();
         frame.setVisible(true);
     }
+    
     public static void main(String[] args) {
         javax.swing.SwingUtilities.invokeLater(new Runnable() {
             public void run() {
