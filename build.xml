@@ -76,7 +76,7 @@
 
   </target>
   
-  <target name="testui" depends="compile" description="compile and run UI" >
+  <target name="startui" depends="compile" description="compile and run UI" >
     <java classname="org.slosc.wsdl2rest.ui.Wsdl2RestForm" fork="yes">
         <classpath>
           <pathelement location="${target}"/>
