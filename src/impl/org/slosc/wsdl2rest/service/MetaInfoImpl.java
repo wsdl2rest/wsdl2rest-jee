@@ -21,23 +21,25 @@ package org.slosc.wsdl2rest.service;
 import java.util.List;
 
 class MetaInfoImpl implements MetaInfo {
-	private List<String> resources;
-    private String defaultResource;
+    
+    private List<String> resources;
+    private String preferredResource;
     private String httpMethod;
-    private String defaultHttpMethod;
+    private String preferredHttpMethod;
     private String mimeType;
-    private String defaultMimeType;
+    private String preferredMimeType;
+    private boolean pathParam;
 	
     public String getHttpMethod() {
 		return httpMethod;
 	}
 
-    public void setDefaultHttpMethod(String defaultHttpMethod) {
-        this.defaultHttpMethod = defaultHttpMethod;
+    public void setPreferredHttpMethod(String defaultHttpMethod) {
+        this.preferredHttpMethod = defaultHttpMethod;
     }
 
-    public void setDefaultMimeType(String defaultMimeType) {
-        this.defaultMimeType = defaultMimeType;
+    public void setPreferredMimeType(String defaultMimeType) {
+        this.preferredMimeType = defaultMimeType;
     }
 
     public void setHttpMethod(String httpMethod) {
@@ -48,12 +50,12 @@ class MetaInfoImpl implements MetaInfo {
 		return mimeType;
 	}
 
-    public String getDefaultResource() {
-        return defaultResource;  
+    public String getPreferredResource() {
+        return preferredResource;
     }
 
-    public void setDefaultResource(String defaultResource) {
-        this.defaultResource = defaultResource;
+    public void setPreferredResource(String defaultResource) {
+        this.preferredResource = defaultResource;
     }
 
     public void setMimeType(String mimeType) {
@@ -64,7 +66,23 @@ class MetaInfoImpl implements MetaInfo {
 		return resources;
 	}
 
-	public void setResources(List<String> resources) {
+    public void setResources(List<String> resources) {
 		this.resources = resources;
 	}
+
+    public String getPreferredHttpMethod() {
+        return preferredHttpMethod;
+    }
+
+    public String getPreferredMimeType() {
+        return preferredMimeType;
+    }
+
+    public boolean isPathParam() {
+        return pathParam;
+    }
+
+    public void setPathParam(boolean pathParam) {
+        this.pathParam = pathParam;
+    }
 }

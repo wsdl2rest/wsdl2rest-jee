@@ -72,6 +72,6 @@ public class MethodInfoImpl extends MetaInfoImpl implements MethodInfo {
     }
 
     public String toString() {
-        return methodName;
+        return methodName+"(): "+returnType;
     }
 }

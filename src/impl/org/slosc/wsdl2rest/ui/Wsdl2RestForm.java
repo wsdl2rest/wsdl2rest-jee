@@ -21,6 +21,7 @@ package org.slosc.wsdl2rest.ui;
 import javax.swing.*;
 import javax.swing.table.TableModel;
 import javax.swing.table.AbstractTableModel;
+import javax.swing.table.TableColumn;
 import javax.swing.border.TitledBorder;
 import javax.swing.filechooser.FileFilter;
 import javax.swing.tree.*;
@@ -35,12 +36,12 @@ import java.io.File;
 
 import org.slosc.wsdl2rest.service.ClassDefinition;
 import org.slosc.wsdl2rest.service.*;
-import org.slosc.wsdl2rest.util.WSDLFileFilter;
 import org.slosc.wsdl2rest.Wsdl2Rest;
 
 public class Wsdl2RestForm extends JPanel
                       implements TreeSelectionListener, ActionListener {
 
+    private Wsdl2Rest wsdl2rest;
     private JTree serviceMethods;
     private JTable methodDetails;
 
@@ -48,8 +49,11 @@ public class Wsdl2RestForm extends JPanel
     protected ClassDefinition clazzDef = null;
     private static String lineStyle = "Horizontal";
     protected JTextField fileName;
+    protected JTextField outputLocation;
     private JFileChooser fc;
     private JButton openButton;
+    private JButton generateButton;
+    private JButton outputLocationSelectButton;
     private DefaultMutableTreeNode topServiceTree;
 
     private JComboBox resources;
@@ -64,33 +68,15 @@ public class Wsdl2RestForm extends JPanel
 
         super(new GridLayout(1,0));
         
-        fileName = new JTextField(20);
+        fileName = new JTextField();
         fileName.addActionListener(this);
         JLabel textFieldLabel = new JLabel("WSDL File Name: ");
         textFieldLabel.setLabelFor(fileName);
 
         //Lay out the text controls and the labels.
-        JPanel textControlsPane = new JPanel();
-        GridBagLayout gridbag = new GridBagLayout();
-        GridBagConstraints c = new GridBagConstraints();
-
-        textControlsPane.setLayout(gridbag);
-
-//        c.anchor = GridBagConstraints.EAST;
-//        c.gridwidth = GridBagConstraints.RELATIVE; //next-to-last
-//        c.fill = GridBagConstraints.NONE;      //reset to default
-//        c.weightx = 0.0;                       //reset to default
-        c.gridx = 0;
-        c.gridy = 0;
-
-        textControlsPane.add(textFieldLabel, c);
-//        //c.anchor = GridBagConstraints.CENTER;
-        c.gridwidth = GridBagConstraints.RELATIVE;
-        c.fill = GridBagConstraints.HORIZONTAL;
-        c.weightx = 1.0;
-        c.gridx = 1;
-        c.gridy = 0;
-        textControlsPane.add(fileName, c);
+        JPanel textControlsPane = new JPanel(new BorderLayout());
+//        textControlsPane.add(textFieldLabel, BorderLayout.WEST);
+//        textControlsPane.add(fileName, BorderLayout.CENTER);
 
         //Create a file chooser
         fc = new JFileChooser();
@@ -99,13 +85,13 @@ public class Wsdl2RestForm extends JPanel
         openButton = new JButton("Browse");
         openButton.addActionListener(this);
 
-        c.gridwidth = GridBagConstraints.RELATIVE; //next-to-last
-        c.fill = GridBagConstraints.NONE;      //reset to default
-        c.anchor = GridBagConstraints.WEST;
-//        c.weightx = 2.0;
-        c.gridx = 2;
-        c.gridy = 0;
-        textControlsPane.add(openButton, c);
+        JPanel textPane = new JPanel();
+        textPane.setLayout(new BoxLayout(textPane, BoxLayout.X_AXIS));
+        textPane.add(textFieldLabel);
+        textPane.add(fileName);
+        textPane.add(openButton);
+
+        textControlsPane.add(textPane, BorderLayout.NORTH);
 
         textControlsPane.setBorder(
                 BorderFactory.createCompoundBorder(
@@ -186,29 +172,54 @@ public class Wsdl2RestForm extends JPanel
 
         // Create the table
         methodDetails = getParamTable();
+        TableColumn col = methodDetails.getColumn("Path Param");
+        col.setCellEditor(new DefaultCellEditor(new JCheckBox()));
+        col.setMaxWidth(col.getPreferredWidth());
         JScrollPane scrollpane= new JScrollPane(methodDetails);
         mainEditPane.add(scrollpane, BorderLayout.CENTER);
+
+        JPanel actionPanel =  new JPanel(new BorderLayout());
+        actionPanel.setBorder(new TitledBorder("Generate REST Classes"));
+        JPanel outputPanel =  new JPanel(new BorderLayout());
+        outputLocation = new JTextField();
+        outputLocation.addActionListener(this);
+        JLabel textFieldLabel = new JLabel("Output Location: ");
+        textFieldLabel.setLabelFor(outputLocation);
+        outputLocationSelectButton = new JButton("Browse");
+        outputLocationSelectButton.addActionListener(this);
+        outputPanel.add(textFieldLabel, BorderLayout.WEST);
+        outputPanel.add(outputLocation, BorderLayout.CENTER);
+        outputPanel.add(outputLocationSelectButton, BorderLayout.EAST);
+        generateButton = new JButton("Generate");
+        generateButton.addActionListener(this);
+        actionPanel.add(outputPanel, BorderLayout.NORTH);
+        actionPanel.add(generateButton, BorderLayout.EAST);
+        mainEditPane.add(actionPanel, BorderLayout.SOUTH);
         return mainEditPane;
     }
 
     private JTable getParamTable(){
         // Create a model of the data.
         TableModel dataModel = new AbstractTableModel() {
-            private String [] cnames ={"Param Name", "Type", "TODO"};
+            private String [] cnames ={"Param Name", "Type", "Path Param"};
             private int CSIZE = 3;
             public int getColumnCount() { return CSIZE; }
             public int getRowCount() { return getMethodParams().size();}
             public Object getValueAt(int row, int col) {
                 Param p = getMethodParams().get(row);
                 if(p == null) return "";
-                return (col==0)?p.getParamName():(col==1)?p.getParamType():"TODO";
+                
+                return (col==0)?p.getParamName():(col==1)?p.getParamType():p.isPathParam() ;
             }
             public String getColumnName(int column) {return cnames[column];}
             public Class getColumnClass(int c) {return getValueAt(0, c).getClass();}
 	        public boolean isCellEditable(int row, int col) {return col == 2;}
             public void setValueAt(Object aValue, int row, int column) {
-                //data[row][column] = aValue;
-
+                if(column == 2) {
+                    Param p = getMethodParams().get(row);
+                    if(p == null) return;
+                    p.setPathParam(!p.isPathParam());
+                }
             }
          };
 
@@ -229,7 +240,7 @@ public class Wsdl2RestForm extends JPanel
     public void generateServiceTree() {
        if(fileName.getText() == null && fileName.getText().length() == 0) return;
 
-       Wsdl2Rest wsdl2rest = new Wsdl2Rest();
+       wsdl2rest = new Wsdl2Rest();
        wsdl2rest.process(fileName.getText(), "", "");
        svcClasses = wsdl2rest.getSvcClasses();
        topServiceTree.removeAllChildren();
@@ -263,7 +274,7 @@ public class Wsdl2RestForm extends JPanel
             for(String r: method.getResources()){
                 resources.addItem(r);
             }
-//            resources.setSelectedIndex(1);
+            if(method.getResources().size() > 1) resources.setSelectedIndex(1);
             httpMethod.addItem(method.getHttpMethod() == null?"POST":method.getHttpMethod());
             mimeType.addItem(method.getMimeType());
             methodDetails.updateUI();
@@ -276,8 +287,7 @@ public class Wsdl2RestForm extends JPanel
             for(String r: cl.getResources()){
                 resources.addItem(r);
             }
-//            resources.setSelectedIndex(1);
-            httpMethod.addItem(cl.getHttpMethod() == null?"POST":cl.getHttpMethod());
+            httpMethod.addItem("");
             mimeType.addItem(cl.getMimeType() == null?"application/xml":cl.getMimeType());
             methodDetails.updateUI();
         }
@@ -294,6 +304,7 @@ public class Wsdl2RestForm extends JPanel
 
             if (returnVal == JFileChooser.APPROVE_OPTION) {
                 File file = fc.getSelectedFile();
+                if(fileName.getText().length()  > 0) fc.setCurrentDirectory(new File(fileName.getText()));
                 //This is where a real application would open the file.
                 fileName.setText(file.getAbsolutePath());
                 generateServiceTree();
@@ -301,12 +312,29 @@ public class Wsdl2RestForm extends JPanel
             } else{
                 JOptionPane.showMessageDialog(this, "Please select a WSDL file..."); // ,"warning",  JOptionPane.WARNING_MESSAGE);
             }
-        }else if (src == resources) {
-            ((MetaInfo)currentTreeNode).setDefaultResource((String) resources.getSelectedItem());
-        }else if (src == httpMethod) {
-            ((MetaInfo)currentTreeNode).setDefaultHttpMethod((String) httpMethod.getSelectedItem());
-        }else if (src == mimeType) {
-            ((MetaInfo)currentTreeNode).setDefaultMimeType((String) mimeType.getSelectedItem());
+        }else if (src == resources && resources.getSelectedItem() != null) {
+            ((MetaInfo)currentTreeNode).setPreferredResource((String) resources.getSelectedItem());
+        }else if (src == httpMethod && httpMethod.getSelectedItem() != null) {
+            ((MetaInfo)currentTreeNode).setPreferredHttpMethod((String) httpMethod.getSelectedItem());
+        }else if (src == mimeType && mimeType.getSelectedItem() != null) {
+            ((MetaInfo)currentTreeNode).setPreferredMimeType((String) mimeType.getSelectedItem());
+        }else if(src == generateButton){
+            if(outputLocation.getText().length() > 0)
+                wsdl2rest.generateClasses(outputLocation.getText());    
+        }else if(src == outputLocationSelectButton){
+            JFileChooser outChooser = new JFileChooser();
+            if(outputLocation.getText().length()  > 0) outChooser.setCurrentDirectory(new File(outputLocation.getText()));
+            outChooser.setFileSelectionMode(JFileChooser.DIRECTORIES_ONLY);
+            outChooser.setDialogTitle("Choose output path");
+            int returnVal = outChooser.showOpenDialog(this);
+
+            if (returnVal == JFileChooser.APPROVE_OPTION) {
+                File file = outChooser.getSelectedFile();
+                //This is where a real application would open the file.
+                outputLocation.setText(file.getAbsolutePath());
+            } else{
+                JOptionPane.showMessageDialog(this, "Please select a output location ..."); 
+            }
         }
     }
 

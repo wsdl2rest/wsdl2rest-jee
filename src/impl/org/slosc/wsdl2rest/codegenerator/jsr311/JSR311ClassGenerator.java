@@ -24,6 +24,7 @@ import org.slosc.wsdl2rest.service.MethodInfo;
 import org.slosc.wsdl2rest.service.Param;
 
 import java.util.List;
+import java.util.ArrayList;
 
 public class JSR311ClassGenerator extends ClassGeneratorImpl {
 
@@ -48,22 +49,26 @@ public class JSR311ClassGenerator extends ClassGeneratorImpl {
     protected void writeMethods(List<? extends MethodInfo> methods){
         if(methods == null) return;
         for(MethodInfo mInf:methods){
-           //write jsr-311 annotations
-           List<String> resouceInf = mInf.getResources();
-           if(resouceInf != null && resouceInf.size() >= 2){
-//               if(mInf.getResources().get(0).equals("get"))
-//                    writer.println("\t@GET");
-//               else writer.println("\t@POST");
-               writer.println("\t@"+mInf.getHttpMethod());
+            //write jsr-311 annotations
+            List<String> resouceInf = mInf.getResources();
+            if(mInf.getPreferredResource() != null){
+                resouceInf = new ArrayList<String>();
+                resouceInf.add(mInf.getPreferredResource());
+            }
+
+            if(resouceInf != null){
+               writer.println("\t@"+((mInf.getPreferredHttpMethod()==null)?mInf.getHttpMethod():mInf.getPreferredHttpMethod()));
                StringBuilder path = new StringBuilder();
-               for(int i=1;i<resouceInf.size();i++){
+               int loc = 0;
+               if(resouceInf.size() >= 2) loc = 1;
+               for(int i=loc;i<resouceInf.size();i++){
                    path.append(resouceInf.get(i));
                }
                writer.println("\t@Path(\""+path.toString().toLowerCase()+"\")");
-           }else{
-               
-           }
-           writeMethod(mInf);
+            }else{
+
+            }
+            writeMethod(mInf);
         }
     }
 
