@@ -18,23 +18,23 @@ package org.slosc.wsdl2rest.ui;
  *
  */
 
-import org.slosc.wsdl2rest.service.ClassDefinition;
-
 import javax.swing.*;
+import javax.swing.table.TableModel;
+import javax.swing.table.AbstractTableModel;
 import javax.swing.border.TitledBorder;
 import javax.swing.filechooser.FileFilter;
 import javax.swing.tree.*;
 import javax.swing.event.TreeSelectionListener;
 import javax.swing.event.TreeSelectionEvent;
 import java.util.List;
+import java.util.ArrayList;
 import java.awt.*;
 import java.awt.event.ActionListener;
 import java.awt.event.ActionEvent;
 import java.io.File;
 
 import org.slosc.wsdl2rest.service.ClassDefinition;
-import org.slosc.wsdl2rest.service.MethodInfo;
-import org.slosc.wsdl2rest.service.Param;
+import org.slosc.wsdl2rest.service.*;
 import org.slosc.wsdl2rest.util.WSDLFileFilter;
 import org.slosc.wsdl2rest.Wsdl2Rest;
 
@@ -50,12 +50,14 @@ public class Wsdl2RestForm extends JPanel
     protected JTextField fileName;
     private JFileChooser fc;
     private JButton openButton;
-    private Wsdl2Rest wsdl2rest;
     private DefaultMutableTreeNode topServiceTree;
 
     private JComboBox resources;
 	private JComboBox httpMethod;
 	private JComboBox mimeType;
+
+    private Object currentTreeNode = null;
+
 
 
     public Wsdl2RestForm() {
@@ -149,8 +151,12 @@ public class Wsdl2RestForm extends JPanel
     }
 
     private Component addEditPane() {
-        JPanel mainEditPane = new JPanel(new GridLayout(3,2));
-        JPanel editPane = new JPanel(new GridLayout(3,2));
+        JPanel mainEditPane = new JPanel(new BorderLayout());
+        JPanel editPane = new JPanel(new GridLayout(3,2)){
+            public Dimension getMaximumSize() {
+                return new Dimension(getPreferredSize().width, super.getMaximumSize().height);
+            }
+        };
         JLabel lbl1 = new JLabel("Resources: ");
         lbl1.setLabelFor(resources);
         JLabel lbl2 = new JLabel("HTTP Method: ");
@@ -158,8 +164,14 @@ public class Wsdl2RestForm extends JPanel
         JLabel lbl3 = new JLabel("MIME type: ");
         lbl3.setLabelFor(mimeType);
         resources = new JComboBox();
+        resources.setEditable(true);
+        resources.addActionListener(this);
         httpMethod = new JComboBox();
+        httpMethod.setEditable(true);
+        httpMethod.addActionListener(this);
         mimeType = new JComboBox();
+        mimeType.setEditable(true);
+        mimeType.addActionListener(this);
 
         editPane.add(lbl1);
         editPane.add(resources);
@@ -167,58 +179,134 @@ public class Wsdl2RestForm extends JPanel
         editPane.add(httpMethod);
         editPane.add(lbl3);
         editPane.add(mimeType);
-//        editPane.setMaximumSize(new Dimension(400, 100));
-//        editPane.setPreferredSize(new Dimension(400, 100));
+        editPane.setMaximumSize(new Dimension(200, 100));
+        editPane.setPreferredSize(new Dimension(200, 100));
         editPane.setBorder(new TitledBorder("REST definitions"));
-        mainEditPane.add(editPane);
+        mainEditPane.add(editPane, BorderLayout.NORTH);
+
+        // Create the table
+        methodDetails = getParamTable();
+        JScrollPane scrollpane= new JScrollPane(methodDetails);
+        mainEditPane.add(scrollpane, BorderLayout.CENTER);
         return mainEditPane;
     }
 
-    public static void createAndShowGUI() {
-//        try {
-//            UIManager.setLookAndFeel(
-//                UIManager.getSystemLookAndFeelClassName());
-//        } catch (Exception e) {
-//            System.err.println("Couldn't use system look and feel.");
-//        }
+    private JTable getParamTable(){
+        // Create a model of the data.
+        TableModel dataModel = new AbstractTableModel() {
+            private String [] cnames ={"Param Name", "Type", "TODO"};
+            private int CSIZE = 3;
+            public int getColumnCount() { return CSIZE; }
+            public int getRowCount() { return getMethodParams().size();}
+            public Object getValueAt(int row, int col) {
+                Param p = getMethodParams().get(row);
+                if(p == null) return "";
+                return (col==0)?p.getParamName():(col==1)?p.getParamType():"TODO";
+            }
+            public String getColumnName(int column) {return cnames[column];}
+            public Class getColumnClass(int c) {return getValueAt(0, c).getClass();}
+	        public boolean isCellEditable(int row, int col) {return col == 2;}
+            public void setValueAt(Object aValue, int row, int column) {
+                //data[row][column] = aValue;
 
-        //Create and set up the window.
-        JFrame frame = new JFrame("Wsdl2Rest");
-        frame.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
+            }
+         };
 
-        //Create and set up the content pane.
-        Wsdl2RestForm newContentPane = new Wsdl2RestForm();
-        newContentPane.setOpaque(true); //content panes must be opaque
-        frame.setContentPane(newContentPane);
 
-        //Display the window.
-        frame.pack();
-        frame.setVisible(true);
+        // Create the table
+        return new JTable(dataModel);
+    }
+
+
+    private List<Param> getMethodParams(){
+        if(currentTreeNode != null && currentTreeNode instanceof MethodInfo){
+            MethodInfo method = (MethodInfo)currentTreeNode;
+            return method.getParams();
+        }
+        return new ArrayList<Param>();
     }
 
     public void generateServiceTree() {
        if(fileName.getText() == null && fileName.getText().length() == 0) return;
-        
-       wsdl2rest = new Wsdl2Rest();
+
+       Wsdl2Rest wsdl2rest = new Wsdl2Rest();
        wsdl2rest.process(fileName.getText(), "", "");
-        svcClasses = wsdl2rest.getSvcClasses();
+       svcClasses = wsdl2rest.getSvcClasses();
+       topServiceTree.removeAllChildren();
 
        for(ClassDefinition classDef : svcClasses){
             this.clazzDef = classDef;
-            String packageName = clazzDef.getPackageName();
 
             if(clazzDef.getClassName() != null){
 
                 DefaultMutableTreeNode svcClass = new DefaultMutableTreeNode(clazzDef);
                 topServiceTree.add(svcClass);
-//                for(String r: clazzDef.getResources())
-//                    resources.addItem(r);
-//                httpMethod.addItem(clazzDef.getHttpMethod());
-//                mimeType.addItem(clazzDef.getMimeType());
-                //serviceMethods.scrollPathToVisible(new TreePath(svcClass.getPath()));
-                
+
                 writeMethods(clazzDef.getMethods(), svcClass);
             }
+        }
+    }
+
+    /** Required by TreeSelectionListener interface. */
+    public void valueChanged(TreeSelectionEvent e) {
+        DefaultMutableTreeNode node = (DefaultMutableTreeNode)
+                           serviceMethods.getLastSelectedPathComponent();
+
+        if (node == null) return;
+
+        currentTreeNode = node.getUserObject();
+        if (node.isLeaf() && currentTreeNode instanceof MethodInfo) {
+            MethodInfo method = (MethodInfo)currentTreeNode;
+            resources.removeAllItems();
+            httpMethod.removeAllItems();
+            mimeType.removeAllItems();
+            for(String r: method.getResources()){
+                resources.addItem(r);
+            }
+//            resources.setSelectedIndex(1);
+            httpMethod.addItem(method.getHttpMethod() == null?"POST":method.getHttpMethod());
+            mimeType.addItem(method.getMimeType());
+            methodDetails.updateUI();
+
+        }else if(currentTreeNode instanceof ClassDefinition){
+            ClassDefinition cl = (ClassDefinition)currentTreeNode;
+            resources.removeAllItems();
+            httpMethod.removeAllItems();
+            mimeType.removeAllItems();
+            for(String r: cl.getResources()){
+                resources.addItem(r);
+            }
+//            resources.setSelectedIndex(1);
+            httpMethod.addItem(cl.getHttpMethod() == null?"POST":cl.getHttpMethod());
+            mimeType.addItem(cl.getMimeType() == null?"application/xml":cl.getMimeType());
+            methodDetails.updateUI();
+        }
+    }
+
+
+    public void actionPerformed(ActionEvent e) {
+
+        //Handle open button action.
+        final Object src = e.getSource();
+        if (src == openButton) {
+
+            int returnVal = fc.showOpenDialog(this);
+
+            if (returnVal == JFileChooser.APPROVE_OPTION) {
+                File file = fc.getSelectedFile();
+                //This is where a real application would open the file.
+                fileName.setText(file.getAbsolutePath());
+                generateServiceTree();
+                serviceMethods.updateUI();
+            } else{
+                JOptionPane.showMessageDialog(this, "Please select a WSDL file..."); // ,"warning",  JOptionPane.WARNING_MESSAGE);
+            }
+        }else if (src == resources) {
+            ((MetaInfo)currentTreeNode).setDefaultResource((String) resources.getSelectedItem());
+        }else if (src == httpMethod) {
+            ((MetaInfo)currentTreeNode).setDefaultHttpMethod((String) httpMethod.getSelectedItem());
+        }else if (src == mimeType) {
+            ((MetaInfo)currentTreeNode).setDefaultMimeType((String) mimeType.getSelectedItem());
         }
     }
 
@@ -232,7 +320,7 @@ public class Wsdl2RestForm extends JPanel
 //                visible = true;
 //                serviceMethods.scrollPathToVisible(new TreePath(method.getParent()));
 //            }
-            
+
 //            ImageIcon leafIcon = new ImageIcon("images/middle.gif");
 //            if (leafIcon != null) {
 //                DefaultTreeCellRenderer renderer =
@@ -272,38 +360,6 @@ public class Wsdl2RestForm extends JPanel
 //        }
 //    }
 
-    /** Required by TreeSelectionListener interface. */
-    public void valueChanged(TreeSelectionEvent e) {
-        DefaultMutableTreeNode node = (DefaultMutableTreeNode)
-                           serviceMethods.getLastSelectedPathComponent();
-
-        if (node == null) return;
-
-        Object nodeInfo = node.getUserObject();
-        if (node.isLeaf() && nodeInfo instanceof MethodInfo) {
-            MethodInfo method = (MethodInfo)nodeInfo;
-            resources.removeAllItems();
-            httpMethod.removeAllItems();
-            mimeType.removeAllItems();
-            for(String r: method.getResources()){
-                resources.addItem(r);
-            }
-//            resources.setSelectedIndex(1);
-            httpMethod.addItem(method.getHttpMethod() == null?"POST":method.getHttpMethod());
-            mimeType.addItem(method.getMimeType());
-        }else if(nodeInfo instanceof ClassDefinition){
-            ClassDefinition cl = (ClassDefinition)nodeInfo;
-            resources.removeAllItems();
-            httpMethod.removeAllItems();
-            mimeType.removeAllItems();
-            for(String r: cl.getResources()){
-                resources.addItem(r);
-            }
-//            resources.setSelectedIndex(1);
-            httpMethod.addItem(cl.getHttpMethod() == null?"POST":cl.getHttpMethod());
-            mimeType.addItem(cl.getMimeType() == null?"application/xml":cl.getMimeType());
-        }
-    }
     class WSDLFileFilter  extends FileFilter {
         public WSDLFileFilter() {
         }
@@ -317,27 +373,27 @@ public class Wsdl2RestForm extends JPanel
         }
     }
 
-    public void actionPerformed(ActionEvent e) {
+        public static void createAndShowGUI() {
+//        try {
+//            UIManager.setLookAndFeel(
+//                UIManager.getSystemLookAndFeelClassName());
+//        } catch (Exception e) {
+//            System.err.println("Couldn't use system look and feel.");
+//        }
 
-        //Handle open button action.
-        if (e.getSource() == openButton) {
+        //Create and set up the window.
+        JFrame frame = new JFrame("Wsdl2Rest");
+        frame.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
 
-            int returnVal = fc.showOpenDialog(this);
+        //Create and set up the content pane.
+        Wsdl2RestForm newContentPane = new Wsdl2RestForm();
+        newContentPane.setOpaque(true); //content panes must be opaque
+        frame.setContentPane(newContentPane);
 
-            if (returnVal == JFileChooser.APPROVE_OPTION) {
-                File file = fc.getSelectedFile();
-                //This is where a real application would open the file.
-                fileName.setText(file.getAbsolutePath());
-                generateServiceTree();
-            } else{
-                JOptionPane.showMessageDialog(this, "Please select a WSDL file..."); // ,"warning",  JOptionPane.WARNING_MESSAGE);
-            }
-
-            //else if (e.getSource() == ) {
-
-        }
+        //Display the window.
+        frame.pack();
+        frame.setVisible(true);
     }
-
     public static void main(String[] args) {
         javax.swing.SwingUtilities.invokeLater(new Runnable() {
             public void run() {

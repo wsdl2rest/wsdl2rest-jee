@@ -23,8 +23,11 @@ import java.util.List;
 
 public interface MetaInfo {
     String getHttpMethod();
-
+    void setDefaultHttpMethod(String defaultHttpMethod);
     String getMimeType();
-
+    void setDefaultMimeType(String defaultMimeType);
+    String getDefaultResource();
+    void setDefaultResource(String defaultResource);
     List<String> getResources();
+
 }

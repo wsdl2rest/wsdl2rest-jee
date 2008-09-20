@@ -22,14 +22,25 @@ import java.util.List;
 
 class MetaInfoImpl implements MetaInfo {
 	private List<String> resources;
-	private String httpMethod;
-	private String mimeType;
+    private String defaultResource;
+    private String httpMethod;
+    private String defaultHttpMethod;
+    private String mimeType;
+    private String defaultMimeType;
 	
-	public String getHttpMethod() {
+    public String getHttpMethod() {
 		return httpMethod;
 	}
 
-	public void setHttpMethod(String httpMethod) {
+    public void setDefaultHttpMethod(String defaultHttpMethod) {
+        this.defaultHttpMethod = defaultHttpMethod;
+    }
+
+    public void setDefaultMimeType(String defaultMimeType) {
+        this.defaultMimeType = defaultMimeType;
+    }
+
+    public void setHttpMethod(String httpMethod) {
 		this.httpMethod = httpMethod;
 	}
 
@@ -37,7 +48,15 @@ class MetaInfoImpl implements MetaInfo {
 		return mimeType;
 	}
 
-	public void setMimeType(String mimeType) {
+    public String getDefaultResource() {
+        return defaultResource;  
+    }
+
+    public void setDefaultResource(String defaultResource) {
+        this.defaultResource = defaultResource;
+    }
+
+    public void setMimeType(String mimeType) {
 		this.mimeType = mimeType;
 	}
 
