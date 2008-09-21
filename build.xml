@@ -14,7 +14,7 @@
   <property name="samples"  location="samples"/>
   <property name="debug"    value="on"/>          <!-- this need to be off for the releases -->
   
-  <property name="release-version"    value="0.1"/>
+  <property name="release-version"    value="0.4"/>
 
 
   <target name="init">

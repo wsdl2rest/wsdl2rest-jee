@@ -257,6 +257,7 @@ public class Wsdl2RestForm extends JPanel
     }
 
     private void updateResourcePane(MetaInfo inf){
+        //remove listners temporary 
         resources.removeActionListener(this);
         httpMethod.removeActionListener(this);
         mimeType.removeActionListener(this);
@@ -287,6 +288,7 @@ public class Wsdl2RestForm extends JPanel
             if(!inf.getMimeType().equals(inf.getPreferredMimeType()))mimeType.addItem(inf.getMimeType());
         }else mimeType.addItem(inf.getMimeType());
 
+        //restore listners
         resources.addActionListener(this);
         httpMethod.addActionListener(this);
         mimeType.addActionListener(this);
