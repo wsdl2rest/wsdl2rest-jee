@@ -28,5 +28,9 @@ Proper documentation:
 We will maintain dicussions.txt in docs folder where all discussions are summarily jotted down.
 
 
-
-
+09/21/2008
+Use the first noun as the preferred resource in MetaInfoImpl.
+Preferred http method should be POST.
+Default mime type should be application/xml (only for class level).
+List default mime type in UI (hard code values in ui).
+Class resourse should be class name in all lowercase.
