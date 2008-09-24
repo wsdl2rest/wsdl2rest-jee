@@ -94,9 +94,9 @@ public class ResourceMapperImp implements ResourceMapper {
                         continue;
                     }
 
-                    // Set default http method as GET
+                    // Set default http method as POST
                     if(httpMethod == null)
-                        this.httpMethod = "GET";
+                        this.httpMethod = "POST";
                 }
         		addResource(resourceMatcher.group());
             }
