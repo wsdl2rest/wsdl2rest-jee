@@ -113,7 +113,8 @@ public class ResourceMapperImp implements ResourceMapper {
         for(ClassDefinition clazzDef : svcClasses){
         	// Don't break up class name
         	if (clazzDef.getClassName()!=null){
-        		clazzDef.setResources(Arrays.asList(clazzDef.getClassName()));
+        		clazzDef.setResources(Arrays.asList(clazzDef.getClassName().toLowerCase()));
+        		clazzDef.setPreferredMimeType("application/xml");
                 for(MethodInfo mInf:clazzDef.getMethods()){
                     if (mInf.getMethodName()!=null){
                         // Parse the method name
