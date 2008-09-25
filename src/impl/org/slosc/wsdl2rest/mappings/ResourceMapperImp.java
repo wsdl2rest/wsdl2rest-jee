@@ -121,6 +121,9 @@ public class ResourceMapperImp implements ResourceMapper {
                         resources = new ArrayList<String>();
                         mapResources(mInf.getMethodName());
                         mInf.setResources(resources);
+                        if (!resources.isEmpty()) {
+                            mInf.setPreferredResource((String)resources.get(0));
+                        }
                         mInf.setHttpMethod(httpMethod);
 
                         if(mInf.getParams()!=null){
