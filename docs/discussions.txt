@@ -1,6 +1,31 @@
 Discussion notes
 ----------------
 
+09/28/2008
+- find a dictionary or implement a partial verb/noun identificastion mechanism
+- use changes done by Thushan ( since last call) to generate 311 classes
+- Create final 311 implementation classes
+- remove http definition from service level.
+- parameter level PathParam usage need to fix
+- Thashan to give a feedback on the UI
+- Lilantha to Fix WSDL parsing
+- Thushan to start the user guide
+- Lilantha to complete the design document
+- create some sample wsdls and outputs
+- Target a release on 10/05/2008 - this should be release candidate 1 if all above things are done.
+- Next Plan: 
+	- implement jsr 311 server support
+	- publish the tool chain to the public domain
+
+
+09/21/2008
+Use the first noun as the preferred resource in MetaInfoImpl.
+Preferred http method should be POST.
+Default mime type should be application/xml (only for class level).
+List default mime type in UI (hard code values in ui).
+Class resourse should be class name in all lowercase.
+
+
 08/10/2008
 -discussed how to handle meta info (http, resource mapping, and mime etc) and decided to refactor ResouceInfo class by 1. renaming it to MetaInfo, 2. add http mapping, 3 mime mapping attributes, to it.
 - decided to show http method in a list box, default value to be set to the one which we identify programattically - for an example if the method level resource mapping for updateCustomerAddress(String custId, Address addr) is needed, then the programatic guess for the http mapping is going to be POST (since the method prefix "update") - and show the rest of the http methods (GET, PUT etc) in the list, so that if the programatic guess is incorrect user has the option to change it.
@@ -28,9 +53,4 @@ Proper documentation:
 We will maintain dicussions.txt in docs folder where all discussions are summarily jotted down.
 
 
-09/21/2008
-Use the first noun as the preferred resource in MetaInfoImpl.
-Preferred http method should be POST.
-Default mime type should be application/xml (only for class level).
-List default mime type in UI (hard code values in ui).
-Class resourse should be class name in all lowercase.
+
