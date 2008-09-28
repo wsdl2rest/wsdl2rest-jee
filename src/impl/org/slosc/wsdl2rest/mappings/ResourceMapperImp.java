@@ -35,7 +35,7 @@ public class ResourceMapperImp implements ResourceMapper {
     private String httpMethod;
     
     private String httpGetWords 	= "[Gg]et|[Rr]ead|[Ff]etch";
-    private String httpPostWords 	= "[Pp]ost|[Aa]dd|[Cc]reate";
+    private String httpPostWords 	= "[Pp]ost|[Aa]dd|[Cc]reate|[Ii]nvoke";
     private String httpDeleteWords 	= "[Dd]elete|[Rr]emove";
     private String httpPutWords 	= "[Pp]ut|[Ss]et|[Uu]pdate|[Cc]hange|[Mm]odify";
     private String httpAllWords		= httpGetWords + "|" + httpPostWords + "|" + httpDeleteWords + "|" + httpPutWords;
