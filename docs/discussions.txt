@@ -2,7 +2,7 @@ Discussion notes
 ----------------
 
 09/28/2008
-- find a dictionary or implement a partial verb/noun identificastion mechanism
+- find a dictionary or implement a partial verb/noun identification mechanism
 - use changes done by Thushan ( since last call) to generate 311 classes
 - Create final 311 implementation classes
 - remove http definition from service level.
