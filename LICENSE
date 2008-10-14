@@ -207,7 +207,7 @@ subject to the terms and conditions of the following licenses.
 
 
 
-JSR 311 API (https://jsr311.dev.java.net/) javax.ws.rs:jsr311-api:jar:0.6
+JSR 311 API (https://jsr311.dev.java.net/) javax.ws.rs:jsr311-api:jar:1.0
     License: COMMON DEVELOPMENT AND DISTRIBUTION LICENSE (CDDL) Version 1.0  (http://www.opensource.org/licenses/cddl1.php)
 
 JAX-WS API (https://jax-ws.dev.java.net/) javax.xml.ws:jaxws-api:jar:2.1-1

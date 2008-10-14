@@ -286,7 +286,7 @@ public class WSDLProcessorImpl implements WSDLProcessor {
             if(parts == null || parts.size() == 0) return;
             List<Param> params = new ArrayList<Param>();
             int indx = -1;
-            List<String> imports = new ArrayList<String>();
+            Set<String> imports = new HashSet<String>();
             for(Object p: parts){
                Part part = (Part)p;
 
@@ -294,15 +294,19 @@ public class WSDLProcessorImpl implements WSDLProcessor {
                    QName elmName = part.getElementName();
                    if(elmName == null) continue;
                    log.info("\t\t\tPart: "+ elmName.getPrefix()+":"+elmName.getLocalPart());
+                   boolean isArray = elmName.getLocalPart().startsWith("ArrayOf");
+                   if(isArray) elmName = new QName(elmName.getNamespaceURI(), elmName.getLocalPart().substring(7));
+
                    String paramType = (String)typeRegistry.get(elmName);
-                   if(paramType == null) continue; 
+                   if(paramType == null) continue;
+                   if(isArray) paramType = paramType +" []";
                    log.info("\t\t\t\tParams: "+paramType+" "+part.getName());
                    //prcessSchemaTypes(def, part.getElementName());
                    int packLoc = paramType.lastIndexOf(".");
                    if(packLoc > 0){
                        String imp = paramType.substring(0,packLoc);
                        if(!imp.equals("java.lang"))
-                            imports.add(imp);
+                            imports.add(paramType);
                        paramType = paramType.substring(packLoc+1);
                    }
                    params.add(new ParamImpl(paramType, part.getName()));
@@ -317,7 +321,7 @@ public class WSDLProcessorImpl implements WSDLProcessor {
                    case 1: mInf.setReturnType(params.get(0).getParamType()); break;
                    case 2: mInf.setExceptionType(params.get(0).getParamType());
                }
-               svcDef.setImports(imports);
+               svcDef.setImports(Arrays.asList(imports.toArray(new String[0])));
            }
         }
     }

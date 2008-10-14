@@ -118,7 +118,9 @@ public class ClassGeneratorImpl implements ClassGenerator {
         writer.print(mInf.getMethodName()+"(");
         writeParams(mInf.getParams());
         String excep = mInf.getExceptionType() != null?(" throws "+ mInf.getExceptionType()):"";
-        writer.println(")"+excep+";\n");
+        writer.println(") "+excep+" {");
+        writer.println("\n\t\t//TODO: invoke real business service interfaces hear ...\n");
+        writer.println("\t}\n");
     }
 
     protected void writeParams(List<Param> params){
