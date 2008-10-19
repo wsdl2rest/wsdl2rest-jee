@@ -2,6 +2,12 @@ package org.slosc.wsdl2rest.samples;
 
 
 public class StockQuoteServiceImpl implements StockQuoteService {
+
+    //@Context, @Header, @Param, @CookieParam, @MatrixParam, @QueryParam or @PathParam
+    public StockQuoteServiceImpl(){
+
+    }
+    
     public StockQuote getStockQuote(String ticker) {
         return null;
     }
