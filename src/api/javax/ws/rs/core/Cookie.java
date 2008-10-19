@@ -40,9 +40,9 @@ public class Cookie {
     
     private String name;
     private String value;
-    private int version = DEFAULT_VERSION;
-    private String path = null;
-    private String domain = null;
+    private int version;
+    private String path;
+    private String domain;
 
     /**
      * Create a new instance.
@@ -51,8 +51,11 @@ public class Cookie {
      * @param path the URI path for which the cookie is valid
      * @param domain the host domain for which the cookie is valid
      * @param version the version of the specification to which the cookie complies
+     * @throws IllegalArgumentException if name is null
      */
     public Cookie(String name, String value, String path, String domain, int version) {
+        if (name == null)
+            throw new IllegalArgumentException("name==null");
         this.name = name;
         this.value = value;
         this.version = version;
@@ -66,22 +69,20 @@ public class Cookie {
      * @param value the value of the cookie
      * @param path the URI path for which the cookie is valid
      * @param domain the host domain for which the cookie is valid
+     * @throws IllegalArgumentException if name is null
      */
     public Cookie(String name, String value, String path, String domain) {
-        this.name = name;
-        this.value = value;
-        this.domain = domain;
-        this.path = path;
+        this(name, value, path, domain, DEFAULT_VERSION);
     }
     
     /**
      * Create a new instance.
      * @param name the name of the cookie
      * @param value the value of the cookie
+     * @throws IllegalArgumentException if name is null
      */
     public Cookie(String name, String value) {
-        this.name = name;
-        this.value = value;
+        this(name, value, null, null);
     }
     
     /**
@@ -89,6 +90,7 @@ public class Cookie {
      * @param value the cookie string
      * @return the newly created Cookie
      * @throws IllegalArgumentException if the supplied string cannot be parsed
+     * or is null
      */
     public static Cookie valueOf(String value) throws IllegalArgumentException {
         return delegate.fromString(value);
@@ -143,4 +145,54 @@ public class Cookie {
     public String toString() {
         return delegate.toString(this);
     }
+
+    /**
+     * Generate a hashcode by hashing all of the cookies properties
+     * @return the hashcode
+     */
+    @Override
+    public int hashCode() {
+        int hash = 7;
+        hash = 97 * hash + (this.name != null ? this.name.hashCode() : 0);
+        hash = 97 * hash + (this.value != null ? this.value.hashCode() : 0);
+        hash = 97 * hash + this.version;
+        hash = 97 * hash + (this.path != null ? this.path.hashCode() : 0);
+        hash = 97 * hash + (this.domain != null ? this.domain.hashCode() : 0);
+        return hash;
+    }
+
+    /**
+     * Compare for equality
+     * @param obj the object to compare to
+     * @return true if the object is a {@code Cookie} with the same value for
+     * all properties, false otherwise.
+     */
+    @Override
+    public boolean equals(Object obj) {
+        if (obj == null) {
+            return false;
+        }
+        if (getClass() != obj.getClass()) {
+            return false;
+        }
+        final Cookie other = (Cookie) obj;
+        if (this.name != other.name && (this.name == null || !this.name.equals(other.name))) {
+            return false;
+        }
+        if (this.value != other.value && (this.value == null || !this.value.equals(other.value))) {
+            return false;
+        }
+        if (this.version != other.version) {
+            return false;
+        }
+        if (this.path != other.path && (this.path == null || !this.path.equals(other.path))) {
+            return false;
+        }
+        if (this.domain != other.domain && (this.domain == null || !this.domain.equals(other.domain))) {
+            return false;
+        }
+        return true;
+    }
+    
+    
 }

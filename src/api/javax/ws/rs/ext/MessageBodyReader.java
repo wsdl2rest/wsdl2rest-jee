@@ -33,11 +33,11 @@ import javax.ws.rs.core.MultivaluedMap;
  * implementation class with <code>@Provider</code>.
  *
  * A <code>MessageBodyReader</code> implementation may be annotated
- * with {@link javax.ws.rs.ConsumeMime} to restrict the media types for which it will
+ * with {@link javax.ws.rs.Consumes} to restrict the media types for which it will
  * be considered suitable.
  *
  * @see Provider
- * @see javax.ws.rs.ConsumeMime
+ * @see javax.ws.rs.Consumes
  */
 public interface MessageBodyReader<T> {
     
@@ -54,9 +54,11 @@ public interface MessageBodyReader<T> {
      * message body is to be converted into a method parameter, this will be
      * the annotations on that parameter returned by 
      * <code>Class.getParameterAnnotations</code>.
+     * @param mediaType the media type of the HTTP entity.
      * @return true if the type is supported, otherwise false.
      */
-    boolean isReadable(Class<?> type, Type genericType, Annotation annotations[]);
+    boolean isReadable(Class<?> type, Type genericType, 
+            Annotation annotations[], MediaType mediaType);
 
     /**
      * Read a type from the {@link InputStream}.
@@ -74,8 +76,9 @@ public interface MessageBodyReader<T> {
      * <code>Class.getParameterAnnotations</code>.
      * @param mediaType the media type of the HTTP entity.
      * @param httpHeaders the read-only HTTP headers associated with HTTP entity.
-     * @param entityStream the {@link InputStream} of the HTTP entity. The 
-     * implementation should not close the input stream.
+     * @param entityStream the {@link InputStream} of the HTTP entity. The
+     * caller is responsible for ensuring that the input stream ends when the
+     * entity has been consumed. The implementation should not close the input stream.
      * @throws java.io.IOException if an IO error arises
      * @throws javax.ws.rs.WebApplicationException if a specific 
      * HTTP error response needs to be produced. Only effective if thrown prior

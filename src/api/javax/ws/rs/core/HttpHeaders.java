@@ -19,6 +19,7 @@
 package javax.ws.rs.core;
 
 import java.util.List;
+import java.util.Locale;
 import java.util.Map;
 
 /**
@@ -48,17 +49,19 @@ public interface HttpHeaders {
 
     /**
      * Get a list of media types that are acceptable for the response.
-     * @return a read-only list of requested response media types
+     * @return a read-only list of requested response media types sorted according
+     * to their q-value, with highest preference first.
      * @throws java.lang.IllegalStateException if called outside the scope of a request
      */
     public List<MediaType> getAcceptableMediaTypes();
     
     /**
      * Get a list of languages that are acceptable for the response.
-     * @return a read-only list of acceptable languages
+     * @return a read-only list of acceptable languages sorted according
+     * to their q-value, with highest preference first.
      * @throws java.lang.IllegalStateException if called outside the scope of a request
      */
-    public List<String> getAcceptableLanguages();
+    public List<Locale> getAcceptableLanguages();
     
     /**
      * Get the media type of the request entity
@@ -72,7 +75,7 @@ public interface HttpHeaders {
      * @return the language of the entity or null if not specified
      * @throws java.lang.IllegalStateException if called outside the scope of a request
      */
-    public String getLanguage();
+    public Locale getLanguage();
 
     /**
      * Get any cookies that accompanied the request.

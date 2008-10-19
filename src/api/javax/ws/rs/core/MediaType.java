@@ -48,6 +48,11 @@ public class MediaType {
     public static final String MEDIA_TYPE_WILDCARD = "*";
     
     // Common media type constants
+    /** "*&#47;*" */
+    public final static String WILDCARD = "*/*";
+    /** "*&#47;*" */
+    public final static MediaType WILDCARD_TYPE = new MediaType();
+    
     /** "application/xml" */
     public final static String APPLICATION_XML = "application/xml";
     /** "application/xml" */
@@ -78,6 +83,11 @@ public class MediaType {
     /** "application/x-www-form-urlencoded" */
     public final static MediaType APPLICATION_FORM_URLENCODED_TYPE = new MediaType("application","x-www-form-urlencoded");
 
+    /** "multipart/form-data" */
+    public final static String MULTIPART_FORM_DATA = "multipart/form-data";
+    /** "multipart/form-data" */
+    public final static MediaType MULTIPART_FORM_DATA_TYPE = new MediaType("multipart","form-data");
+
     /** "application/octet-stream" */
     public final static String APPLICATION_OCTET_STREAM = "application/octet-stream";
     /** "application/octet-stream" */
@@ -103,6 +113,7 @@ public class MediaType {
      * @param type the media type string
      * @return the newly created MediaType
      * @throws IllegalArgumentException if the supplied string cannot be parsed
+     * or is null
      */
     public static MediaType valueOf(String type) throws IllegalArgumentException {
         return delegate.fromString(type);
@@ -111,13 +122,16 @@ public class MediaType {
     /**
      * Creates a new instance of MediaType with the supplied type, subtype and
      * parameters. 
-     * @param type the primary type
-     * @param subtype the subtype
-     * @param parameters a map of media type parameters
+     * @param type the primary type, null is equivalent to 
+     * {@link #MEDIA_TYPE_WILDCARD}.
+     * @param subtype the subtype, null is equivalent to 
+     * {@link #MEDIA_TYPE_WILDCARD}.
+     * @param parameters a map of media type parameters, null is the same as an
+     * empty map.
      */
     public MediaType(String type, String subtype, Map<String, String> parameters) {
-        this.type = type;
-        this.subtype = subtype;
+        this.type = type==null ? MEDIA_TYPE_WILDCARD : type;
+        this.subtype = subtype==null ? MEDIA_TYPE_WILDCARD : subtype;
         if (parameters==null) {
             this.parameters = emptyMap;
         } else {
@@ -135,8 +149,10 @@ public class MediaType {
     
     /**
      * Creates a new instance of MediaType with the supplied type and subtype.
-     * @param type the primary type
-     * @param subtype the subtype
+     * @param type the primary type, null is equivalent to 
+     * {@link #MEDIA_TYPE_WILDCARD}
+     * @param subtype the subtype, null is equivalent to 
+     * {@link #MEDIA_TYPE_WILDCARD}
      */
     public MediaType(String type, String subtype) {
         this(type,subtype,emptyMap);
@@ -144,6 +160,7 @@ public class MediaType {
 
     /**
      * Creates a new instance of MediaType, both type and subtype are wildcards.
+     * Consider using the constant {@link #WILDCARD_TYPE} instead.
      */
     public MediaType() {
         this(MEDIA_TYPE_WILDCARD, MEDIA_TYPE_WILDCARD);
@@ -192,8 +209,8 @@ public class MediaType {
     /**
      * Check if this media type is compatible with another media type. E.g.
      * image/* is compatible with image/jpeg, image/png, etc. Media type
-     * parameters are ignored.
-     * @return true if other is a subtype of this media type, false otherwise.
+     * parameters are ignored. The function is commutative.
+     * @return true if the types are compatible, false otherwise.
      * @param other the media type to compare with
      */
     public boolean isCompatible(MediaType other) {
@@ -230,12 +247,12 @@ public class MediaType {
     }
     
     /**
-     * Generate a hashcode from the type and subtype.
+     * Generate a hashcode from the type, subtype and parameters.
      * @return a hashcode
      */
     @Override
     public int hashCode() {
-        return (this.type.toLowerCase()+this.subtype.toLowerCase()).hashCode();
+        return (this.type.toLowerCase()+this.subtype.toLowerCase()).hashCode()+this.parameters.hashCode();
     }
     
     /**

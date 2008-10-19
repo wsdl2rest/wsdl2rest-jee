@@ -22,24 +22,34 @@ package javax.ws.rs.core;
 import java.net.URI;
 import java.util.Date;
 import java.util.List;
+import java.util.Locale;
 import javax.ws.rs.ext.RuntimeDelegate;
 
 /**
  * Defines the contract between a returned instance and the runtime when
  * an application needs to provide metadata to the runtime. An application
- * class can extend this class directly or can use one the static 
+ * class can extend this class directly or can use one of the static 
  * methods to create an instance using a ResponseBuilder.
  * 
  * Several methods have parameters of type URI, {@link UriBuilder} provides
- * convenient methods to create such values as does <code>URI.create()</code>.
+ * convenient methods to create such values as does 
+ * {@link <a href="http://java.sun.com/j2se/1.5.0/docs/api/java/net/URI.html#create(java.lang.String)">URI.create()</a>}.
  * 
  * @see Response.ResponseBuilder
  */
 public abstract class Response {
     
     /**
-     * Return the entity for the response. The response will be serialized using a
-     * MessageBodyWriter for the class of the entity.
+     * Protected constructor, use one of the static methods to obtain a 
+     * {@link ResponseBuilder} instance and obtain a Response from that.
+     */
+    protected Response() {}
+    
+    
+    /**
+     * Return the response entity. The response will be serialized using a
+     * MessageBodyWriter for either the class of the entity or, in the case of
+     * {@link GenericEntity}, the value of {@link GenericEntity#getRawType()}.
      * @return an object instance or null if there is no entity
      * @see javax.ws.rs.ext.MessageBodyWriter
      */
@@ -47,13 +57,18 @@ public abstract class Response {
     
     /**
      * Get the status code associated with the response.
-     * @return the response status code or -1 if the status was not set
+     * @return the response status code or -1 if the status was not set.  
      */
     public abstract int getStatus();
 
     /**
      * Get metadata associated with the response as a map. The returned map
-     * may be subsequently modified by the JAX-RS runtime.
+     * may be subsequently modified by the JAX-RS runtime. Values will be
+     * serialized using a {@link javax.ws.rs.ext.RuntimeDelegate.HeaderDelegate}
+     * if one is available via
+     * {@link javax.ws.rs.ext.RuntimeDelegate#createHeaderDelegate(java.lang.Class)}
+     * for the class of the value or using the values {@code toString} method if a 
+     * header delegate is not available.
      * @return response metadata as a map
      */
     public abstract MultivaluedMap<String, Object> getMetadata();
@@ -95,6 +110,8 @@ public abstract class Response {
      * Create a new ResponseBuilder with the supplied status.
      * @param status the response status
      * @return a new ResponseBuilder
+     * @throws IllegalArgumentException if status is less than 100 or greater
+     * than 599.
      */
     public static ResponseBuilder status(int status) {
         ResponseBuilder b = ResponseBuilder.newInstance();
@@ -113,7 +130,9 @@ public abstract class Response {
     }
 
     /**
-     * Create a new ResponseBuilder that contains a representation.
+     * Create a new ResponseBuilder that contains a representation. It is the
+     * callers responsibility to wrap the actual entity with
+     * {@link GenericEntity} if preservation of its generic type is required.
      * 
      * @param entity the representation entity data
      * @return a new ResponseBuilder
@@ -125,7 +144,9 @@ public abstract class Response {
     }
 
     /**
-     * Create a new ResponseBuilder that contains a representation.
+     * Create a new ResponseBuilder that contains a representation. It is the
+     * callers responsibility to wrap the actual entity with
+     * {@link GenericEntity} if preservation of its generic type is required.
      * 
      * @param entity the representation entity data
      * @param type the media type of the entity
@@ -139,7 +160,9 @@ public abstract class Response {
     }
 
     /**
-     * Create a new ResponseBuilder that contains a representation.
+     * Create a new ResponseBuilder that contains a representation. It is the
+     * callers responsibility to wrap the actual entity with
+     * {@link GenericEntity} if preservation of its generic type is required.
      * 
      * @param entity the representation entity data
      * @param type the media type of the entity
@@ -153,7 +176,9 @@ public abstract class Response {
     }
 
     /**
-     * Create a new ResponseBuilder that contains a representation.
+     * Create a new ResponseBuilder that contains a representation. It is the
+     * callers responsibility to wrap the actual entity with
+     * {@link GenericEntity} if preservation of its generic type is required.
      * 
      * @param entity the representation entity data
      * @param variant representation metadata
@@ -184,6 +209,7 @@ public abstract class Response {
      * supplied it will be converted into an absolute URI by resolving it
      * relative to the request URI (see {@link UriInfo#getRequestUri}).
      * @return a new ResponseBuilder
+     * @throws java.lang.IllegalArgumentException if location is null
      */
     public static ResponseBuilder created(URI location) {
         ResponseBuilder b = status(Status.CREATED).location(location);
@@ -215,6 +241,7 @@ public abstract class Response {
      * 
      * @param tag a tag for the unmodified entity
      * @return a new ResponseBuilder
+     * @throws java.lang.IllegalArgumentException if tag is null
      */
     public static ResponseBuilder notModified(EntityTag tag) {
         ResponseBuilder b = notModified();
@@ -230,6 +257,7 @@ public abstract class Response {
      * @param tag the string content of a strong entity tag. The JAX-RS
      * runtime will quote the supplied value when creating the header.
      * @return a new ResponseBuilder
+     * @throws java.lang.IllegalArgumentException if tag is null
      */
     public static ResponseBuilder notModified(String tag) {
         ResponseBuilder b = notModified();
@@ -246,6 +274,7 @@ public abstract class Response {
      * relative to the base URI of the application (see 
      * {@link UriInfo#getBaseUri}).
      * @return a new ResponseBuilder
+     * @throws java.lang.IllegalArgumentException if location is null
      */
     public static ResponseBuilder seeOther(URI location) {
         ResponseBuilder b = status(Status.SEE_OTHER).location(location);
@@ -260,6 +289,7 @@ public abstract class Response {
      * relative to the base URI of the application (see 
      * {@link UriInfo#getBaseUri}).
      * @return a new ResponseBuilder
+     * @throws java.lang.IllegalArgumentException if location is null
      */
     public static ResponseBuilder temporaryRedirect(URI location) {
         ResponseBuilder b = status(Status.TEMPORARY_REDIRECT).location(location);
@@ -269,7 +299,8 @@ public abstract class Response {
     /**
      * Create a new ResponseBuilder for a not acceptable response.
      * 
-     * @param variants list of variants that were available
+     * @param variants list of variants that were available, a null vaue is
+     * equivalent to an empty list.
      * @return a new ResponseBuilder
      */
     public static ResponseBuilder notAcceptable(List<Variant> variants) {
@@ -290,8 +321,12 @@ public abstract class Response {
      *   return Response.created(widgetId).build();
      * }</pre>
      * 
-     * Several methods have parameters of type URI, {@link UriBuilder} provides
-     * convenient methods to create such values as does <code>URI.create()</code>.
+     * <p>Several methods have parameters of type URI, {@link UriBuilder} provides
+     * convenient methods to create such values as does <code>URI.create()</code>.</p>
+     * 
+     * <p>Where multiple variants of the same method are provided, the type of
+     * the supplied parameter is retained in the metadata of the built 
+     * {@code Response}.</p>  
      * 
      */
     public static abstract class ResponseBuilder {
@@ -332,6 +367,8 @@ public abstract class Response {
          * 
          * @param status the response status
          * @return the updated ResponseBuilder
+         * @throws IllegalArgumentException if status is less than 100 or greater
+         * than 599.
          */
         public abstract ResponseBuilder status(int status);
         
@@ -349,8 +386,9 @@ public abstract class Response {
         };
         
         /**
-         * Set the entity on the ResponseBuilder.
-         * 
+         * Set the entity on the ResponseBuilder. It is the
+         * callers responsibility to wrap the actual entity with
+         * {@link GenericEntity} if preservation of its generic type is required.
          * 
          * @param entity the response entity
          * @return the updated ResponseBuilder
@@ -360,8 +398,8 @@ public abstract class Response {
         /**
          * Set the response media type on the ResponseBuilder.
          * 
-         * 
-         * @param type the media type of the response entity
+         * @param type the media type of the response entity, if null any 
+         * existing value for type will be removed
          * @return the updated ResponseBuilder
          */
         public abstract ResponseBuilder type(MediaType type);
@@ -369,17 +407,20 @@ public abstract class Response {
         /**
          * Set the response media type on the ResponseBuilder.
          * 
-         * @param type the media type of the response entity
+         * @param type the media type of the response entity, if null any 
+         * existing value for type will be removed
          * @return the updated ResponseBuilder
          * @throws IllegalArgumentException if type cannot be parsed
          */
         public abstract ResponseBuilder type(String type);
         
         /**
-         * Set representation metadata on the ResponseBuilder.
+         * Set representation metadata on the ResponseBuilder. Equivalent to
+         * setting the values of content type, content language, and content
+         * encoding separately using the values of the variant properties.
          * 
-         * 
-         * @param variant metadata of the response entity
+         * @param variant metadata of the response entity, a null value is
+         * equivalent to a variant with all null properties.
          * @return the updated ResponseBuilder
          */
         public abstract ResponseBuilder variant(Variant variant);
@@ -387,7 +428,8 @@ public abstract class Response {
         /**
          * Add a Vary header that lists the available variants.
          * 
-         * @param variants a list of available representation variants
+         * @param variants a list of available representation variants, a null
+         * value will remove an existing value for vary.
          * @return the updated ResponseBuilder
          */
         public abstract ResponseBuilder variants(List<Variant> variants);
@@ -395,11 +437,21 @@ public abstract class Response {
         /**
          * Set the language on the ResponseBuilder.
          * 
-         * 
-         * @param language the language of the response entity
+         * @param language the language of the response entity, if null any 
+         * existing value for language will be removed
          * @return the updated ResponseBuilder
          */
         public abstract ResponseBuilder language(String language);
+        
+        /**
+         * Set the language on the ResponseBuilder.
+         * 
+         * 
+         * @param language the language of the response entity, if null any 
+         * existing value for type will be removed
+         * @return the updated ResponseBuilder
+         */
+        public abstract ResponseBuilder language(Locale language);
         
         /**
          * Set the location on the ResponseBuilder.
@@ -407,7 +459,8 @@ public abstract class Response {
          * @param location the location. If a relative URI is 
          * supplied it will be converted into an absolute URI by resolving it
          * relative to the base URI of the application (see 
-         * {@link UriInfo#getBaseUri}).
+         * {@link UriInfo#getBaseUri}). If null any 
+         * existing value for location will be removed.
          * @return the updated ResponseBuilder
          */
         public abstract ResponseBuilder location(URI location);
@@ -416,7 +469,8 @@ public abstract class Response {
          * Set the content location on the ResponseBuilder.
          * 
          * @param location the content location. Relative or absolute URIs
-         * may be used for the value of content location.
+         * may be used for the value of content location. If null any 
+         * existing value for content location will be removed.
          * @return the updated ResponseBuilder
          */
         public abstract ResponseBuilder contentLocation(URI location);
@@ -424,7 +478,8 @@ public abstract class Response {
         /**
          * Set an entity tag on the ResponseBuilder.
          * 
-         * @param tag the entity tag
+         * @param tag the entity tag, if null any 
+         * existing entity tag value will be removed.
          * @return the updated ResponseBuilder
          */
         public abstract ResponseBuilder tag(EntityTag tag);
@@ -434,7 +489,8 @@ public abstract class Response {
          * for <code>tag(new EntityTag(<i>value</i>))</code>.
          * 
          * @param tag the string content of a strong entity tag. The JAX-RS
-         * runtime will quote the supplied value when creating the header.
+         * runtime will quote the supplied value when creating the header. If
+         * null any existing entity tag value will be removed.
          * @return the updated ResponseBuilder
          */
         public abstract ResponseBuilder tag(String tag);
@@ -442,8 +498,8 @@ public abstract class Response {
         /**
          * Set the last modified date on the ResponseBuilder.
          * 
-         * 
-         * @param lastModified the last modified date
+         * @param lastModified the last modified date, if null any existing
+         * last modified value will be removed.
          * @return the updated ResponseBuilder
          */
         public abstract ResponseBuilder lastModified(Date lastModified);
@@ -451,32 +507,52 @@ public abstract class Response {
         /**
          * Set the cache control data on the ResponseBuilder.
          * 
-         * 
-         * @param cacheControl the cache control directives
+         * @param cacheControl the cache control directives, if null removes any
+         * existing cache control directives.
          * @return the updated ResponseBuilder
          */
         public abstract ResponseBuilder cacheControl(CacheControl cacheControl);
         
         /**
-         * Set the value of a specific header on the ResponseBuilder.
+         * Set the expires date on the ResponseBuilder.
+         * 
+         * @param expires the expiration date, if null removes any existing
+         * expires value.
+         * @return the updated ResponseBuilder
+         */
+        public abstract ResponseBuilder expires(Date expires);
+        
+        /**
+         * Add a header to the ResponseBuilder.
          * 
          * @param name the name of the header
          * @param value the value of the header, the header will be serialized
-         * using its toString method
+         * using a {@link javax.ws.rs.ext.RuntimeDelegate.HeaderDelegate} if
+         * one is available via
+         * {@link javax.ws.rs.ext.RuntimeDelegate#createHeaderDelegate(java.lang.Class)}
+         * for the class of {@code value} or using its {@code toString} method if a 
+         * header delegate is not available. If {@code value} is null then all 
+         * current headers of the same name will be removed.
          * @return the updated ResponseBuilder
          */
         public abstract ResponseBuilder header(String name, Object value);
         
         /**
-         * Add cookies to the ResponseBuilder. If more than one cookie with
-         * the same is supplied, later ones overwrite earlier ones.
+         * Add cookies to the ResponseBuilder.
          * 
-         * @param cookies new cookies that will accompany the response.
+         * @param cookies new cookies that will accompany the response. A null
+         * value will remove all cookies, including those added via the 
+         * {@link #header(java.lang.String, java.lang.Object)} method.
          * @return the updated ResponseBuilder
          */
         public abstract ResponseBuilder cookie(NewCookie... cookies);
     }
     
+    /**
+     * Commonly used status codes defined by HTTP, see 
+     * {@link <a href="http://www.w3.org/Protocols/rfc2616/rfc2616-sec10.html#sec10">HTTP/1.1 documentation</a>}
+     * for the complete list.
+     */
     public enum Status {
         /**
          * 200 OK, see {@link <a href="http://www.w3.org/Protocols/rfc2616/rfc2616-sec10.html#sec10.2.1">HTTP/1.1 documentation</a>}.

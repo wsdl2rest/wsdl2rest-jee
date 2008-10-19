@@ -54,6 +54,7 @@ import java.lang.annotation.Target;
  *
  * @see DefaultValue
  * @see Encoded
+ * @see <a href="http://www.w3.org/DesignIssues/MatrixURIs.html">Matrix URIs</a>
  */
 @Target({ElementType.PARAMETER, ElementType.METHOD, ElementType.FIELD})
 @Retention(RetentionPolicy.RUNTIME)
@@ -61,15 +62,10 @@ public @interface MatrixParam {
     /**
      * Defines the name of the URI matrix parameter whose value will be used
      * to initialize the value of the annotated method argument, class field or
-     * bean property.
+     * bean property. The name is specified in decoded form, any percent encoded
+     * literals within the value will not be decoded and will instead be 
+     * treated as literal text. E.g. if the parameter name is "a b" then the 
+     * value of the annotation is "a b", <i>not</i> "a+b" or "a%20b".
      */
     String value();
-    
-    /**
-     * Controls whether the the supplied matrix parameter name is URL encoded. 
-     * If true, any characters in the matrix parameter name that are not valid
-     * URI characters will be automatically encoded. If false then all 
-     * characters in the supplied name must be valid URI characters.
-     */
-    boolean encode() default true;    
 }

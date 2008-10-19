@@ -34,8 +34,13 @@ import java.lang.annotation.Target;
  * 
  * The type of the annotated parameter, field or property must either:
  * <ul>
- * <li>Be {@link javax.ws.rs.core.PathSegment}, the value will be a PathSegment
- * corresponding to the path segment that contains the named template parameter.
+ * <li>Be {@link javax.ws.rs.core.PathSegment}, the value will be the final
+ * segment of the matching part of the path.
+ * See {@link javax.ws.rs.core.UriInfo} for a means of retrieving all request 
+ * path segments.</li>
+ * <li>Be {@code List<}{@link javax.ws.rs.core.PathSegment}{@code >}, the 
+ * value will be a list of {@code PathSegment} corresponding to the path 
+ * segment(s) that matched the named template parameter.
  * See {@link javax.ws.rs.core.UriInfo} for a means of retrieving all request 
  * path segments.</li>
  * <li>Be a primitive type.</li>
@@ -43,6 +48,12 @@ import java.lang.annotation.Target;
  * <li>Have a static method named <code>valueOf</code> that accepts a single 
  * String argument (see, for example, {@link Integer#valueOf(String)}).
  * </ul>
+ * 
+ * <p>The injected value corresponds to the latest use (in terms of scope) of 
+ * the path parameter. E.g. if a class and a sub-resource method are both 
+ * annotated with a {@link Path} containing the same URI template parameter, use
+ * of {@code PathParam} on a subresource method parameter will bind the value 
+ * matching URI template parameter in the method's {@link Path} annotation.</p>
  * 
  * <p>Because injection occurs at object creation time, use of this annotation 
  * on resource class fields and bean properties is only supported for the 
@@ -59,12 +70,13 @@ import java.lang.annotation.Target;
 @Retention(RetentionPolicy.RUNTIME)
 public @interface PathParam {
     /**
-     * Defines the name of the URI template parameter who value will be used
+     * Defines the name of the URI template parameter whose value will be used
      * to initialize the value of the annotated method parameter, class field or
-     * property.
+     * property. See {@link Path#value()} for a description of the syntax of
+     * template parameters.
      * 
      * <p>E.g. a class annotated with: <code>&#64;Path("widgets/{id}")</code>
-     * can have methods annotated with a HTTP method annotation whose arguments are annotated
+     * can have methods annotated whose arguments are annotated
      * with <code>&#64;PathParam("id")</code>.
      */
     String value();

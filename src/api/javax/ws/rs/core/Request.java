@@ -44,6 +44,13 @@ import javax.ws.rs.core.Response.ResponseBuilder;
 public interface Request {
     
     /**
+     * Get the request method, e.g. GET, POST, etc.
+     * @return the request method
+     * @see javax.ws.rs.HttpMethod
+     */
+    String getMethod();
+
+    /**
      * Select the representation variant that best matches the request. More
      * explicit variants are chosen ahead of less explicit ones. A vary header
      * is computed from the supplied list and automatically added to the 
@@ -53,7 +60,7 @@ public interface Request {
      * available representation variants.
      * @return the variant that best matches the request.
      * @see Variant.VariantListBuilder
-     * @throws IllegalArgumentException if variants is empty
+     * @throws java.lang.IllegalArgumentException if variants is empty or null
      * @throws java.lang.IllegalStateException if called outside the scope of a request
      */
     Variant selectVariant(List<Variant> variants) throws IllegalArgumentException;
@@ -65,6 +72,7 @@ public interface Request {
      * @return null if the preconditions are met or a ResponseBuilder set with
      * the appropriate status if the preconditions are not met. A returned
      * ResponseBuilder will include an ETag header set with the value of eTag.
+     * @throws java.lang.IllegalArgumentException if eTag is null
      * @throws java.lang.IllegalStateException if called outside the scope of a request
      */
     ResponseBuilder evaluatePreconditions(EntityTag eTag);
@@ -75,6 +83,7 @@ public interface Request {
      * @param lastModified a date that specifies the modification date of the resource
      * @return null if the preconditions are met or a ResponseBuilder set with
      * the appropriate status if the preconditions are not met.
+     * @throws java.lang.IllegalArgumentException if lastModified is null
      * @throws java.lang.IllegalStateException if called outside the scope of a request
      */
     ResponseBuilder evaluatePreconditions(Date lastModified);
@@ -87,6 +96,7 @@ public interface Request {
      * @return null if the preconditions are met or a ResponseBuilder set with
      * the appropriate status if the preconditions are not met.  A returned
      * ResponseBuilder will include an ETag header set with the value of eTag.
+     * @throws java.lang.IllegalArgumentException if lastModified or eTag is null
      * @throws java.lang.IllegalStateException if called outside the scope of a request
      */
     ResponseBuilder evaluatePreconditions(Date lastModified, EntityTag eTag);
