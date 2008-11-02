@@ -21,6 +21,7 @@ package org.slosc.rest.core;
 import javax.ws.rs.core.Application;
 import java.util.Set;
 import java.util.HashSet;
+import java.net.URL;
 
 /**
  * A JAX-RS application consists of one or more resources (see chapter 3) and zero or more providers (see
@@ -37,6 +38,15 @@ import java.util.HashSet;
 public class ApplicationConfiguration extends Application {
 
     private final Set<Class<?>> classes = new HashSet<Class<?>>();
+
+    public ApplicationConfiguration(){
+        loadResourceClasses();
+    }
+
+    private void loadResourceClasses() {
+        URL classesURL = servletContext.getResource("/WEB-INF/classes/");
+        URL libURL = servletContext.getResource("/WEB-INF/lib/");
+    }
 
     public Set<Class<?>> getClasses() {
         return classes;  

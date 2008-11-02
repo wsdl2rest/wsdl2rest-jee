@@ -18,20 +18,24 @@ package org.slosc.rest.servlet;
  *
  */
 
-import org.slosc.rest.core.ApplicationConfiguration;
-import org.slosc.rest.core.RequestHandler;
-import org.slosc.rest.core.ApplicationContext;
+import org.slosc.rest.core.*;
+import org.slosc.rest.core.resource.ResourceClassLoader;
 
 import javax.servlet.http.HttpServlet;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 import javax.servlet.ServletException;
 import javax.servlet.ServletConfig;
+import javax.servlet.ServletContext;
 import javax.ws.rs.core.UriBuilder;
 import java.io.IOException;
+import java.io.File;
+import java.net.URL;
+import java.net.MalformedURLException;
 
 /**
- * JAX-RS implementation Servlet class to be used in non-JAX-RS aware servlet container
+ * JAX-RS implementation Servlet class to be used in non-JAX-RS aware servlet container.
+ *
  * <servlet-class/> of web.xml shoud define this servlet.  if the servlet container is
  * JAX-RS aware, the <servlet-class/> element of the web.xml descriptor SHOULD name
  * the application-supplied subclass of <code>Application</code>
@@ -45,8 +49,8 @@ import java.io.IOException;
  * injected (see section 3.2), then the appropriate method (see section 3.3) is invoked and
  * finally the object is made available for garbage collection
  *
- * A public constructor MAY include parameters annotated with one of the following:
- * @Context, @Header, @Param, @CookieParam, @MatrixParam, @QueryParam or @PathParam.
+ * A public constructor MAY include parameters annotated with one of the following: @Context, @Header, @Param,
+ * @CookieParam, @MatrixParam, @QueryParam or @PathParam.
  * However, depending on the resource class lifecycle and concurrency, per-request information may not
  * make sense in a constructor. If more than one public constructor is suitable then an implementation MUST
  * use the one with the most parameters. Choosing amongst suitable constructors with the same number of
@@ -64,6 +68,10 @@ public class ControllerServlet extends HttpServlet {
     private ApplicationConfiguration applicationConfig;
     private ServletConfig config = null;
 
+    private ResourceClassLoader resourceClassLoader;
+
+    private static final String WORK_DIR_ATTR = "javax.servlet.context.tempdir";
+
     private ApplicationContext ctx;
 
     public void init(ServletConfig servletConfig) throws ServletException {
@@ -80,12 +88,14 @@ public class ControllerServlet extends HttpServlet {
         try {
             applicationConfig = (ApplicationConfiguration) classLoader.loadClass(applicationConfigClassName).newInstance();
         } catch (ClassNotFoundException e) {
-            log("Unable to load Application configuration class ", e);  
+            log("Unable to load Application configuration class ", e);
         } catch (IllegalAccessException e) {
             log("Unable to load Application configuration class ", e);
         } catch (InstantiationException e) {
             log("Unable to load Application configuration class ", e); 
         }
+
+        resourceLookup();
 
         ctx = new ApplicationContext();
         ctx.add("applicationConfig", applicationConfig);
@@ -99,11 +109,19 @@ public class ControllerServlet extends HttpServlet {
             res.setStatus(404);
             return;
         }
+
+
         
         UriBuilder absURI = UriBuilder.fromUri(req.getRequestURL().toString());
         
         String queryParameters = req.getQueryString();
         if (queryParameters == null) queryParameters = "";
+
+        Request reqest    = new RequestWrapper(req);
+        Response response = new ResponseWrapper(res);
+
+        ctx.add("request", reqest);
+        ctx.add("response", response);
 
         RequestHandler handler = new RequestHandler();
 
@@ -112,6 +130,95 @@ public class ControllerServlet extends HttpServlet {
         } catch (Exception e) {
             res.sendError(500, e.getMessage());
             return;
+        }
+    }
+
+
+    private void resourceLookup(){
+
+        resourceClassLoader = new ResourceClassLoader();
+        ServletContext servletContext = config.getServletContext();
+
+        File workDir = (File) servletContext.getAttribute(WORK_DIR_ATTR);
+
+        try {
+
+            URL rootURL = servletContext.getResource("/");
+            String contextRoot = servletContext.getRealPath("/");
+            if (contextRoot != null) {
+                try {
+                    contextRoot = (new File(contextRoot)).getCanonicalPath();
+                } catch (IOException e) {
+                    // Ignore
+                }
+            }
+
+            URL classesURL = servletContext.getResource("/WEB-INF/classes/");
+            URL libURL = servletContext.getResource("/WEB-INF/lib/");
+
+            if (contextRoot != null) {
+                File rootDir = new File(contextRoot);
+                if (libURL != null) {
+                    File libDir = new File(rootDir, "WEB-INF/lib/");
+                    try {
+                        String path = libDir.getCanonicalPath();
+                        resourceClassLoader.addLookupPath(path);
+                    } catch (IOException e) {
+                        //ignore
+                    }
+                }
+                if (classesURL != null) {
+                    File classesDir = new File(rootDir, "WEB-INF/classes/");
+                    try {
+                        String path = classesDir.getCanonicalPath();
+                        resourceClassLoader.addLookupPath(path);
+                    } catch (IOException e) {
+                        //ignore
+                    }
+                }
+
+            } else {
+                if (workDir != null) {
+                    if (libURL != null) {
+                        File libDir = new File(workDir, "WEB-INF/lib/");
+                        try {
+                            String path = libDir.getCanonicalPath();
+                            resourceClassLoader.addLookupPath(path);
+                        } catch (IOException e) {
+                            //ignore
+                        }
+                    }
+                    if (classesURL != null) {
+                        File classesDir = new File(workDir, "WEB-INF/classes/");
+                        try {
+                            String path = classesDir.getCanonicalPath();
+                            resourceClassLoader.addLookupPath(path);
+                        } catch (IOException e) {
+                            //ignore
+                        }
+                    }
+                }
+            }
+        } catch (MalformedURLException e) {
+            log("Unable to load resource classes ", e);
+        }
+
+        resourceClassLoader.lookup();
+    }
+
+    class RequestWrapper implements Request{
+        HttpServletRequest req;
+
+        public RequestWrapper(HttpServletRequest req){
+            this.req = req;    
+        }
+    }
+
+    class ResponseWrapper implements Response {
+        HttpServletResponse res;
+
+        public ResponseWrapper(HttpServletResponse res){
+            this.res = res;    
         }
     }
 }
