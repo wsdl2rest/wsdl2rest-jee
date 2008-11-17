@@ -199,11 +199,14 @@ public class ControllerServlet extends HttpServlet {
                     }
                 }
             }
+            resourceClassLoader.lookup();
         } catch (MalformedURLException e) {
+            log("Unable to load resource classes ", e);
+        } catch (Exception e) {
             log("Unable to load resource classes ", e);
         }
 
-        resourceClassLoader.lookup();
+
     }
 
     class RequestWrapper implements Request{

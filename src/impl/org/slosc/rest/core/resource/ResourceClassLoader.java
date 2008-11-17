@@ -27,7 +27,7 @@ import java.io.*;
 
 /**
  * @author : Lilantha Darshana (lilantha_os@yahoo.com)
- *         Date    : Nov 1, 2008
+ * Date    : Nov 1, 2008
  * @version: 1.0
  */
 public class ResourceClassLoader {
@@ -40,14 +40,14 @@ public class ResourceClassLoader {
         lookupPaths.add(path);
     }
 
-    public void lookup(){
+    public void lookup() throws Exception {
 
        for(String path : lookupPaths){
             lookInDir(new File(path));
        }
     }
 
-    private void lookInDir(File dir){
+    private void lookInDir(File dir) throws Exception{
        File[] lst = dir.listFiles();
 
        for(File f:lst){
@@ -63,7 +63,7 @@ public class ResourceClassLoader {
        }
     }
 
-    private void processJarFile(File jarFile){
+    private void processJarFile(File jarFile) throws Exception{
         JarFile jar = new JarFile(jarFile);
 
         Enumeration<JarEntry> entries = jar.entries();
@@ -151,7 +151,7 @@ public class ResourceClassLoader {
 
     }
 
-    private void checkMagic(DataInputStream file){
+    private void checkMagic(DataInputStream file) throws Exception{
         int magic = 0xCAFEBABE;
         if (file.readInt() != magic) {
             throw new Exception(" is not a Java .class file");
