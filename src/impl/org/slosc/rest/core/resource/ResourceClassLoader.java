@@ -1,5 +1,8 @@
 package org.slosc.rest.core.resource;
 
+import org.apache.commons.logging.Log;
+import org.apache.commons.logging.LogFactory;
+
 import java.util.*;
 import java.util.jar.JarFile;
 import java.util.jar.JarEntry;
@@ -32,6 +35,8 @@ public class ResourceClassLoader {
 
     private static final int BUFSIZE = 1024;
 
+    protected static Log log = LogFactory.getLog(ResourceClassLoader.class);
+
     private List<String> lookupPaths = new ArrayList<String>();
 
     private Set<Class> resourceClasses = new HashSet<Class>();
@@ -58,24 +63,46 @@ public class ResourceClassLoader {
            }
 
            if(f.getName().endsWith(".class")){
-                processClassFile(f);     
+               InputStream input = null;
+               try{
+                   input = f.toURL().openStream(); 
+                   processClassFile(input);
+               }catch (Exception e){
+                    log.error(e);
+                    throw e;
+                }finally {
+                    try{
+                        if(input != null) input.close();
+                    }catch (Exception e){
+                        //ignore
+                    }
+                }
            }
        }
     }
 
-    private void processJarFile(File jarFile) throws Exception{
-        JarFile jar = new JarFile(jarFile);
+    private void processJarFile(File jarFile) throws Exception {
+        InputStream input = null;
+        try{
+            JarFile jar = new JarFile(jarFile);
 
-        Enumeration<JarEntry> entries = jar.entries();
-        while(entries.hasMoreElements()){
-            JarEntry entry = entries.nextElement();
-            entry.getName().endsWith(".class");
-            DataInputStream in = new DataInputStream(new BufferedInputStream(jar.getInputStream(entry), BUFSIZE));
-            ResourceClassParser par = new ResourceClassParser(in);
-            par.parse();
-            String className = par.getClazzName();
-            if(className != null) resourceClasses.add(Class.forName(className.replaceAll("/", ".")));
-
+            Enumeration<JarEntry> entries = jar.entries();
+            while(entries.hasMoreElements()){
+                JarEntry entry = entries.nextElement();
+                if(entry.getName().endsWith(".class")){
+                    input = jar.getInputStream(entry);
+                    processClassFile(input);
+                }
+            }
+        }catch (Exception e){
+            log.error(e);
+            throw e;
+        }finally {
+            try{
+                if(input != null) input.close();
+            }catch (Exception e){
+                //ignore
+            }
         }
     }
 
@@ -83,8 +110,13 @@ public class ResourceClassLoader {
         return resourceClasses;
     }
 
-    private void processClassFile(File classFile){
-
+    private void processClassFile(InputStream input) throws Exception{
+        DataInputStream in = new DataInputStream(new BufferedInputStream(input, BUFSIZE));
+        //TODO for now we create ASM class parser.
+        ResourceClassParser par = new ResourceASMClassParserImpl(in);
+        par.parse();
+        String className = par.getClazzName();
+        if(className != null) resourceClasses.add(Class.forName(className.replaceAll("/", ".")));
     }
     
     class LookupFileFilter  implements FileFilter {
