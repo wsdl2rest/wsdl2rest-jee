@@ -216,3 +216,6 @@ JAX-WS API (https://jax-ws.dev.java.net/) javax.xml.ws:jaxws-api:jar:2.1-1
 WSDL4J (http://sf.net/projects/wsdl4j) wsdl4j:wsdl4j:jar:1.6.1
     License: CPL  (http://www.opensource.org/licenses/cpl1.0.txt)
 
+
+ASM All purpose Java bytecode manipulation and analysis framework (http://asm.objectweb.org/) org.objectweb.asm:asm:jar:3.1
+	License: Project License (http://asm.objectweb.org/license.html)

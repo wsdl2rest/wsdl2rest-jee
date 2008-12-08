@@ -1,8 +1,6 @@
 package org.slosc.rest.core.resource;
 
-import java.util.List;
-import java.util.ArrayList;
-import java.util.Enumeration;
+import java.util.*;
 import java.util.jar.JarFile;
 import java.util.jar.JarEntry;
 import java.io.*;
@@ -35,6 +33,8 @@ public class ResourceClassLoader {
     private static final int BUFSIZE = 1024;
 
     private List<String> lookupPaths = new ArrayList<String>();
+
+    private Set<Class> resourceClasses = new HashSet<Class>();
 
     public void addLookupPath(String path){
         lookupPaths.add(path);
@@ -71,92 +71,16 @@ public class ResourceClassLoader {
             JarEntry entry = entries.nextElement();
             entry.getName().endsWith(".class");
             DataInputStream in = new DataInputStream(new BufferedInputStream(jar.getInputStream(entry), BUFSIZE));
-            checkMagic(in);
-            skip(in);
+            ResourceClassParser par = new ResourceClassParser(in);
+            par.parse();
+            String className = par.getClazzName();
+            if(className != null) resourceClasses.add(Class.forName(className.replaceAll("/", ".")));
 
         }
-
-
     }
 
-    private final static byte UTF8               =   1;
-    private final static byte INTEGER            = 3;
-    private final static byte FLOAT              = 4;
-    private final static byte LONG               = 5;
-    private final static byte DOUBLE             = 6;
-    private final static byte CLASS              = 7;
-    private final static byte FIELD_REF           = 9;
-    private final static byte STRING             = 8;
-    private final static byte METHOD_REF          = 10;
-    private final static byte INTERFACE_METHID_REF = 11;
-    private final static byte NAME_AND_TYPE        = 12;
-
-
-    private void skip(DataInputStream in) throws Exception {
-        //skip version major/minor
-        in.readUnsignedShort();
-        in.readUnsignedShort();
-
-        //skip constant pool entries
-        int count = in.readUnsignedShort();
-        for (int i = 1; i < count; i++) {
-             byte b = in.readByte(); // Read tag byte
-            switch (b) {
-                case CLASS:
-                    in.readUnsignedShort();
-                case FIELD_REF:
-                    in.readUnsignedShort(); in.readUnsignedShort();
-                case METHOD_REF:
-                    in.readUnsignedShort(); in.readUnsignedShort();
-                case INTERFACE_METHID_REF:
-                    in.readUnsignedShort(); in.readUnsignedShort();
-                case STRING:
-                    in.readUnsignedShort();
-                case INTEGER:
-                    in.readInt();
-                case FLOAT:
-                    in.readFloat();
-                case LONG:
-                    in.readLong();
-                case DOUBLE:
-                    in.readDouble();
-                case NAME_AND_TYPE:
-                    in.readUnsignedShort(); in.readUnsignedShort();
-                case UTF8:
-                    in.readUTF();
-                default:
-                    throw new Exception("Invalid byte tag in constant pool: " + b);
-            }
-        }
-
-        //skip class info 
-        in.readUnsignedShort(); in.readUnsignedShort(); in.readUnsignedShort();
-
-        //skip interfaces
-        int interfaces_count = in.readUnsignedShort();
-        for (int i = 0; i < interfaces_count; i++) {
-           in.readUnsignedShort();
-        }
-
-        //skip fields
-        int fields_count = in.readUnsignedShort();
-        for (int i = 0; i < fields_count; i++) {
-            in.readUnsignedShort(); in.readUnsignedShort(); in.readUnsignedShort();  in.readUnsignedShort();
-        }
-
-        //skip methods
-    }
-
-    private final void readFields() throws IOException {
-
-    }
-
-    private void checkMagic(DataInputStream file) throws Exception{
-        int magic = 0xCAFEBABE;
-        if (file.readInt() != magic) {
-            throw new Exception(" is not a Java .class file");
-        }
-
+    public Set<Class> getResourceClasses() {
+        return resourceClasses;
     }
 
     private void processClassFile(File classFile){

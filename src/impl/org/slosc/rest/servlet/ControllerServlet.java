@@ -68,8 +68,6 @@ public class ControllerServlet extends HttpServlet {
     private ApplicationConfiguration applicationConfig;
     private ServletConfig config = null;
 
-    private ResourceClassLoader resourceClassLoader;
-
     private static final String WORK_DIR_ATTR = "javax.servlet.context.tempdir";
 
     private ApplicationContext ctx;
@@ -79,7 +77,7 @@ public class ControllerServlet extends HttpServlet {
         config = servletConfig;
         String applicationConfigClassName = getInitParameter(APP_CONFIG_CLASS_NAME);
 
-        //use the default is no config is found
+        //use the default if no config is found
         if(applicationConfigClassName == null) applicationConfigClassName = "org.slosc.rest.core.ApplicationConfiguration";
 
         ClassLoader classLoader = Thread.currentThread().getContextClassLoader();
@@ -109,8 +107,6 @@ public class ControllerServlet extends HttpServlet {
             res.setStatus(404);
             return;
         }
-
-
         
         UriBuilder absURI = UriBuilder.fromUri(req.getRequestURL().toString());
         
@@ -136,7 +132,7 @@ public class ControllerServlet extends HttpServlet {
 
     private void resourceLookup(){
 
-        resourceClassLoader = new ResourceClassLoader();
+        ResourceClassLoader resourceClassLoader = applicationConfig.getResourceClassLoader();
         ServletContext servletContext = config.getServletContext();
 
         File workDir = (File) servletContext.getAttribute(WORK_DIR_ATTR);
@@ -199,7 +195,7 @@ public class ControllerServlet extends HttpServlet {
                     }
                 }
             }
-            resourceClassLoader.lookup();
+            applicationConfig.loadResources();
         } catch (MalformedURLException e) {
             log("Unable to load resource classes ", e);
         } catch (Exception e) {

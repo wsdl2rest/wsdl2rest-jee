@@ -18,6 +18,8 @@ package org.slosc.rest.core;
  *
  */
 
+import org.slosc.rest.core.resource.ResourceClassLoader;
+
 import javax.ws.rs.core.Application;
 import java.util.Set;
 import java.util.HashSet;
@@ -38,14 +40,9 @@ import java.net.URL;
 public class ApplicationConfiguration extends Application {
 
     private final Set<Class<?>> classes = new HashSet<Class<?>>();
+    private ResourceClassLoader resourceClassLoader = new ResourceClassLoader();
 
     public ApplicationConfiguration(){
-        loadResourceClasses();
-    }
-
-    private void loadResourceClasses() {
-        URL classesURL = servletContext.getResource("/WEB-INF/classes/");
-        URL libURL = servletContext.getResource("/WEB-INF/lib/");
     }
 
     public Set<Class<?>> getClasses() {
@@ -54,5 +51,16 @@ public class ApplicationConfiguration extends Application {
 
     private boolean validate(){
         return false;
+    }
+
+    public void loadResources() throws Exception {
+        resourceClassLoader.lookup();
+    }
+    public ResourceClassLoader getResourceClassLoader() {
+        return resourceClassLoader;
+    }
+
+    public void setResourceClassLoader(ResourceClassLoader resourceClassLoader) {
+        this.resourceClassLoader = resourceClassLoader;
     }
 }
