@@ -31,7 +31,7 @@
 
     <servlet>
         <servlet-name>org.slosc.rest.Servlet</servlet-name>
-        <servlet-class>org.slosc.rest.servlet.ControllerServlet</servlet-class>
+        <servlet-class>org.slosc.rest.servlet.RestfulApplicationControllerServlet</servlet-class>
     </servlet>
 
     <servlet-mapping>

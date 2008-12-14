@@ -39,22 +39,25 @@ import java.net.URL;
 
 public class ApplicationConfiguration extends Application {
 
-    private final Set<Class<?>> classes = new HashSet<Class<?>>();
+    private Set<Class<?>> classes = new HashSet<Class<?>>();
+    private Set<Object> classInstances = new HashSet<Object>();
     private ResourceClassLoader resourceClassLoader = new ResourceClassLoader();
 
     public ApplicationConfiguration(){
     }
 
     public Set<Class<?>> getClasses() {
-        return classes;  
+        return classes;
     }
 
-    private boolean validate(){
-        return false;
+    public Set<Object> getSingletons() {
+        return classInstances;
     }
+
 
     public void loadResources() throws Exception {
         resourceClassLoader.lookup();
+        classes = resourceClassLoader.getResourceClasses();
     }
     public ResourceClassLoader getResourceClassLoader() {
         return resourceClassLoader;

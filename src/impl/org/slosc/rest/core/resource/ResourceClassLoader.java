@@ -39,7 +39,7 @@ public class ResourceClassLoader {
 
     private List<String> lookupPaths = new ArrayList<String>();
 
-    private Set<Class> resourceClasses = new HashSet<Class>();
+    private Set<Class<?>> resourceClasses = new HashSet<Class<?>>();
 
     public void addLookupPath(String path){
         lookupPaths.add(path);
@@ -106,14 +106,14 @@ public class ResourceClassLoader {
         }
     }
 
-    public Set<Class> getResourceClasses() {
+    public Set<Class<?>> getResourceClasses() {
         return resourceClasses;
     }
 
     private void processClassFile(InputStream input) throws Exception{
         DataInputStream in = new DataInputStream(new BufferedInputStream(input, BUFSIZE));
         //TODO for now we create ASM class parser.
-        ResourceClassParser par = new ResourceASMClassParserImpl(in);
+        ResourceClassParser par = new ASMResourceClassParserImpl(in);
         par.parse();
         String className = par.getClazzName();
         if(className != null) resourceClasses.add(Class.forName(className.replaceAll("/", ".")));

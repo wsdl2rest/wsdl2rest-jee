@@ -144,8 +144,10 @@ Here above the <code>InvokationContext </code>is used to send client
 eviroment details, context related information etc. Consider an example
 of calling above method with following data<br>
 <br>
-<code>setContactAddress(ctx, &#8220;John&nbsp; &#8220;ABC Computing Systems
-Inc,&nbsp; Suite 5A-1204&#8221;, &#8220;Orchard Park&#8220;, &#8220;TUCSON&#8221;, &#8220;AZ&#8221;, 85705, USA)</code><br>
+<code>setContactAddress(ctx, &ldquo;John&nbsp; &ldquo;ABC Computing
+Systems
+Inc,&nbsp; Suite 5A-1204&rdquo;, &ldquo;Orchard Park&ldquo;,
+&ldquo;TUCSON&rdquo;, &ldquo;AZ&rdquo;, 85705, USA)</code><br>
 <br>
 When this is mapped to REST style resources we might define URL
 something like:<br>
@@ -170,14 +172,17 @@ abstract: Since we know it is contact address we only provide person
 name
 instead of all address fields ids.<br>
 <br>
-Let&#8217;s say now we need obtaining above person&#8217;s country of work from the
-directory service above using HTTP GET. Mmm&#8230; how should we issue the
+Let&rsquo;s say now we need obtaining above person&rsquo;s country of
+work from the
+directory service above using HTTP GET. Mmm&hellip; how should we issue
+the
 resource request??<br>
 Either we should retrieve the full contact address or we should request
 it through a parameter on the URL query string,&nbsp; how ever the
 latter option is wrong in REST style webservices.<br>
 Ideally there should be another URL like this: <code>http://hostname:port/directory-service/ContactAddress/&lt;name(firstname,lastname)&gt;/country</code>
-and issuing a GET on this URL result in the person&#8217;s country of work.<br>
+and issuing a GET on this URL result in the person&rsquo;s country of
+work.<br>
 <br>
 ok now lets say this person has moved and now we need to update his
 current location address. This need issuing UPDATE (or POST) HTTP
@@ -242,19 +247,24 @@ The &lt;binding&gt; element defines the message format and protocol
 details for each port.<br>
 <br>
 <ul type="disc">
-  <li class="MsoNormal"><b>Types</b>&#8211; a container for data type
+  <li class="MsoNormal"><b>Types</b>&ndash; a container for data type
 definitions using some type system (such as XSD). </li>
-  <li class="MsoNormal"><b>Message</b>&#8211; an abstract, typed definition
+  <li class="MsoNormal"><b>Message</b>&ndash; an abstract, typed
+definition
 of the data being communicated. </li>
-  <li class="MsoNormal"><b>Operation</b>&#8211; an abstract description of an
+  <li class="MsoNormal"><b>Operation</b>&ndash; an abstract description
+of an
 action supported by the service. </li>
-  <li class="MsoNormal"><b>Port Type</b>&#8211;an abstract set of operations
+  <li class="MsoNormal"><b>Port Type</b>&ndash;an abstract set of
+operations
 supported by one or more endpoints. </li>
-  <li class="MsoNormal"><b>Binding</b>&#8211; a concrete protocol and data
+  <li class="MsoNormal"><b>Binding</b>&ndash; a concrete protocol and
+data
 format specification for a particular port type. </li>
-  <li class="MsoNormal"><b>Port</b>&#8211; a single endpoint defined as a
+  <li class="MsoNormal"><b>Port</b>&ndash; a single endpoint defined as
+a
 combination of a binding and a network address. </li>
-  <li class="MsoNormal"><b>Service</b>&#8211; a collection of related
+  <li class="MsoNormal"><b>Service</b>&ndash; a collection of related
 endpoints. </li>
 </ul>
 <br>
@@ -400,9 +410,22 @@ as stale. Responses to this method are not cacheable. <br>
 <br>
 <br>
 <br>
+<big><big><big>3 Resource Classes</big></big></big><br>
+A resource class is a Java class that uses JAX-RS annotations&nbsp;to
+implement a corresponding Web resource.&nbsp;Resource classes are POJOs
+that have at least one method annotated with @Path or a request method
+designator. Root resource classes are instantiated by the JAX-RS
+runtime and MUST have a public constructor for which the JAX-RS runtime
+can provide all parameter values. Note that a zero argument constructor
+is permissible&nbsp;under this rule. A public constructor MAY include
+parameters annotated with one of the following: @Context,
+@Header-Param, @CookieParam, @MatrixParam, @QueryParam or @PathParam.
+However, depending on the&nbsp;resource class lifecycle and
+concurrency, per-request information may not make sense in a
+constructor.<br>
 <br>
 <br>
-<big><big><big>3. High Level Approach</big></big></big><br>
+<big><big><big>4. High Level Approach</big></big></big><br>
 <br>
 High level approach to the solution is outline below:<br>
 <br>
@@ -413,7 +436,8 @@ jsr-311 configuration &amp; classes.<br>
 Wsdl2java tool generates java binding for the webservices. It creates
 java code for services implementation and respective Java code for
 client side artifacts. The wsdl2java current
-impl. has mechanism to read WSDL document and generate it&#8217;s object
+impl. has mechanism to read WSDL document and generate it&rsquo;s
+object
 model and emit respective java code for that.
 Since this tool has the way of reading, understanding &amp; creating a
 respective wsdl representation, we could use it to

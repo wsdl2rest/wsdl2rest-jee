@@ -1,12 +1,3 @@
-package org.slosc.rest.core.resource;
-
-
-import org.objectweb.asm.*;
-
-import javax.ws.rs.Path;
-import javax.ws.rs.ext.Provider;
-import java.io.DataInputStream;
-
 /*
  * Copyright (c) 2008 SL_OpenSource Consortium
  * All Rights Reserved.
@@ -25,16 +16,26 @@ import java.io.DataInputStream;
  *
  */
 
+package org.slosc.rest.core.resource;
+
+
+import org.objectweb.asm.*;
+
+import javax.ws.rs.Path;
+import javax.ws.rs.HttpMethod;
+import javax.ws.rs.ext.Provider;
+import java.io.DataInputStream;
+
 /**
  * @author : Lilantha Darshana (lilantha_os@yahoo.com)
  *         Date    : Dec 8, 2008
  * @version: 1.0
  */
-public class ResourceASMClassParserImpl extends ResourceClassParser implements ClassVisitor {
+public class ASMResourceClassParserImpl extends ResourceClassParser implements ClassVisitor {
 
     private ClassReader classReader = null;
 
-   public ResourceASMClassParserImpl(DataInputStream in) {
+   public ASMResourceClassParserImpl(DataInputStream in) {
         super(in);
        try{
            classReader = new ClassReader(in);
@@ -61,10 +62,22 @@ public class ResourceASMClassParserImpl extends ResourceClassParser implements C
         //TODO change body of implemented method
     }
 
+    /*
+     * A resource class is a Java class that uses JAX-RS annotations to implement a corresponding Web resource.
+     * Resource classes are POJOs that have at least one method annotated with @Path or a request method designator.
+     * A request method designator is a runtime annotation that is annotated with the @HttpMethod annotation.
+     * JAX-RS defines a set of request method designators for the common HTTP methods: @GET, @POST, @PUT, @DELETE,
+     * @HEAD. Users may define their own custom request method designators including alternate designators for the
+     * common HTTP methods.
+     */
     public AnnotationVisitor visitAnnotation(String desc, boolean visible) {
         if(desc.equals("L"+Path.class.getName().replaceAll(".", "/")+";")
-           || desc.equals("L"+Provider.class.getName().replaceAll(".", "/")+";")){
+           || desc.equals("L"+Provider.class.getName().replaceAll(".", "/")+";")
+           || desc.equals("L"+ HttpMethod.class.getName().replaceAll(".", "/")+";")){
             if(clazzName != null) clazzName = tmpClazzName;
+
+            //if the visibility of the resource method is not public then warn
+            //if(!visible) log.warn(clazzName + " is having inaccessible resource methods ...");
         }
         return null;
     }

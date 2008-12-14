@@ -38,94 +38,94 @@ public class UriBuilderImpl extends UriBuilder {
 
     @Override
     public UriBuilder clone() {
-        return null;  //TODO change body of implemented method
+        throw new UnsupportedOperationException();  //TODO change body of implemented method
     }
 
     public UriBuilder scheme(String scheme) throws IllegalArgumentException {
-        return null;  //TODO change body of implemented method
+        throw new UnsupportedOperationException();  //TODO change body of implemented method
     }
 
     public UriBuilder schemeSpecificPart(String ssp) throws IllegalArgumentException {
-        return null;  //TODO change body of implemented method
+        throw new UnsupportedOperationException();  //TODO change body of implemented method
     }
 
     public UriBuilder userInfo(String ui) {
-        return null;  //TODO change body of implemented method
+        throw new UnsupportedOperationException();  //TODO change body of implemented method
     }
 
     public UriBuilder host(String host) throws IllegalArgumentException {
-        return null;  //TODO change body of implemented method
+        throw new UnsupportedOperationException();  //TODO change body of implemented method
     }
 
     public UriBuilder port(int port) throws IllegalArgumentException {
-        return null;  //TODO change body of implemented method
+        throw new UnsupportedOperationException();  //TODO change body of implemented method
     }
 
     public UriBuilder replacePath(String path) {
-        return null;  //TODO change body of implemented method
+        throw new UnsupportedOperationException();  //TODO change body of implemented method
     }
 
     public UriBuilder path(String path) throws IllegalArgumentException {
-        return null;  //TODO change body of implemented method
+        throw new UnsupportedOperationException();  //TODO change body of implemented method
     }
 
     public UriBuilder path(Class resource) throws IllegalArgumentException {
-        return null;  //TODO change body of implemented method
+        throw new UnsupportedOperationException();  //TODO change body of implemented method
     }
 
     public UriBuilder path(Class resource, String method) throws IllegalArgumentException {
-        return null;  //TODO change body of implemented method
+        throw new UnsupportedOperationException();  //TODO change body of implemented method
     }
 
     public UriBuilder path(Method method) throws IllegalArgumentException {
-        return null;  //TODO change body of implemented method
+        throw new UnsupportedOperationException();  //TODO change body of implemented method
     }
 
     public UriBuilder segment(String... segments) throws IllegalArgumentException {
-        return null;  //TODO change body of implemented method
+        throw new UnsupportedOperationException();  //TODO change body of implemented method
     }
 
     public UriBuilder replaceMatrix(String matrix) throws IllegalArgumentException {
-        return null;  //TODO change body of implemented method
+        throw new UnsupportedOperationException();  //TODO change body of implemented method
     }
 
     public UriBuilder matrixParam(String name, Object... values) throws IllegalArgumentException {
-        return null;  //TODO change body of implemented method
+        throw new UnsupportedOperationException();  //TODO change body of implemented method
     }
 
     public UriBuilder replaceMatrixParam(String name, Object... values) throws IllegalArgumentException {
-        return null;  //TODO change body of implemented method
+        throw new UnsupportedOperationException();  //TODO change body of implemented method
     }
 
     public UriBuilder replaceQuery(String query) throws IllegalArgumentException {
-        return null;  //TODO change body of implemented method
+        throw new UnsupportedOperationException();  //TODO change body of implemented method
     }
 
     public UriBuilder queryParam(String name, Object... values) throws IllegalArgumentException {
-        return null;  //TODO change body of implemented method
+        throw new UnsupportedOperationException();  //TODO change body of implemented method
     }
 
     public UriBuilder replaceQueryParam(String name, Object... values) throws IllegalArgumentException {
-        return null;  //TODO change body of implemented method
+        throw new UnsupportedOperationException();  //TODO change body of implemented method
     }
 
     public UriBuilder fragment(String fragment) {
-        return null;  //TODO change body of implemented method
+        throw new UnsupportedOperationException();  //TODO change body of implemented method
     }
 
     public URI buildFromMap(Map<String, ? extends Object> values) throws IllegalArgumentException, UriBuilderException {
-        return null;  //TODO change body of implemented method
+        throw new UnsupportedOperationException();  //TODO change body of implemented method
     }
 
     public URI buildFromEncodedMap(Map<String, ? extends Object> values) throws IllegalArgumentException, UriBuilderException {
-        return null;  //TODO change body of implemented method
+        throw new UnsupportedOperationException();  //TODO change body of implemented method
     }
 
     public URI build(Object... values) throws IllegalArgumentException, UriBuilderException {
-        return null;  //TODO change body of implemented method
+        throw new UnsupportedOperationException();  //TODO change body of implemented method
     }
 
     public URI buildFromEncoded(Object... values) throws IllegalArgumentException, UriBuilderException {
-        return null;  //TODO change body of implemented method
+        throw new UnsupportedOperationException();  //TODO change body of implemented method
     }
 }

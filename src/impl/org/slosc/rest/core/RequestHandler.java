@@ -24,6 +24,8 @@ package org.slosc.rest.core;
 public class RequestHandler {
 
     public void invoke(ApplicationContext ctx) throws Exception{
+
+        
         
     }
 }

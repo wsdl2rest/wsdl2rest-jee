@@ -62,7 +62,7 @@ import java.net.MalformedURLException;
  * When a resource class is instantiated
  */
 
-public class ControllerServlet extends HttpServlet {
+public class RestfulApplicationControllerServlet extends HttpServlet {
 
     private final static String  APP_CONFIG_CLASS_NAME = "javax.ws.rs.Application";
     private ApplicationConfiguration applicationConfig;
@@ -96,7 +96,7 @@ public class ControllerServlet extends HttpServlet {
         resourceLookup();
 
         ctx = new ApplicationContext();
-        ctx.add("applicationConfig", applicationConfig);
+        ctx.add(ApplicationConfiguration.class.getName(), applicationConfig);
     }
     
     protected void service(HttpServletRequest req, HttpServletResponse res) 
@@ -116,8 +116,8 @@ public class ControllerServlet extends HttpServlet {
         Request reqest    = new RequestWrapper(req);
         Response response = new ResponseWrapper(res);
 
-        ctx.add("request", reqest);
-        ctx.add("response", response);
+        ctx.add(Request.class.getName(), reqest);
+        ctx.add(Response.class.getName(), response);
 
         RequestHandler handler = new RequestHandler();
 
