@@ -27,11 +27,10 @@ import java.net.URL;
 
 /**
  * A JAX-RS application consists of one or more resources (see chapter 3) and zero or more providers (see
- * chapter 4). This chapter describes aspects of JAX-RS that apply to an application as a whole, subsequent
- * chapters describe particular aspects of a JAX-RS application and requirements on JAX-RS implementations.
+ * chapter 4).
  *
  * The resources and providers that make up a JAX-RS application are configured via an application-supplied
- * subclass of Application.
+ * subclass of {@link javax.ws.rs.core.Application}
  *
  * An implementation MAY provide alternate mechanisms for locating resource classes and providers (e.g.
  * runtime class scanning) but use of Application is the only portable means of configuration.
@@ -45,6 +44,13 @@ public class ApplicationConfiguration extends Application {
 
     public ApplicationConfiguration(){
     }
+
+    public ApplicationConfiguration(ApplicationConfiguration other){
+        this.classes = other.classes;
+        this.classInstances = other.classInstances;
+        this.resourceClassLoader = other.resourceClassLoader;
+    }
+
 
     public Set<Class<?>> getClasses() {
         return classes;

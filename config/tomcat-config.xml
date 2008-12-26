@@ -1,0 +1,1 @@
+<Context path="/@application.path@" docBase="@application.base@" reloadable="true"/>

@@ -32,6 +32,7 @@ import java.io.IOException;
 import java.io.File;
 import java.net.URL;
 import java.net.MalformedURLException;
+import java.security.Principal;
 
 /**
  * JAX-RS implementation Servlet class to be used in non-JAX-RS aware servlet container.
@@ -70,8 +71,6 @@ public class RestfulApplicationControllerServlet extends HttpServlet {
 
     private static final String WORK_DIR_ATTR = "javax.servlet.context.tempdir";
 
-    private ApplicationContext ctx;
-
     public void init(ServletConfig servletConfig) throws ServletException {
         super.init(servletConfig);
         config = servletConfig;
@@ -94,9 +93,6 @@ public class RestfulApplicationControllerServlet extends HttpServlet {
         }
 
         resourceLookup();
-
-        ctx = new ApplicationContext();
-        ctx.add(ApplicationConfiguration.class.getName(), applicationConfig);
     }
     
     protected void service(HttpServletRequest req, HttpServletResponse res) 
@@ -107,14 +103,18 @@ public class RestfulApplicationControllerServlet extends HttpServlet {
             res.setStatus(404);
             return;
         }
-        
+
+
         UriBuilder absURI = UriBuilder.fromUri(req.getRequestURL().toString());
         
         String queryParameters = req.getQueryString();
         if (queryParameters == null) queryParameters = "";
 
-        Request reqest    = new RequestWrapper(req);
-        Response response = new ResponseWrapper(res);
+        Request<HttpServletRequest> reqest    = new RequestWrapper(req);
+        Response<HttpServletResponse> response = new ResponseWrapper(res);
+
+        //create per request application context from the application configuration.
+        ApplicationContext ctx = new ApplicationContext(applicationConfig);
 
         ctx.add(Request.class.getName(), reqest);
         ctx.add(Response.class.getName(), response);
@@ -203,21 +203,5 @@ public class RestfulApplicationControllerServlet extends HttpServlet {
         }
 
 
-    }
-
-    class RequestWrapper implements Request{
-        HttpServletRequest req;
-
-        public RequestWrapper(HttpServletRequest req){
-            this.req = req;    
-        }
-    }
-
-    class ResponseWrapper implements Response {
-        HttpServletResponse res;
-
-        public ResponseWrapper(HttpServletResponse res){
-            this.res = res;    
-        }
     }
 }

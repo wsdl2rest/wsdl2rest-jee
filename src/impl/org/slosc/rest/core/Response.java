@@ -23,5 +23,7 @@ package org.slosc.rest.core;
  *         Date    : Oct 27, 2008
  * @version: 1.0
  */
-public interface Response {
+public abstract class Response <T> {
+
+    public abstract T narrow();
 }

@@ -1,7 +1,8 @@
-package org.slosc.rest.core;
+package org.slosc.rest.servlet;
 
-import javax.servlet.http.HttpServletRequest;
-import javax.ws.rs.core.SecurityContext;
+import org.slosc.rest.core.Response;
+
+import javax.servlet.http.HttpServletResponse;
 
 /*
  * Copyright (c) 2008 SL_OpenSource Consortium
@@ -23,16 +24,17 @@ import javax.ws.rs.core.SecurityContext;
 
 /**
  * @author : Lilantha Darshana (lilantha_os@yahoo.com)
- *         Date    : Oct 27, 2008
+ *         Date    : Dec 26, 2008
  * @version: 1.0
  */
-public abstract class Request<T> implements javax.ws.rs.core.Request,  SecurityContext {
+public class ResponseWrapper extends Response<HttpServletResponse> {
+        HttpServletResponse res;
 
-    public abstract String getBaseUri();
-    public abstract String getUri();
-    public abstract String getBasePath();
-    public abstract String getPath();
+        public ResponseWrapper(HttpServletResponse res){
+            this.res = res;
+        }
 
-    public abstract T narrow();
-    
+        public HttpServletResponse narrow() {
+            return null;  //TODO change body of implemented method
+        }
 }

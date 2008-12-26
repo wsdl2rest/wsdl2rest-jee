@@ -424,6 +424,14 @@ However, depending on the&nbsp;resource class lifecycle and
 concurrency, per-request information may not make sense in a
 constructor.<br>
 <br>
+<h4>3.1 Lifecycle</h4>
+By default a new resource class instance is created for each request to
+that resource. First the constructor is called, then any requested
+dependencies are injected, then the appropriate method is invoked and
+finally the object is made available for garbage collection. &nbsp;If
+based on an inversion-of-control framework, it may&nbsp;support all of
+the lifecycle options provided by that framework.<br>
+<br>
 <br>
 <big><big><big>4. High Level Approach</big></big></big><br>
 <br>
@@ -433,12 +441,12 @@ WSDL -&gt; obtain service API &amp; params etc-&gt; map resources
 (URLs) &amp; http operations -&gt; user refines mapping -&gt; generate
 jsr-311 configuration &amp; classes.<br>
 <br>
-Wsdl2java tool generates java binding for the webservices. It creates
+Wsdl2rest tool generates java binding for the webservices. It creates
 java code for services implementation and respective Java code for
-client side artifacts. The wsdl2java current
+server side artifacts. The wsdl2rest current
 impl. has mechanism to read WSDL document and generate it&rsquo;s
 object
-model and emit respective java code for that.
+model and emit respective java code for REST mapping.
 Since this tool has the way of reading, understanding &amp; creating a
 respective wsdl representation, we could use it to
 read the WSDL and create us the representation (in memory). There is an
@@ -453,12 +461,7 @@ we could do is replace this code generator to generate required RESTful
 services stubs &amp; skeletons implementation
 java code. This seems feasible. i.e. replace the java emitter with the
 emitter to generate RESTful services stubs.<br>
-<br>
-The idea is to target this output for an existing REST supporting tool
-kit
-like: CXF, Axis etc. for starter. i.e. we generate services stubs
-targeting these tool kits until we
-create one of our own. The generated code should follow the JSR-311
+For example&nbsp;generate code that&nbsp;follows the JSR-311
 specification.<br>
 <br>
 Springframework allows us to define &amp; use webservices very simply

@@ -2,12 +2,19 @@ package org.slosc.wsdl2rest.samples;
 
 import javax.ws.rs.core.Response;
 import javax.ws.rs.core.GenericEntity;
+import javax.ws.rs.core.Context;
 
 /**
  * A resource class is a Java class that uses JAX-RS annotations to implement a corresponding Web resource.
  * Resource classes are POJOs that have at least one method annotated with @Path or a request method designator.
  *
  * Resource methods MUST NOT have more than one parameter that is not annotated with one of the listed annotations.
+ * 
+ * A public constructor MAY include parameters annotated with one of the following: @Context, @HeaderParam,
+ * @CookieParam, @MatrixParam, @QueryParam or @PathParam. However, depending on the resource class lifecycle and
+ * concurrency, per-request information may not make sense in a constructor. If more than one public constructor is
+ * suitable then an implementation will use the one with the most parameters. Choosing amongst suitable constructors
+ * with the same number of parameters will generate a warning about ambiguity.
  */
 
 public class StockQuoteServiceImpl implements StockQuoteService {
@@ -28,7 +35,7 @@ public class StockQuoteServiceImpl implements StockQuoteService {
     * @Context Injects an instance of a supported resource, see chapters 5 and 6 for more details.
     */
     //@Context, @HeaderParam, @CookieParam, @MatrixParam, @QueryParam or @PathParam
-    public StockQuoteServiceImpl(String contex, String headerParam, String cookie,
+    public StockQuoteServiceImpl(String  contex, String headerParam, String cookie,
                                  String matricParam, String queryParam, String pathParam){
         this.contex = contex;       
         this.headerParam = headerParam;

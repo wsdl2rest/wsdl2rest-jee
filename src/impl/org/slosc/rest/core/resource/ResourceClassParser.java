@@ -63,7 +63,7 @@ public class ResourceClassParser {
     }
 
     private  void skip(DataInputStream in) throws Exception {
-        //skip version major/minor
+        //skip version major/minor, since jvm will handle it
         int minor = in.readUnsignedShort();
         int major = in.readUnsignedShort();
 

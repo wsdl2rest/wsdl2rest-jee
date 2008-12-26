@@ -71,12 +71,12 @@ public class ASMResourceClassParserImpl extends ResourceClassParser implements C
      * common HTTP methods.
      */
     public AnnotationVisitor visitAnnotation(String desc, boolean visible) {
-        if(desc.equals("L"+Path.class.getName().replaceAll(".", "/")+";")
-           || desc.equals("L"+Provider.class.getName().replaceAll(".", "/")+";")
-           || desc.equals("L"+ HttpMethod.class.getName().replaceAll(".", "/")+";")){
-            if(clazzName != null) clazzName = tmpClazzName;
+        if(desc.equals("L"+Path.class.getName().replaceAll("\\.", "/")+";")
+           || desc.equals("L"+Provider.class.getName().replaceAll("\\.", "/")+";")
+           || desc.equals("L"+ HttpMethod.class.getName().replaceAll("\\.", "/")+";")){
+            if(tmpClazzName != null && clazzName == null && !tmpClazzName.startsWith("javax")) clazzName = tmpClazzName;
 
-            //if the visibility of the resource method is not public then warn
+            //TODO if the visibility of the resource method is not public then warn
             //if(!visible) log.warn(clazzName + " is having inaccessible resource methods ...");
         }
         return null;

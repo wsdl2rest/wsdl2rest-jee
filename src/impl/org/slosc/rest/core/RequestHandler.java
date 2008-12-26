@@ -20,12 +20,25 @@ package org.slosc.rest.core;
 
 /**
  * By default a new resource class instance is created for each request to that resource
+ *
+ * Matching Requests to Resource Methods
+ * Prior to matching, request URIs are normalized by following the rules for case, path segment, and percent
+ * encoding normalization described in section 6.2.2 of RFC 3986[5]. The normalized request URI MUST be
+ * reflected in the URIs obtained from an injected UriInfo.
+ *
+ * Assumption: RFC 3986: 6.2.2 Syntax-Based Normalization is already done by the servlet angine utilized for this library.
+ * 
+ * A request is matched to the corresponding resource method or sub-resource method by comparing the normalized request
+ * URI, the media type of any request entity, and the requested response entity format to the
+ * metadata annotations on the resource classes and their methods. If no matching resource method or sub-resource
+ * method can be found then an appropriate error response is returned.
  */
 public class RequestHandler {
 
     public void invoke(ApplicationContext ctx) throws Exception{
 
-        
+        ResourceLocator rl = new ResourceLocator();
+        Object o = rl.find(ctx);
         
     }
 }
