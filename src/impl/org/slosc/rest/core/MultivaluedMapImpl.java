@@ -19,10 +19,7 @@ package org.slosc.rest.core;/*
 
 
 import javax.ws.rs.core.MultivaluedMap;
-import java.util.Map;
-import java.util.Set;
-import java.util.Collection;
-import java.util.List;
+import java.util.*;
 
 /**
  * @author : Lilantha Darshana (lilantha_os@yahoo.com)
@@ -30,8 +27,16 @@ import java.util.List;
  * @version: 1.0
  */
 public class MultivaluedMapImpl<K,V> implements MultivaluedMap<K,V> {
+
+    Map<K, List<V>> values = new HashMap<K, List<V>>();
+    
     public void putSingle(K key, V value) {
-        //TODO change body of implemented method
+        List<V> v = values.get(key);
+        if(v == null) {
+            v = new ArrayList<V>();
+            values.put(key, v);
+        }
+        v.add(value);
     }
 
     public void add(K key, V value) {
@@ -39,19 +44,20 @@ public class MultivaluedMapImpl<K,V> implements MultivaluedMap<K,V> {
     }
 
     public V getFirst(K key) {
-        return null;  //TODO change body of implemented method
+        List<V> v = values.get(key);
+        return v.size() == 0?null:v.get(0);  
     }
 
     public int size() {
-        return 0;  //TODO change body of implemented method
+        return values.size();
     }
 
     public boolean isEmpty() {
-        return false;  //TODO change body of implemented method
+        return values.size() == 0;  
     }
 
     public boolean containsKey(Object key) {
-        return false;  //TODO change body of implemented method
+        return values.containsKey(key);
     }
 
     public boolean containsValue(Object value) {
@@ -59,7 +65,7 @@ public class MultivaluedMapImpl<K,V> implements MultivaluedMap<K,V> {
     }
 
     public List<V> get(Object key) {
-        return null;  //TODO change body of implemented method
+        return values.get(key);
     }
 
     public List<V> put(K key, List<V> value) {

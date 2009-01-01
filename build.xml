@@ -10,7 +10,7 @@
   <property name="lib"      location="lib"/>
   <property name="target"   value="target/classes"/>
   <property name="dist"     value="dist"/>
-  <property name="test"     location="test"/>
+  <property name="testdir"     location="test"/>
   <property name="samples"  location="samples"/>
   <property name="debug"    value="on"/>          <!-- this need to be off for the releases -->
   
@@ -43,8 +43,12 @@
   <target name="test" depends="compile" description="compile test source " >
      <!-- Compile test java code from ${test} into target/test/classes -->
      <mkdir dir="target/test/classes"/>
-     <javac srcdir="${test}" destdir="target/test/classes" debug="${debug}" debuglevel="lines,vars,source">
+      
+     <javac destdir="target/test/classes" debug="${debug}" debuglevel="lines,vars,source">
          <compilerarg value="-Xlint"/>
+         <src path="${testdir}"/>
+         <src path="${samples}/src/api"/>
+         <src path="${samples}/src/impl"/>
          <classpath>
           <pathelement location="${target}"/>
           <pathelement location="target/test/classes"/>
@@ -64,12 +68,12 @@
         <jvmarg value="-Dorg.slosc.wsdl2rest.wsdl.wsdlLocations=${basedir}/samples/wsdl"/>
         <jvmarg value="-Dorg.slosc.wsdl2rest.wsdl.targetLocation=${basedir}/target/generated"/>
 
-        <!--<jvmarg value="-Xdebug"/>-->
-        <!--<jvmarg value="-Xrunjdwp:transport=dt_socket,server=y,suspend=y,address=5004"/>-->
+        <!-- <jvmarg value="-Xdebug"/> -->
+        <!-- <jvmarg value="-Xrunjdwp:transport=dt_socket,server=y,suspend=y,address=5005"/> -->
        
-        <batchtest fork="yes" todir="target/test">
-
-          <fileset dir="${test}"/>
+        <test if="test" name="${test}"/>
+        <batchtest unless="test" fork="yes" todir="target/test">
+          <fileset dir="${testdir}"/>
         </batchtest>
       </junit>
 
@@ -117,6 +121,8 @@
 
   </target>
 
+
+    
   <property environment="env"/>
 
   <target name="test-svr" depends="restapp">
@@ -136,6 +142,8 @@
 
     <echo message="App server started"/>
   </target>
+
+
 
   <target name="src-dist" description="generate the src distribution" >
     <!-- Create the distribution directory -->

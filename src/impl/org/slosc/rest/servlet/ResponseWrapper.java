@@ -30,7 +30,10 @@ import javax.servlet.http.HttpServletResponse;
 public class ResponseWrapper extends Response<HttpServletResponse> {
         HttpServletResponse res;
 
-        public ResponseWrapper(HttpServletResponse res){
+    private ResponseWrapper() {
+    }
+
+    public ResponseWrapper(HttpServletResponse res){
             this.res = res;
         }
 

@@ -41,6 +41,8 @@ public class ResourceClassLoader {
 
     private Set<Class<?>> resourceClasses = new HashSet<Class<?>>();
 
+    private ResourceClassParser parser;
+
     public void addLookupPath(String path){
         lookupPaths.add(path);
     }
@@ -48,7 +50,12 @@ public class ResourceClassLoader {
     public void lookup() throws Exception {
 
        for(String path : lookupPaths){
-            lookInDir(new File(path));
+           File f = new File(path);
+           if(f.isDirectory())
+            lookInDir(f);
+           else{
+               processFile(f);
+           }
        }
     }
 
@@ -57,27 +64,30 @@ public class ResourceClassLoader {
 
        for(File f:lst){
            if(f.isDirectory()) lookInDir(f);
-           
-           if (f.getName().endsWith(".jar")){
-               processJarFile(f);
-           }
+           processFile(f);
+       }
+    }
 
-           if(f.getName().endsWith(".class")){
-               InputStream input = null;
-               try{
-                   input = f.toURL().openStream(); 
-                   processClassFile(input);
-               }catch (Exception e){
-                    log.error(e);
-                    throw e;
-                }finally {
-                    try{
-                        if(input != null) input.close();
-                    }catch (Exception e){
-                        //ignore
-                    }
+    private void processFile(File f) throws Exception{
+       if (f.getName().endsWith(".jar")){
+           processJarFile(f);
+       }
+
+       if(f.getName().endsWith(".class")){
+           InputStream input = null;
+           try{
+               input = f.toURL().openStream();
+               processClassFile(input);
+           }catch (Exception e){
+                log.error(e);
+                throw e;
+            }finally {
+                try{
+                    if(input != null) input.close();
+                }catch (Exception e){
+                    //ignore
                 }
-           }
+            }
        }
     }
 
@@ -110,14 +120,26 @@ public class ResourceClassLoader {
         return resourceClasses;
     }
 
-    private void processClassFile(InputStream input) throws Exception{
+    public void setParser(ResourceClassParser parser) {
+        this.parser = parser;
+    }
+
+    private void processClassFile(InputStream input){
+        try{
         DataInputStream in = new DataInputStream(new BufferedInputStream(input, BUFSIZE));
         //TODO for now we create ASM class parser.
-        ResourceClassParser par = new ASMResourceClassParserImpl(in);
-        par.parse();
-        String className = par.getClazzName();
+        if(parser!=null) parser = new ASMResourceClassParserImpl();//new ResourceClassParser();//
+            
+        parser.parse(in);
+        String className = parser.getClazzName();
         if(className != null) resourceClasses.add(Class.forName(className.replaceAll("/", ".")));
+        }catch(Exception e){
+            e.printStackTrace();
+            log.error(e);
+        }
     }
+
+
     
     class LookupFileFilter  implements FileFilter {
         public boolean accept(File pathname) {

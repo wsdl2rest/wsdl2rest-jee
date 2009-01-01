@@ -35,6 +35,9 @@ import java.util.Date;
 public class RequestWrapper extends Request<HttpServletRequest> {
     HttpServletRequest req;
 
+    private RequestWrapper() {
+    }
+
     public RequestWrapper(HttpServletRequest req){
         this.req = req;
     }

@@ -63,6 +63,8 @@ import java.security.Principal;
  * When a resource class is instantiated
  */
 
+//TODO consider an implementation of ServletContextListener to get notification of changes
+
 public class RestfulApplicationControllerServlet extends HttpServlet {
 
     private final static String  APP_CONFIG_CLASS_NAME = "javax.ws.rs.Application";

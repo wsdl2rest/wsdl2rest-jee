@@ -35,19 +35,19 @@ public class ASMResourceClassParserImpl extends ResourceClassParser implements C
 
     private ClassReader classReader = null;
 
-   public ASMResourceClassParserImpl(DataInputStream in) {
-        super(in);
+    public ASMResourceClassParserImpl() {
+    }
+
+    public  void parse(DataInputStream in) throws Exception {
+       this.in = in;
+       clazzName = null;
        try{
            classReader = new ClassReader(in);
        }catch(Exception e){
            log.error(e);
            throw new RuntimeException(e);
        }
-    }
-
-    public void parse() throws Exception {
-        clazzName = null;
-        classReader.accept(this, 0);    
+       classReader.accept(this, 0);
     }
 
     public void visit(int version, int access, String name, String signature, String superName, String[] interfaces) {
@@ -74,10 +74,8 @@ public class ASMResourceClassParserImpl extends ResourceClassParser implements C
         if(desc.equals("L"+Path.class.getName().replaceAll("\\.", "/")+";")
            || desc.equals("L"+Provider.class.getName().replaceAll("\\.", "/")+";")
            || desc.equals("L"+ HttpMethod.class.getName().replaceAll("\\.", "/")+";")){
-            if(tmpClazzName != null && clazzName == null && !tmpClazzName.startsWith("javax")) clazzName = tmpClazzName;
 
-            //TODO if the visibility of the resource method is not public then warn
-            //if(!visible) log.warn(clazzName + " is having inaccessible resource methods ...");
+            if(tmpClazzName != null && clazzName == null && !tmpClazzName.startsWith("javax")) clazzName = tmpClazzName;
         }
         return null;
     }

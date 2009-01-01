@@ -5,6 +5,8 @@ import org.apache.commons.logging.LogFactory;
 
 import java.io.DataInputStream;
 import java.io.IOException;
+import java.util.List;
+import java.util.ArrayList;
 
 /*
  * Copyright (c) 2008 SL_OpenSource Consortium
@@ -29,6 +31,35 @@ import java.io.IOException;
  *         Date    : Dec 8, 2008
  * @version: 1.0
  */
+
+/**
+ * The types u1, u2, and u4 represent an unsigned one-, two-, or four-byte quantity, respectively.
+ * these types may be read by methods such as readUnsignedByte, readUnsignedShort, and readInt
+ * Successive items are stored in the class file sequentially, without padding or alignment.
+ *
+ * ClassFile structure:
+ *
+ *      ClassFile {
+ *      u4 magic;
+ *      u2 minor_version;
+ *      u2 major_version;
+ *      u2 constant_pool_count;
+ *      cp_info constant_pool[constant_pool_count-1];
+ *      u2 access_flags;
+ *      u2 this_class;
+ *      u2 super_class;
+ *      u2 interfaces_count;
+ *      u2 interfaces[interfaces_count];
+ *      u2 fields_count;
+ *      field_info fields[fields_count];
+ *      u2 methods_count;
+ *      method_info methods[methods_count];
+ *      u2 attributes_count;
+ *      attribute_info attributes[attributes_count];
+ *      }
+ *
+ * see the spec for more info: http://java.sun.com/docs/books/jvms/second_edition/ClassFileFormat-Java5.pdf
+ **/
 public class ResourceClassParser {
 
     protected String clazzName = null;
@@ -47,13 +78,13 @@ public class ResourceClassParser {
     private final static byte NAME_AND_TYPE        = 12;
 
     protected static Log log = LogFactory.getLog(ResourceClassParser.class);
-    private DataInputStream in = null;
+    protected DataInputStream in = null;
 
-    public ResourceClassParser(DataInputStream in){
-        this.in = in;            
+    public ResourceClassParser() {
     }
 
-    public  void parse() throws Exception {
+    public  void parse(DataInputStream in) throws Exception {
+        this.in = in;      
         checkMagic(in);
         skip(in);
     }
@@ -68,8 +99,9 @@ public class ResourceClassParser {
         int major = in.readUnsignedShort();
 
         //skip constant pool entries
-        int count = in.readUnsignedShort();
-        for (int i = 1; i < count; i++) {
+        int constant_pool_count = in.readUnsignedShort();
+        SymbolTable constPool = new SymbolTable();
+        for (int i = 1; i < constant_pool_count; i++) {
              byte b = in.readByte(); // Read tag byte
             switch (b) {
                 case CLASS:
@@ -93,7 +125,8 @@ public class ResourceClassParser {
                 case NAME_AND_TYPE:
                     in.readUnsignedShort(); in.readUnsignedShort();break;
                 case UTF8:
-                    in.readUTF();break;
+                    String val = in.readUTF();constPool.addElement(val);
+                    System.out.println("UTF8 val: "+val);break;
                 default:
                     throw new Exception("Invalid byte tag in constant pool: " + b);
             }
@@ -111,7 +144,16 @@ public class ResourceClassParser {
         //skip fields
         int fields_count = in.readUnsignedShort();
         for (int i = 0; i < fields_count; i++) {
-            in.readUnsignedShort(); in.readUnsignedShort(); in.readUnsignedShort();  in.readUnsignedShort();
+            in.readUnsignedShort(); in.readUnsignedShort(); in.readUnsignedShort();
+            //attribute count
+           int attributes_count = in.readUnsignedShort();
+           for (int j = 0; j < attributes_count; j++) {
+               //name index, length of data in bytes
+               int name = in.readUnsignedShort();
+               int len = in.readInt();
+               byte[] info = new byte[len];
+               if (len > 0) in.readFully(info);
+           }
         }
 
         //skip methods
@@ -123,8 +165,23 @@ public class ResourceClassParser {
            int attributes_count = in.readUnsignedShort();
            for (int j = 0; j < attributes_count; j++) {
                //name index, length of data in bytes
-               in.readUnsignedShort(); in.readInt();
+               int name = in.readUnsignedShort();
+               int len = in.readInt();
+               byte[] info = new byte[len];
+               if (len > 0) in.readFully(info);
            }
+        }
+
+        int attrib_count = in.readUnsignedShort();
+        for (int i = 0; i < attrib_count; i++) {
+            //access flag, name index & signature index
+           int nameIdx = in.readUnsignedShort();
+           String name = (String) constPool.elementAt(nameIdx);
+           System.out.println("Class attribute: "+name);
+           //attribute count
+           int len = in.readInt();
+           byte[] info = new byte[len];
+           if (len > 0) in.readFully(info);
         }
     }
 
@@ -135,4 +192,53 @@ public class ResourceClassParser {
         }
 
     }
+
+
+    class SymbolTable {
+        static final int ASIZE = 128;
+        static final int ABITS = 7;  // ASIZE = 2^ABITS
+        static final int VSIZE = 8;
+        private Object[][] objects;
+        private int elements;
+
+        public SymbolTable() {
+            objects = new Object[VSIZE][];
+            elements = 0;
+        }
+
+        public SymbolTable(int initialSize) {
+            int vsize = ((initialSize >> ABITS) & ~(VSIZE - 1)) + VSIZE;
+            objects = new Object[vsize][];
+            elements = 0;
+        }
+
+        public int size() { return elements; }
+
+        public int capacity() { return objects.length * ASIZE; }
+
+        public Object elementAt(int i) {
+            if (i < 0 || elements <= i)
+                return null;
+
+            return objects[i >> ABITS][i & (ASIZE - 1)];
+        }
+
+        public void addElement(Object value) {
+            int nth = elements >> ABITS;
+            int offset = elements & (ASIZE - 1);
+            int len = objects.length;
+            if (nth >= len) {
+                Object[][] newObj = new Object[len + VSIZE][];
+                System.arraycopy(objects, 0, newObj, 0, len);
+                objects = newObj;
+            }
+
+            if (objects[nth] == null)
+                objects[nth] = new Object[ASIZE];
+
+            objects[nth][offset] = value;
+            elements++;
+        }
+    }
+
 }

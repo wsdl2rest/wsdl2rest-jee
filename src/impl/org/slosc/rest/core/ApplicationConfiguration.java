@@ -71,5 +71,6 @@ public class ApplicationConfiguration extends Application {
 
     public void setResourceClassLoader(ResourceClassLoader resourceClassLoader) {
         this.resourceClassLoader = resourceClassLoader;
+        classes = resourceClassLoader.getResourceClasses();
     }
 }
