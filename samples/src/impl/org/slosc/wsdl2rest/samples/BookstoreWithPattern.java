@@ -23,7 +23,7 @@ import javax.ws.rs.core.UriInfo;
 import javax.ws.rs.core.Context;
 import javax.ws.rs.core.Request;
 
-@Path("/bookstore/{path:.+}")
+@Path("/bookstore/{city:.+?}/")
 @Produces("application/xml")
 public class BookstoreWithPattern {
 
@@ -33,13 +33,13 @@ public class BookstoreWithPattern {
     @GET
     @Path("items/{id}")
     public String getItem(@PathParam("id") String id) {
-        System.out.println("In getItem method with param : "+id);
+        System.out.println("In BookstoreWithPattern.getItem() method with param : "+id);
         return "testId";
     }
 
     @Path("{item: .+}")
     public String getItemResource(@PathParam("item") String item) {
-         System.out.println("In getItem method with param : "+item);
+         System.out.println("In BookstoreWithPattern.getItemResource method with param : "+item);
         return "itemResource";
     }
 

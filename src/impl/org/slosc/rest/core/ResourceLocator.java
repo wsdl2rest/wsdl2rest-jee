@@ -2,6 +2,7 @@ package org.slosc.rest.core;
 
 import javax.ws.rs.Path;
 import javax.ws.rs.WebApplicationException;
+import javax.ws.rs.HttpMethod;
 import java.util.*;
 import java.util.regex.Pattern;
 import java.util.regex.Matcher;
@@ -9,6 +10,7 @@ import java.net.URI;
 import java.net.URISyntaxException;
 import java.lang.reflect.Method;
 import java.lang.reflect.InvocationTargetException;
+import java.lang.annotation.Annotation;
 
 /*
  * Copyright (c) 2008 SL_OpenSource Consortium
@@ -38,72 +40,30 @@ public class ResourceLocator {
     private MultivaluedMapImpl<String, UriTemplateRegEx> classEntries = new MultivaluedMapImpl<String, UriTemplateRegEx>();
     private MultivaluedMapImpl<String, UriTemplateRegEx> methodEntries = new MultivaluedMapImpl<String, UriTemplateRegEx>();
 
-    class UriTemplateRegEx {
-        private String path;
-        private Map<Integer, String> varibalesIndx;
-        private Map<String, String> varibales;
-        private Class forClazz;
-        private Method forMethod;
-        private String mainPath;
-
-        UriTemplateRegEx(String path, Map varibalesIndx) {
-            this.path = path;
-            this.varibalesIndx = varibalesIndx;
+    class UriTemplateComparator implements Comparator<String>{
+        private MultivaluedMapImpl<String, UriTemplateRegEx> classEntries;
+        
+        UriTemplateComparator(MultivaluedMapImpl<String, UriTemplateRegEx> classEntries) {
+            this.classEntries = classEntries;
         }
 
-        public String getPath() {
-            return path;
-        }
+        public int compare(String left, String right) {
+            UriTemplateRegEx leftRegex = classEntries.get(left).get(0);
+            UriTemplateRegEx rightRegex = classEntries.get(right).get(0);
+            int leftdiff = leftRegex.getGcount() -  leftRegex.getDefaultRegexLocIndx();
+            int rightdiff = rightRegex.getGcount() -  rightRegex.getDefaultRegexLocIndx();
 
-        public void setPath(String path) {
-            this.path = path;
-        }
-
-        public Map getVaribales() {
-            return varibales;
-        }
-
-        public void setVaribales(Map varibales) {
-            this.varibales = varibales;
-        }
-
-        public Class getForClazz() {
-            return forClazz;
-        }
-
-        public void setForClazz(Class forClazz) {
-            this.forClazz = forClazz;
-        }
-
-        public Map<Integer, String> getVaribalesIndx() {
-            return varibalesIndx;
-        }
-
-        public void setVaribalesIndx(Map<Integer, String> varibalesIndx) {
-            this.varibalesIndx = varibalesIndx;
-        }
-
-        public String getMainPath() {
-            return mainPath;
-        }
-
-        public void setMainPath(String mainPath) {
-            this.mainPath = mainPath;
-        }
-
-        public Method getForMethod() {
-            return forMethod;
-        }
-
-        public void setForMethod(Method forMethod) {
-            this.forMethod = forMethod;
+            //TODO fix me number of literal characters
+            int primaryKey = right.compareTo(left);
+            int secondery = leftRegex.getGcount() > rightRegex.getGcount()? 1:leftRegex.getGcount() == rightRegex.getGcount()?0:-1;
+            int tertiary = leftdiff > rightdiff?1:leftdiff == rightdiff?0:-1;
+            //TODO fix me
+            return primaryKey;//+secondery+tertiary;
         }
     }
 
     public Object find(ApplicationContext ctx){
-       IdentifyRootResourceClass(ctx);
-        
-        return null;
+        return IdentifyRootResourceClass(ctx);
     }
 
     //Identify the root resource class for the request
@@ -120,63 +80,171 @@ public class ResourceLocator {
         (c) Filter E by matching each member against U as follows:
             - Remove members that do not match U.
             - Remove members for which the final regular expression capturing group (henceforth simply
-            referred to as a capturing group) value is neither empty nor ‘/’ and the class associated with 
-            R(Tclass) had no sub-resource methods or locators.
+              referred to as a capturing group) value is neither empty nor ‘/’ and the class associated with
+              R(Tclass) had no sub-resource methods or locators.
          */
-        Set<String> remove = new HashSet<String>();
+        Set<String> toRemove = new HashSet<String>();
         for(String path: e){
-            if(!match(u, path, classEntries))
-                remove.add(path);
+            if(!match(u, path, classEntries)) {
+                toRemove.add(path);
+            }
+            UriTemplateRegEx regex = classEntries.get(path).get(0);
+            String fcapgrp = regex.getFinalCapturingGroup();
+            if(fcapgrp != null && fcapgrp.equals("/")){
+                toRemove.add(path);
+            }
         }
-        e.removeAll(remove);
+        e.removeAll(toRemove);
 
         if(e.size() == 0) {
             System.err.println("ERROR: No resource found ... ");
-            throw new WebApplicationException();
+            throw new WebApplicationException(404);
         }
 
         if(e.size() > 1) {
             System.err.println("WARN: There exist more than one matching resource for the uri: "+u);
         }
 
+        /*
+         * (e) Sort E using the number of literal characters in each member as the primary key (descending
+         *   order), the number of capturing groups as a secondary key (descending order) and the number
+         *   of capturing groups with non-default regular expressions (i.e. not ‘([ˆ/]+?)’) as the tertiary key
+         *   (descending order).
+         */
+        UriTemplateComparator cmp = new UriTemplateComparator(classEntries);
+        Arrays.sort(e.toArray(), (Comparator)cmp);
+
+       /* (f) Set Rmatch to be the first member of E, set U to be the value of the final capturing group of
+        *  Rmatch when matched against U, and instantiate an object O of the associated class.
+        */
         Iterator itr = e.iterator();
         List<UriTemplateRegEx> reg = classEntries.get(itr.next());
+        UriTemplateRegEx regToInvoke= reg.get(0);
 
-        //ok we have the required class, and variables as of now.
-        Object res = null;
-        Class resource =  reg.get(0).getForClazz();
-        //find the what path string applicable for method level
-        String subPath =  u.substring(reg.get(0).getMainPath().length());
+         //ok we have the required class, and variables as of now.
+        Class resource =  regToInvoke.getForClazz();
 
+        //TODO verify
+        u = regToInvoke.getFinalCapturingGroup();
+
+        /*
+         *   Methods of a resource class that are annotated with @Path are either sub-resource methods or sub-resource
+         *   locators. Sub-resource methods handle a HTTP request directly whilst sub-resource locators return an object
+         *   that will handle a HTTP request. The presence or absence of a request method designator (e.g. @GET)
+         *   differentiates between the two:
+         *
+         *   Present: Such methods, known as sub-resource methods, are treated like a normal resource method
+         *   except the method is only invoked for request URIs that match a URI template created by
+         *   concatenating the URI template of the resource class with the URI template of the method.
+         *   (If the resource class URI template does not end with a ‘/’ character then one is added during the concatenation.)
+         *
+         *   TODO Absent: Such methods, known as sub-resource locators, are used to dynamically resolve the object that will handle the request.
+         */
+
+        //check http method support
         Method[] methods = resource.getMethods();
-        Set<Method> reqMethods = new HashSet<Method>();
+        Set<Method> subResMethods = new HashSet<Method>();
+        Set<Method> otherMethods = new HashSet<Method>();
+        Set<Method> m = new HashSet<Method>();
 
-        for(Method m:methods){
-            if(m.isAnnotationPresent(Path.class)) reqMethods.add(m);
+        for(Method mth:methods){
+            if(mth.isAnnotationPresent(Path.class)){
+                //either sub-resource method/locators
+                for(Annotation an :mth.getAnnotations()){
+                    if(an.annotationType().isAnnotationPresent(HttpMethod.class)
+                      && an.annotationType().getAnnotation(HttpMethod.class).value().equals(req.getMethod())){
+                        subResMethods.add(mth); break;
+                    }else {//sub-resource locators
+                        subResMethods.add(mth); break;
+                    }
+                }
+            }else{
+                 for(Annotation an :mth.getAnnotations()){
+                    if(an.annotationType().isAnnotationPresent(HttpMethod.class)
+                      && an.annotationType().getAnnotation(HttpMethod.class).value().equals(req.getMethod())){
+                        otherMethods.add(mth);
+                    }
+                }
+            }
+        }
+
+        if(u != null && !u.equals("/")){
+
+            if(subResMethods.size() == 0) {
+                System.err.println("ERROR: No resource found with methods supporting the request method... ");
+                throw new WebApplicationException(405);
+            }
+
+            e = new HashSet<String>();
+            resolveSubResourceMethods(subResMethods, e);
+
+            toRemove = new HashSet<String>();
+            for(String path: e){
+                if(!match(u, path, methodEntries))  {
+                    toRemove.add(path);
+                }
+                UriTemplateRegEx regex = methodEntries.get(path).get(0);
+                String fcapgrp = regex.getFinalCapturingGroup();
+                if(fcapgrp != null && fcapgrp.equals("/")){
+                    toRemove.add(path);
+                }
+            }
+            e.removeAll(toRemove);
+
+            if(e.size() == 0) {
+                System.err.println("ERROR: No resource method found ... ");
+                throw new WebApplicationException(404);
+            }
+
+            if(e.size() > 1) {
+                System.err.println("WARN: There exist more than one matching resource for the uri: "+u);
+            }
+
+            //TODO the source of each member as quaternary key sorting those derived from Tmethod ahead of those derived from Tlocator.
+            cmp = new UriTemplateComparator(methodEntries);
+            Arrays.sort(e.toArray(), (Comparator)cmp);
+
+           /* (f) Set Rmatch to be the first member of E, set U to be the value of the final capturing group of
+            *  Rmatch when matched against U, and instantiate an object O of the associated class.
+            */
+            itr = e.iterator();
+            reg = methodEntries.get(itr.next());
+    //        regToInvoke= reg.get(0);
+
+            for(UriTemplateRegEx r:reg){
+                for(Annotation an :r.getForMethod().getAnnotations()){
+                    if(an.annotationType().isAnnotationPresent(HttpMethod.class)){
+                        m.add(r.getForMethod());
+                    }else{
+                        //sub-resource locator
+                        u = regToInvoke.getFinalCapturingGroup();
+                        //invoke sub-resource
+                        System.err.println("ERROR: Sub resources are not support as yet ... ");
+                        throw new WebApplicationException(405);
+                    }
+                }
+            }
+        }else if(u == null || u.equals("/")){
+            m.addAll(otherMethods);
         }
         
-        e = new HashSet<String>();
-        resolveMethods(reqMethods, e);
-
-        remove = new HashSet<String>();
-        for(String path: e){
-            if(!match(subPath, path, methodEntries))
-                remove.add(path);
-        }
-        e.removeAll(remove);
-
-        if(e.size() == 0) {
-            System.err.println("ERROR: No resource method found ... ");
-            throw new WebApplicationException();
+        if(m.size() == 0) {
+            System.err.println("ERROR: No resource found with methods supporting the request method... ");
+            throw new WebApplicationException(405);
         }
 
-        if(e.size() > 1) {
-            System.err.println("WARN: There exist more than one matching resource for the uri: "+u);
-        }
+//        cmp = new UriTemplateComparator(methodEntries);
+//        Arrays.sort(m.toArray(), (Comparator)cmp);
+        
+         //ok we have the required class, and variables as of now.
 
-        itr = e.iterator();
+        itr = m.iterator();
         reg = methodEntries.get(itr.next());
-        Method methodToInvoke =  reg.get(0).getForMethod();
+        regToInvoke= reg.get(0);
+
+         //ok we have the required class, and variables as of now.
+        Method methodToInvoke =  regToInvoke.getForMethod();
+
         try {
             methodToInvoke.invoke(resource.newInstance(), new Object[]{"TODO this is a test"});
         } catch (InstantiationException ex) {
@@ -188,7 +256,6 @@ public class ResourceLocator {
         } catch (InvocationTargetException e1) {
             e1.printStackTrace();  //TODO change body of catch statement
         }
-
 
         return null;
     }
@@ -205,50 +272,23 @@ public class ResourceLocator {
             int gcount = m.groupCount();
             UriTemplateRegEx uriTemplateRegEx = reg.get(0);
             if(gcount > 0) {
-                matches = uriTemplateRegEx.getVaribalesIndx().size() == gcount;
-
-                
+                int vsize = uriTemplateRegEx.getVaribalesIndx().size();
+                matches =  vsize == gcount - 1; //deduct one for ‘(/.*)?’ group
+                uriTemplateRegEx.setGcount(gcount);
                 if(matches){
                     Map<String, String> varibales = new HashMap<String, String>();
-                    for(int i=1; i <= gcount;i++){
-                        varibales.put(uriTemplateRegEx.getVaribalesIndx().get(i-1), m.group(i));
+                    Map<Integer, String>  vIndexs =  uriTemplateRegEx.getVaribalesIndx();
+                    for(int i=0; i < vsize;i++){
+                        varibales.put(vIndexs.get(i), m.group(i+1));
                     }
                     uriTemplateRegEx.setVaribales(varibales);
                 }
+                uriTemplateRegEx.setFinalCapturingGroup(m.group(gcount));
             }
-            uriTemplateRegEx.setMainPath(m.group(0));
+            uriTemplateRegEx.setMainPath(m.group());
         }
         return matches;
     }
-
-//        int start = path.indexOf('{');
-//        while(start > 0){
-//
-//            if(!uri.regionMatches(true, 0, path, start - 1 , start - 1)) return false;
-//            uri = uri.substring(start);
-//            int end = path.indexOf('}');
-//            String var = path.substring(0, end - 1);
-//
-//            if (!matchVars(uri, var, reg)) return false;
-//            path = path.substring(end+1);
-//            start = path.indexOf('{');
-//        }
-
-//        return uri.equals(path);
-//    }
-
-//    private boolean matchVars(String uri, String var, final List<UriTemplateRegEx> reg) {
-//        for(UriTemplateRegEx uriTempRegex: reg){
-//            Map<String, String> vars = uriTempRegex.getVaribales();
-//            if(!vars.containsKey(var)) return false;
-//            String regex = vars.get(var);
-//            uri.matches(regex);
-//
-//        }
-//
-//
-//        return true;
-//    }
 
     /**
      * (b) For each class in C add a regular expression (computed using the function R(A) described below)
@@ -271,24 +311,35 @@ public class ResourceLocator {
 
     }
 
+    private void resolveSubResourceMethods(Set<Method> subResMethods, Set<String> e) {
+        resolveMethods(subResMethods, e);
+    }
+
     private void resolveMethods(Set<Method> method, Set e){
-            for(Method m: method){
-                Path path = m.getAnnotation(Path.class);
+        for(Method m: method){
+            Path path = m.getAnnotation(Path.class);
 
-                //class is path anotated
-                if(path != null){
-                    UriTemplateRegEx reg = r(path);
-                    reg.setForMethod(m);
-                    methodEntries.putSingle(reg.getPath(), reg);
-                    e.add(reg.getPath());
-                }
+            //class is path anotated
+            if(path != null){
+                UriTemplateRegEx reg = r(path);
+                reg.setForMethod(m);
+                methodEntries.putSingle(reg.getPath(), reg);
+                e.add(reg.getPath());
             }
-
         }
+    }
 
 
     /**
      * Converting URI Templates to Regular Expressions
+     *
+     * A root resource class is anchored in URI space using the @Path annotation. The value of the annotation is
+     * a relative URI path template whose base URI is provided by the deployment context.
+     * A URI path template is a string with zero or more embedded parameters that, when values are substituted
+     * for all the parameters, is a valid URI path. The Javadoc for the @Path annotation describes their syntax
+     * {@link javax.ws.rs.Path}
+     *
+     * Template parameters can optionally specify the regular expression used to match their values.
      *
      * The function R(A) converts a URI path template annotation A into a regular expression as follows:
      *   1. URI encode the template, ignoring URI template variable specifications.
@@ -306,7 +357,7 @@ public class ResourceLocator {
     private UriTemplateRegEx r(Path path){
         String uriTemplate = path.value().trim();
 
-//        if(!Character.isLetter(uriTemplate.charAt(0)) && uriTemplate.charAt(0) != '_') throw new IllegalArgumentException("Invalid path");
+//      if(!Character.isLetter(uriTemplate.charAt(0)) && uriTemplate.charAt(0) != '_') throw new IllegalArgumentException("Invalid path");
 
         //strip the template varible
         int start = uriTemplate.indexOf('{');
@@ -324,6 +375,9 @@ public class ResourceLocator {
 
         Map varibalesIndx = new HashMap();
         int groupIndx = 0;
+        int [] loc = new int[25];
+        int j = 0;
+
         while(start >= 0){
             URI uri = null;
             try {
@@ -356,15 +410,23 @@ public class ResourceLocator {
             uriTemplate = uriTemplate.substring(end+1);
 
             regex = regex.length() > 0?"("+regex+")":"([ˆ/]+?)";
-            varibalesIndx.put(groupIndx, variable);
+            if(regex.length() <= 0) loc[j++] = groupIndx;
+            varibalesIndx.put(groupIndx++, variable);
             pathStr.append(regex);
 
             start = uriTemplate.indexOf('{');
         }
+
         if(pathStr.charAt(0) != '/') pathStr = pathStr.append('/');
-        if(pathStr.charAt(pathStr.length() - 1) != '/') pathStr = pathStr.append('/');
-        
-        return new UriTemplateRegEx(pathStr.toString(), varibalesIndx);
+        if(pathStr.charAt(pathStr.length() - 1) == '/') pathStr = pathStr.deleteCharAt(pathStr.length() - 1);
+        pathStr.append("(/.*)?");
+
+        UriTemplateRegEx ret = new UriTemplateRegEx(pathStr.toString(), varibalesIndx);
+        for (int aLoc : loc) {
+            ret.addToDefaultRegexLoc(aLoc);
+        }
+
+        return ret;
     }
 
     private static boolean isNameChar(char c){
@@ -383,31 +445,6 @@ public class ResourceLocator {
         return new String(tmp, 0, j);
     }
 
-//    private String encode(String str){
-//       Charset utf8 = Charset.forName("UTF-8");
-//
-//
-//       for(int i=0;i<str.length();i++){
-//            char c = str.charAt(i);
-//       }
-//       return "";
-//    }
-
-
-    /**
-     * A root resource class is anchored in URI space using the @Path annotation. The value of the annotation is
-     * a relative URI path template whose base URI is provided by the deployment context.
-     * A URI path template is a string with zero or more embedded parameters that, when values are substituted
-     * for all the parameters, is a valid URI path. The Javadoc for the @Path annotation describes their syntax
-     * {@link javax.ws.rs.Path}
-     *
-     * Template parameters can optionally specify the regular expression used to match their values. 
-     * TODO For now only simple pattens are allowed
-     */
-    private void uriTemplate(){
-
-    }
-
     private static Path getPathAnnoation(Class<?> c){
         Path path = c.getAnnotation(Path.class);
         if(path == null){
@@ -418,5 +455,15 @@ public class ResourceLocator {
         }
         return path;
     }
+
+//    private String encode(String str){
+//       Charset utf8 = Charset.forName("UTF-8");
+//
+//
+//       for(int i=0;i<str.length();i++){
+//            char c = str.charAt(i);
+//       }
+//       return "";
+//    }
 
 }

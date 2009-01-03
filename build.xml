@@ -68,8 +68,8 @@
         <jvmarg value="-Dorg.slosc.wsdl2rest.wsdl.wsdlLocations=${basedir}/samples/wsdl"/>
         <jvmarg value="-Dorg.slosc.wsdl2rest.wsdl.targetLocation=${basedir}/target/generated"/>
 
-        <!-- <jvmarg value="-Xdebug"/> -->
-        <!-- <jvmarg value="-Xrunjdwp:transport=dt_socket,server=y,suspend=y,address=5005"/> -->
+         <jvmarg value="-Xdebug"/>
+         <jvmarg value="-Xrunjdwp:transport=dt_socket,server=y,suspend=y,address=5005"/>
        
         <test if="test" name="${test}"/>
         <batchtest unless="test" fork="yes" todir="target/test">

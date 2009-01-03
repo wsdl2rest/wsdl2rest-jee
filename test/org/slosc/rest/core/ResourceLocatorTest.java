@@ -40,34 +40,36 @@ import java.util.regex.Pattern;
 public class ResourceLocatorTest extends TestCase {
     ResourceLocator resourceLocator;
     ResourceClassLoader resourceClassLoader;
+    ApplicationConfiguration applicationConfig;
 
     protected void setUp() throws Exception {
         resourceLocator = new ResourceLocator();
         resourceClassLoader = new ResourceClassLoader();
         resourceClassLoader.setParser(new ResourceClassParser());
+
+        URL url = this.getClass().getClassLoader().getResource("org/slosc/wsdl2rest/samples/Bookstore.class");
+        resourceClassLoader.addLookupPath(url.getPath());
+        url = this.getClass().getClassLoader().getResource("org/slosc/wsdl2rest/samples/BookstoreWithPattern.class");
+        resourceClassLoader.addLookupPath(url.getPath());
+        resourceClassLoader.lookup();
+        Set<Class<?>> cls = resourceClassLoader.getResourceClasses();
+        for(Class cc: cls){
+            System.out.println(cc.getName());
+        }
+
+        ClassLoader classLoader = Thread.currentThread().getContextClassLoader();
+        if(classLoader == null) classLoader = getClass().getClassLoader();
+        applicationConfig = (ApplicationConfiguration) classLoader.loadClass("org.slosc.rest.core.ApplicationConfiguration").newInstance();
+
     }
 
     public void testLookup() throws Exception {
         try {
 
-             Matcher m = Pattern.compile("/bookstore/").matcher("/bookstore/item/101");
-             boolean matches = m.find();
+//         Matcher m = Pattern.compile("/bookstore/").matcher("/bookstore/item/101");
+//         boolean matches = m.find();
 
-            URL url = this.getClass().getClassLoader().getResource("org/slosc/wsdl2rest/samples/Bookstore.class");
-//            resourceClassLoader.addLookupPath(url.getPath());
-//            url = this.getClass().getClassLoader().getResource("org/slosc/wsdl2rest/samples/BookstoreWithPattern.class");
-            resourceClassLoader.addLookupPath(url.getPath());
-            resourceClassLoader.lookup();
-            Set<Class<?>> cls = resourceClassLoader.getResourceClasses();
-            for(Class cc: cls){
-                System.out.println(cc.getName());
-            }
-
-            ClassLoader classLoader = Thread.currentThread().getContextClassLoader();
-            if(classLoader == null) classLoader = getClass().getClassLoader();
-            ApplicationConfiguration applicationConfig = (ApplicationConfiguration) classLoader.loadClass("org.slosc.rest.core.ApplicationConfiguration").newInstance();
-
-            Request<HttpServletRequest> reqest    = new MockRequestWrapper(null);
+            Request<HttpServletRequest> reqest    = new MockRequestWrapper("/bookstore/item/101");
             Response<HttpServletResponse> response = new MockResponseWrapper(null);
 
             //create per request application context from the application configuration.
@@ -76,7 +78,26 @@ public class ResourceLocatorTest extends TestCase {
             ctx.add(Request.class.getName(), reqest);
             ctx.add(Response.class.getName(), response);
             ctx.setResourceClassLoader(resourceClassLoader);
-            
+
+            Object o = resourceLocator.find(ctx);
+        }
+        catch (Exception ex) {
+            ex.printStackTrace();
+        }
+    }
+
+    public void testLookup2() throws Exception {
+        try {
+            Request<HttpServletRequest> reqest    = new MockRequestWrapper("/bookstore/colombo/item/101");
+            Response<HttpServletResponse> response = new MockResponseWrapper(null);
+
+            //create per request application context from the application configuration.
+            ApplicationContext ctx = new ApplicationContext(applicationConfig);
+
+            ctx.add(Request.class.getName(), reqest);
+            ctx.add(Response.class.getName(), response);
+            ctx.setResourceClassLoader(resourceClassLoader);
+
             Object o = resourceLocator.find(ctx);
         }
         catch (Exception ex) {
@@ -85,19 +106,25 @@ public class ResourceLocatorTest extends TestCase {
     }
 
     class MockRequestWrapper extends RequestWrapper{
+        private String path;
 
-        MockRequestWrapper(HttpServletRequest req) {
-            super(req);
+        public MockRequestWrapper(String path) {
+            super(null);
+            this.path = path;
         }
 
         public String getPath() {
-            return "/bookstore/item/101";    
+            return path;
+        }
+
+        public String getMethod() {
+            return "GET";    
         }
     }
 
     class MockResponseWrapper extends ResponseWrapper{
 
-        MockResponseWrapper(HttpServletResponse res) {
+        public MockResponseWrapper(HttpServletResponse res) {
             super(res);
         }
     }
