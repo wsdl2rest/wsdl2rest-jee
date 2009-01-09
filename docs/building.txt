@@ -1,0 +1,32 @@
+Building the source
+-------------------
+To build the source code you need JDK 1.5 and Apache Ant 1.6 or later version.
+
+You can build the source code from source distribution or from the svn checkout.
+
+The current project is hosted at sourceforge: http://sourceforge.net/projects/wsdl2rest 
+You can checkout the source read only using following command:
+
+$ svn co http://wsdl2rest.svn.sourceforge.net/svnroot/wsdl2rest <source folder>
+
+To build the code just run ‘ant’ on the top level of source tree.
+
+$ cd <source folder>
+$ ant 
+
+To run test just run ‘ant test’
+
+
+Running wsdl2rest tool
+----------------------
+
+To run the wsdl2rest tool for you to convert WSDLs to jsr-311 compliant resources (RESTful service interfaces) do the following:
+
+$ cd <source folder>
+$ ant wsdl2rest
+
+or just run
+
+java -cp wsdl2rest-1.0.jar:wsif.jar:wsdl4j-20021124.jar:log4j-1.2.15.jar:commons-logging.jar org.slosc.wsdl2rest.ui.Wsdl2RestForm
+
+e.g. $ java -cp ./dist/lib/wsdl2rest-1.0.jar;./lib/wsif.jar;./lib/wsdl4j-20021124.jar;./lib/log4j-1.2.15.jar;./lib/commons-logging.jar org.slosc.wsdl2rest.ui.Wsdl2RestForm
