@@ -1,0 +1,39 @@
+TODO list for the Jump from SOAP to REST 
+----------------------------------------
+
+1. implementations
+2. testing
+3. documentation
+4. repository
+5. publications
+
+
+
+[implementations]
+[main]
+- complete jsr-311 spec implementations - priority HIGH - owner Lilantha
+- add spring framework support, similar either to spring mapping for struts or webservice tool mapping as in for CXF - priority HIGH - owner <none>
+- Ajax implementation for rest services exposed by the library - priority MEDIUM - owner <none>
+- add non-annotation (non-jsr-311) model for REST resources and mapping to resolve the same model as in jsr-311. (this is for ppl who do not like annotation model) - priority MEDIUM - owner <none>
+- fix issues in the wsdl2rest tool - priority HIGH - owner <none>
+- add web (at site) interface similar to the tool to generate rest classes from WSDL file. - priority MEDIUM - owner <none>
+
+
+[testing]
+- test wsdl2rest tool and fix all the bugs in it. report bugs in the bugzilla 2 sourceforge.
+
+
+[documentations]
+- complete architecture/design document - Lilantha
+- create user guide for the tool chain - Thushan
+
+
+[repository]
+- consider renaming repositoty for rest library
+
+[Publications]
+- Create the sourceforge website for the tool chain
+- publish some articals on theserverside.com, infoq.com, or where ever possible
+- add some blog entries on developer blog sites
+- increate google hits/search
+- send release mail to major goups: cxf apache site, theserverside.com, news groups etc.
