@@ -158,6 +158,35 @@
 		           
   </target>
 
+   <target name="bin-dist" depends="dist" description="generate the binary distribution" >
+	<!-- Create the distribution directory -->
+	<mkdir dir="${dist}/bin"/>
+	<mkdir dir="${dist}/docs"/>
+	<copy todir="${dist}/docs" overwrite="true">
+         <fileset dir="./docs">
+	    	<exclude name="building.txt"/>
+	    	<exclude name="discussions.txt"/>
+	    	<exclude name="todo.txt"/>
+	    </fileset>
+    </copy>
+    
+	<tar destfile="${dist}/bin/wsdl2rest-bin-${release-version}.tar.gz" compression="gzip">
+		<fileset  dir=".">
+	        <include name="README.TXT"/>
+	        <include name="LICENSE"/>
+	        <include name="NOTICE"/>
+	        <include name="lib/**"/>
+	    </fileset >
+	    <fileset dir="${dist}/lib">
+	    	<include name="wsdl2rest-${release-version}.jar"/>
+	    </fileset>
+	    <fileset dir="${dist}">
+	    	<include name="docs/**"/>
+	    </fileset>
+	</tar>
+	</target>
+         
+
 
   <target name="clean"
         description="clean up" >
