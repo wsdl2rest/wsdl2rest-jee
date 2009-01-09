@@ -151,10 +151,10 @@
 
     <!-- Put everything in ${build} into the *.tar.gz file -->
     <tar destfile="${dist}/src/wsdl2rest-src-${release-version}.tar.gz" compression="gzip" basedir="." 
-    excludes=".svn/**,**/.svn,**/.svn/**,dist,dist/**,target,target/**,wsdl2rest.iml,wsdl2rest.ipr,wsdl2rest.iws,config/**,docs/**,samples/**,tools/**,**/*.bak"/>
+    excludes=".svn/**,**/.svn,**/.svn/**,dist,dist/**,target,target/**,wsdl2rest.iml,wsdl2rest.ipr,wsdl2rest.iws,config/**,docs/discussions.txt,docs/todo.txt,site/**,samples/src/api/**,samples/test/**,samples/src/webapp/**,tools/**,**/*.bak,.classpath,.project"/>
     
     <zip destfile="${dist}/src/wsdl2rest-src-${release-version}.zip" basedir="." 
-    excludes=".svn/**,**/.svn,**/.svn/**,dist,dist/**,target,target/**,wsdl2rest.iml,wsdl2rest.ipr,wsdl2rest.iws,config/**,docs/**,samples/**,tools/**,**/*.bak"/>
+    excludes=".svn/**,**/.svn,**/.svn/**,dist,dist/**,target,target/**,wsdl2rest.iml,wsdl2rest.ipr,wsdl2rest.iws,config/**,docs/discussions.txt,docs/todo.txt,site/**,samples/src/api/**,samples/test/**,samples/src/webapp/**,tools/**,**/*.bak,.classpath,.project"/>
 		           
   </target>
 

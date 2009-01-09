@@ -5,3 +5,5 @@ A tool chain allowing quick migration from existing SOAP webservices
 implementation to RESTful webservices implementation by using axisting WSDL
 defintion together with the services impl. classes.(dev. by a group
 http://tech.groups.yahoo.com/group/slosc) 
+
+Please refer to documents found under ./docs folder for more infomation.
