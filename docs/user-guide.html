@@ -3,14 +3,71 @@
 <head>
   <meta content="text/html; charset=ISO-8859-1"
  http-equiv="content-type">
-  <title>Jump from SOAP to REST User Guide</title>
+  <title>Jump from SOAP to REST
+User Guide</title>
   <link rel="stylesheet" href="styles.css" type="text/css">
 </head>
 <body>
-<h1>Jump from SOAP to REST User Guide</h1>
+<h1>Jump
+from SOAP to REST User's
+Guide (version 1.0)</h1>
 <hr style="width: 100%; height: 2px;"><br>
+&nbsp;&nbsp;&nbsp; &nbsp;&nbsp;&nbsp;
+&nbsp;&nbsp;1. <a href="#Introduction"><span
+ style="font-family: Helvetica,Arial,sans-serif;">Introduction</span></a><br>
+<div style="margin-left: 40px;">2.
+<a style="font-family: Helvetica,Arial,sans-serif;"
+ href="#Building_the_source">Building the source</a><br
+ style="font-family: Helvetica,Arial,sans-serif;">
+3. <a style="font-family: Helvetica,Arial,sans-serif;"
+ href="#Running_wsdl2rest_tool">Running wsdl2rest tool</a><br
+ style="font-family: Helvetica,Arial,sans-serif;">
+4. <a style="font-family: Helvetica,Arial,sans-serif;"
+ href="#Building_and_deploying_the_RESTful">Building
+and deploying the RESTful webapp</a><br
+ style="font-family: Helvetica,Arial,sans-serif;">
+<span style="font-family: Helvetica,Arial,sans-serif;">&nbsp;&nbsp;&nbsp;
+4</span>.1<a style="font-family: Helvetica,Arial,sans-serif;"
+ href="#Approach_1:"> Approach 1</a><br
+ style="font-family: Helvetica,Arial,sans-serif;">
+<span style="font-family: Helvetica,Arial,sans-serif;">&nbsp;&nbsp;&nbsp;&nbsp;</span>4.2
+<a style="font-family: Helvetica,Arial,sans-serif;" href="#Approach_2:">Approach
+2 </a><br>
+</div>
 <br>
-<h2 style="text-decoration: underline;">Building the source</h2>
+<br>
+<hr style="width: 100%; height: 2px;">
+<h2 style="text-decoration: underline;"><a name="Introduction"></a>Introduction</h2>
+<br>
+<p class="MsoNormal"><span
+ style="font-size: 10pt; font-family: Verdana;">Jump
+from SOAP to REST is a tool chain&nbsp;providing a way for people
+to migrate from SOAP to REST easily or to create RESTful webservices on
+a servlet contains that do not have support for developing REST
+webservices. This project provides you a REST webservice engine and a
+tool to generate RESTful service interfaces (or resources) from an
+existing WSDL. Currently
+the engine is based on the jsr-311 spec @ <a
+ href="http://jcp.org/en/jsr/detail?id=311">jcp</a>.
+&nbsp;</span>
+</p>
+<p class="MsoNormal"><span
+ style="font-size: 10pt; font-family: Verdana;">Target
+of
+this library to be used with servlet containers that do not have
+jsr-311
+implementation, such as Tomcat, Geronimo etc. and is provided free with
+the <a href="http://www.apache.org/licenses/LICENSE-2.0.html">Apache
+License (version 2.0)</a> There is a reference implementation for
+jsr-311 but it is licensed with <a
+ href="http://www.gnu.org/copyleft/gpl.html">GPL</a>, hence is not for
+most commercial use, however our implementation is commercial friendly
+and is free &nbsp;that will work for those parties. Also other
+implementations (such as bea, webspehere etc.) are commercial and not
+cost effective for your businesses.</span></p>
+<hr style="width: 100%; height: 2px;"><br>
+<h2 style="text-decoration: underline;"><a name="Building_the_source"></a>Building
+the source</h2>
 <br>
 To build the source code you need JDK 1.5 and Apache Ant 1.6 or later
 version. You can build the source code from source distribution or from
@@ -25,10 +82,12 @@ You can checkout the source read only using following command:<br>
 To build the code just run &lsquo;ant&rsquo; on the top level
 of source tree.
 <pre class="codesegment">$ cd &lt;source folder&gt;<br>$ ant <br></pre>
-To run test just run<code>&lsquo;ant test&rsquo;</code><br>
+To run test just run<code>&lsquo;ant
+test&rsquo;</code><br>
 <br>
-<br>
-<h2 style="text-decoration: underline;">Running wsdl2rest tool</h2>
+<hr style="width: 100%; height: 2px;"><br>
+<h2 style="text-decoration: underline;"><a name="Running_wsdl2rest_tool"></a>Running
+wsdl2rest tool</h2>
 <br>
 To run the wsdl2rest tool for you to convert WSDLs to jsr-311 compliant
 resources (RESTful service interfaces) do the following:<br>
@@ -39,20 +98,98 @@ e.g. from top of the source tree<br>
 <br>
 <pre class="codesegment">$ java -cp <br>./dist/lib/wsdl2rest-1.0.jar:./lib/wsif.jar:./lib/wsdl4j-20021124.jar:./lib/log4j-1.2.15.jar:./lib/commons-logging.jar <br>org.slosc.wsdl2rest.ui.Wsdl2RestForm</pre>
 <br>
+This will appear as follows:<br>
 <br>
-<h2 style="text-decoration: underline;">Building and deploying the
+<img style="width: 710px; height: 435px;" alt="wsdl2rest UI"
+ title="wsdl2rest form" src="images/wsdl2rest_ui.png"><br>
+<br>
+<br>
+Once you run the tool you can select a WSDL file to generate
+respective&nbsp;RESTful interface for it. &nbsp;Click browse
+button at top right hand corner to select the WSDL. Once the WSDL is
+opened the list of service methods exposed by it will display in the
+left pane under "Webservice Methods" as a tree. From right hand pane
+you can select each method and modify as you wish to specify the
+resource mapping path, HTTP method it maps to and MIME type (for now
+only the return type), and list of parameters you need to included in
+the RESTful interface mapping as variables. For an example if the WSDL
+you opened is from the sample we provide as shown in the follow figure,
+you could see there are couple of services exposed in it. If you select
+one of the service method say <code>getAccount(String
+name)</code> the right hand pane
+shows you the parameters and REST mapping details, for an example
+resources, <code>Account </code>maps
+to the sub resource method <code>account(String
+name)</code> with variable as
+'name', and it &nbsp;will map with GET HTTP method. you can specify
+a MIME type if different from the default<code>
+application/xml </code>MIME type.
+(Note that below WSDL sample is from Apache CXF)<br>
+<br>
+<img style="width: 780px; height: 435px;" alt="wsdl2rest_ui2"
+ title="wsdl2rest form after opening a WSDl file"
+ src="images/wsdl2rest_ui2.png"><br>
+<br>
+<br>
+You can generate the RESTful service by specifying a output location at
+bottom of right hand pane and clicking on Generate button. For example
+for above sample, it will generate&nbsp;two RESTful services.
+BankCORBAService.java and BankSOAPService.java. under
+d:\projects\rest\org\apache\cxf\schemas\cxf\idl\bank<br>
+<br>
+<pre><span class="codesegment">package org.apache.cxf.schemas.cxf.idl.bank;</span><br
+ class="codesegment"><br class="codesegment"><span class="codesegment">import org.apache.cxf.schemas.cxf.idl.bank.AccountAlreadyExistsExceptionType;</span><br
+ class="codesegment"><br class="codesegment"><span class="codesegment">@Path("/bankcorbaservice/")</span><br
+ class="codesegment"><span class="codesegment">@ProduceMime("application/xml")</span><br
+ class="codesegment"><span class="codesegment">public class BankCORBAService {</span><br
+ class="codesegment"><br class="codesegment"><span class="codesegment"> @GET</span><br
+ class="codesegment"><span class="codesegment"> @Path("account")</span><br
+ class="codesegment"><span class="codesegment"> public Account getAccount(String name) throws AccountNotFoundExceptionType {</span><br
+ class="codesegment"><br class="codesegment"><span class="codesegment"> //TODO: invoke real business service interfaces hear ...</span><br
+ class="codesegment"><span class="codesegment"> }</span><br
+ class="codesegment"><br class="codesegment"><span class="codesegment"> @POST</span><br
+ class="codesegment"><span class="codesegment"> @Path("account")</span><br
+ class="codesegment"><span class="codesegment"> public boolean createAccount(String name) throws AccountAlreadyExistsExceptionType {</span><br
+ class="codesegment"><br class="codesegment"><span class="codesegment"> //TODO: invoke real business service interfaces hear ...</span><br
+ class="codesegment"><span class="codesegment"> }</span><br
+ class="codesegment"><span class="codesegment">}</span></pre>
+<br>
+and<br>
+<pre><span class="codesegment">package org.apache.cxf.schemas.cxf.idl.bank;</span><br
+ class="codesegment"><br class="codesegment"><span class="codesegment">import org.apache.cxf.schemas.cxf.idl.bank.AccountAlreadyExistsExceptionType;</span><br
+ class="codesegment"><br class="codesegment"><span class="codesegment">@Path("/banksoapservice/")</span><br
+ class="codesegment"><span class="codesegment">@ProduceMime("application/xml")</span><br
+ class="codesegment"><span class="codesegment">public class BankSOAPService {</span><br
+ class="codesegment"><br class="codesegment"><span class="codesegment"> @GET</span><br
+ class="codesegment"><span class="codesegment"> @Path("account")</span><br
+ class="codesegment"><span class="codesegment"> public Account getAccount(String name) throws AccountNotFoundExceptionType {</span><br
+ class="codesegment"><br class="codesegment"><span class="codesegment"> //TODO: invoke real business service interfaces hear ...</span><br
+ class="codesegment"><span class="codesegment"> }</span><br
+ class="codesegment"><br class="codesegment"><span class="codesegment"> @POST</span><br
+ class="codesegment"><span class="codesegment"> @Path("account")</span><br
+ class="codesegment"><span class="codesegment"> public boolean createAccount(String name) throws AccountAlreadyExistsExceptionType {</span><br
+ class="codesegment"><br class="codesegment"><span class="codesegment"> //TODO: invoke real business service interfaces hear ...</span><br
+ class="codesegment"><span class="codesegment"> }</span><br
+ class="codesegment"><span class="codesegment">}</span></pre>
+<br>
+<hr style="width: 100%; height: 2px;"><br>
+<h2 style="text-decoration: underline;"><a
+ name="Building_and_deploying_the_RESTful"></a>Building
+and deploying the
 RESTful webapp</h2>
 <br>
 To build the web application for testing RESTful webservice follow
 below steps:<br>
 <br>
-<h4 style="text-decoration: underline;">Approach 1:</h4>
+<h4 style="text-decoration: underline;"><a name="Approach_1:"></a>Approach
+1:</h4>
 <br>
 Create a jsr-311 complient RESTful service interface and implement your
 business logic in it. see a sample provided at
 samples\src\impl\org\slosc\wsdl2rest\samples:<br>
 <br>
-<code>Bookstore.java and BookstoreWithPattern.java</code><br>
+<code>Bookstore.java and
+BookstoreWithPattern.java</code><br>
 <br>
 once you finished coding you RESTful service interface, compile it
 seperatly and you may create a jar file. or you can have all as classes.<br>
@@ -62,11 +199,13 @@ build the RESTful app as follows<br>
 <pre class="codesegment">$ cd &lt;source folder&gt;<br>$ ant restapp</pre>
 <br>
 <br>
-This will create a web app under <code>./dist </code>with name <code>'restapp',</code>
+This will create a web app under <code>./dist
+</code>with name <code>'restapp',</code>
 you may
 copy all your classes into it under <code>./dist/restapp/WEB-INF/classes</code>
 or
-have your jar file copied to <code>./dist/restapp/WEB-INF/lib </code>with
+have your jar file copied to <code>./dist/restapp/WEB-INF/lib
+</code>with
 all your
 third party libraries.<br>
 <br>
@@ -75,29 +214,29 @@ deploy the app under Apache Tomcat using following command.<br>
 <pre class="codesegment">$ cd &lt;source folder&gt;<br>$ ant test-svr</pre>
 <br>
 <br>
-you can now access you application at<code> http://host:port/restapp</code><br>
+you can now access you application at<code>
+http://host:port/restapp</code><br>
 <br>
 <br>
-<h4 style="text-decoration: underline;">Approach 2:</h4>
+<h4 style="text-decoration: underline;"><a name="Approach_2:"></a>Approach
+2:</h4>
 <br>
 Create your own web app with jsr-311 complient RESTful service
 interface and implement your business logic in it. Copy<code>
-wsdl2rest-1.0.jar </code>(from<code> ./dist/lib </code>folder) and
+wsdl2rest-1.0.jar </code>(from<code>
+./dist/lib </code>folder) and
 all third party
-dependents found under<code> ./lib</code> into your web app <code>WEB-INF/lib</code>
+dependents found under<code> ./lib</code>
+into your web app <code>WEB-INF/lib</code>
 folder and
 adding following to web.xml of your web app.<br>
 <br>
-<pre class="codesegment">&lt;servlet&gt;
-&nbsp;&nbsp;&nbsp;&lt;servlet-name&gt;restfulApplicationControllerServlet&lt;/servlet-name&gt;
-&nbsp;&nbsp;&nbsp;&lt;servlet-class&gt;org.slosc.rest.servlet.RestfulApplicationControllerServlet&lt;/servlet-class&gt;
-&nbsp;&nbsp;&nbsp;&lt;load-on-startup&gt;1&lt;/load-on-startup&gt;
-&lt;/servlet&gt;<br>
-&lt;servlet-mapping&gt;
-&nbsp;&nbsp;&nbsp;&lt;servlet-name&gt;restfulApplicationControllerServlet&lt;/servlet-name&gt;
-&nbsp;&nbsp;&nbsp;&lt;url-pattern&gt;*&lt;/url-pattern&gt;
-&lt;/servlet-mapping&gt;<br>
-</pre>
+<pre class="codesegment">&lt;servlet&gt;<br>&nbsp;&nbsp;&nbsp;&lt;servlet-name&gt;restfulApplicationControllerServlet&lt;/servlet-name&gt;<br>&nbsp;&nbsp;&nbsp;&lt;servlet-class&gt;org.slosc.rest.servlet.RestfulApplicationControllerServlet&lt;/servlet-class&gt;<br>&nbsp;&nbsp;&nbsp;&lt;load-on-startup&gt;1&lt;/load-on-startup&gt;<br>&lt;/servlet&gt;<br><br>&lt;servlet-mapping&gt;<br>&nbsp;&nbsp;&nbsp;&lt;servlet-name&gt;restfulApplicationControllerServlet&lt;/servlet-name&gt;<br>&nbsp;&nbsp;&nbsp;&lt;url-pattern&gt;*&lt;/url-pattern&gt;<br>&lt;/servlet-mapping&gt;<br><br></pre>
 <br>
+<br>
+<br>
+<div style="text-align: center;" class="copyright"><small>Copyright
+&copy; 2008-2009 The SL_OpenSource Consortium. &nbsp;All Rights
+Reserved. </small></div>
 </body>
 </html>
