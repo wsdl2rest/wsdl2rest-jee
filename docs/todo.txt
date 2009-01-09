@@ -15,7 +15,7 @@ TODO list for the Jump from SOAP to REST
 - add spring framework support, similar either to spring mapping for struts or webservice tool mapping as in for CXF - priority HIGH - owner <none>
 - Ajax implementation for rest services exposed by the library - priority MEDIUM - owner <none>
 - add non-annotation (non-jsr-311) model for REST resources and mapping to resolve the same model as in jsr-311. (this is for ppl who do not like annotation model) - priority MEDIUM - owner <none>
-- fix issues in the wsdl2rest tool - priority HIGH - owner <none>
+- fix issues in the wsdl2rest tool - priority HIGH - owner Thushan
 - add web (at site) interface similar to the tool to generate rest classes from WSDL file. - priority MEDIUM - owner <none>
 
 
