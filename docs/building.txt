@@ -29,4 +29,6 @@ or just run
 
 java -cp wsdl2rest-1.0.jar:wsif.jar:wsdl4j-20021124.jar:log4j-1.2.15.jar:commons-logging.jar org.slosc.wsdl2rest.ui.Wsdl2RestForm
 
-e.g. $ java -cp ./dist/lib/wsdl2rest-1.0.jar;./lib/wsif.jar;./lib/wsdl4j-20021124.jar;./lib/log4j-1.2.15.jar;./lib/commons-logging.jar org.slosc.wsdl2rest.ui.Wsdl2RestForm
+e.g. from top of the source tree
+
+$ java -cp ./dist/lib/wsdl2rest-1.0.jar;./lib/wsif.jar;./lib/wsdl4j-20021124.jar;./lib/log4j-1.2.15.jar;./lib/commons-logging.jar org.slosc.wsdl2rest.ui.Wsdl2RestForm
