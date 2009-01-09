@@ -1,0 +1,103 @@
+<!DOCTYPE html PUBLIC "-//W3C//DTD HTML 4.01 Transitional//EN">
+<html>
+<head>
+  <meta content="text/html; charset=ISO-8859-1"
+ http-equiv="content-type">
+  <title>Jump from SOAP to REST User Guide</title>
+  <link rel="stylesheet" href="styles.css" type="text/css">
+</head>
+<body>
+<h1>Jump from SOAP to REST User Guide</h1>
+<hr style="width: 100%; height: 2px;"><br>
+<br>
+<h2 style="text-decoration: underline;">Building the source</h2>
+<br>
+To build the source code you need JDK 1.5 and Apache Ant 1.6 or later
+version. You can build the source code from source distribution or from
+the svn
+checkout.<br>
+<br>
+The current project is hosted at sourceforge:
+http://sourceforge.net/projects/wsdl2rest<br>
+<br>
+You can checkout the source read only using following command:<br>
+<pre class="codesegment"><code>$ svn co http://wsdl2rest.svn.sourceforge.net/svnroot/wsdl2rest &lt;source folder&gt;<br></code></pre>
+To build the code just run &lsquo;ant&rsquo; on the top level
+of source tree.
+<pre class="codesegment">$ cd &lt;source folder&gt;<br>$ ant <br></pre>
+To run test just run<code>&lsquo;ant test&rsquo;</code><br>
+<br>
+<br>
+<h2 style="text-decoration: underline;">Running wsdl2rest tool</h2>
+<br>
+To run the wsdl2rest tool for you to convert WSDLs to jsr-311 compliant
+resources (RESTful service interfaces) do the following:<br>
+<pre class="codesegment">$ cd &lt;source folder&gt;<br>$ ant wsdl2rest<br></pre>
+or just run<br>
+<pre class="codesegment">$ java -cp wsdl2rest-1.0.jar:wsif.jar:wsdl4j-20021124.jar:log4j-1.2.15.jar:commons-logging.jar org.slosc.wsdl2rest.ui.Wsdl2RestForm</pre>
+e.g. from top of the source tree<br>
+<br>
+<pre class="codesegment">$ java -cp <br>./dist/lib/wsdl2rest-1.0.jar:./lib/wsif.jar:./lib/wsdl4j-20021124.jar:./lib/log4j-1.2.15.jar:./lib/commons-logging.jar <br>org.slosc.wsdl2rest.ui.Wsdl2RestForm</pre>
+<br>
+<br>
+<h2 style="text-decoration: underline;">Building and deploying the
+RESTful webapp</h2>
+<br>
+To build the web application for testing RESTful webservice follow
+below steps:<br>
+<br>
+<h4 style="text-decoration: underline;">Approach 1:</h4>
+<br>
+Create a jsr-311 complient RESTful service interface and implement your
+business logic in it. see a sample provided at
+samples\src\impl\org\slosc\wsdl2rest\samples:<br>
+<br>
+<code>Bookstore.java and BookstoreWithPattern.java</code><br>
+<br>
+once you finished coding you RESTful service interface, compile it
+seperatly and you may create a jar file. or you can have all as classes.<br>
+<br>
+build the RESTful app as follows<br>
+<br>
+<pre class="codesegment">$ cd &lt;source folder&gt;<br>$ ant restapp</pre>
+<br>
+<br>
+This will create a web app under <code>./dist </code>with name <code>'restapp',</code>
+you may
+copy all your classes into it under <code>./dist/restapp/WEB-INF/classes</code>
+or
+have your jar file copied to <code>./dist/restapp/WEB-INF/lib </code>with
+all your
+third party libraries.<br>
+<br>
+deploy the app under Apache Tomcat using following command.<br>
+<br>
+<pre class="codesegment">$ cd &lt;source folder&gt;<br>$ ant test-svr</pre>
+<br>
+<br>
+you can now access you application at<code> http://host:port/restapp</code><br>
+<br>
+<br>
+<h4 style="text-decoration: underline;">Approach 2:</h4>
+<br>
+Create your own web app with jsr-311 complient RESTful service
+interface and implement your business logic in it. Copy<code>
+wsdl2rest-1.0.jar </code>(from<code> ./dist/lib </code>folder) and
+all third party
+dependents found under<code> ./lib</code> into your web app <code>WEB-INF/lib</code>
+folder and
+adding following to web.xml of your web app.<br>
+<br>
+<pre class="codesegment">&lt;servlet&gt;
+&nbsp;&nbsp;&nbsp;&lt;servlet-name&gt;restfulApplicationControllerServlet&lt;/servlet-name&gt;
+&nbsp;&nbsp;&nbsp;&lt;servlet-class&gt;org.slosc.rest.servlet.RestfulApplicationControllerServlet&lt;/servlet-class&gt;
+&nbsp;&nbsp;&nbsp;&lt;load-on-startup&gt;1&lt;/load-on-startup&gt;
+&lt;/servlet&gt;<br>
+&lt;servlet-mapping&gt;
+&nbsp;&nbsp;&nbsp;&lt;servlet-name&gt;restfulApplicationControllerServlet&lt;/servlet-name&gt;
+&nbsp;&nbsp;&nbsp;&lt;url-pattern&gt;*&lt;/url-pattern&gt;
+&lt;/servlet-mapping&gt;<br>
+</pre>
+<br>
+</body>
+</html>

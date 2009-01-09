@@ -31,4 +31,47 @@ java -cp wsdl2rest-1.0.jar:wsif.jar:wsdl4j-20021124.jar:log4j-1.2.15.jar:commons
 
 e.g. from top of the source tree
 
-$ java -cp ./dist/lib/wsdl2rest-1.0.jar;./lib/wsif.jar;./lib/wsdl4j-20021124.jar;./lib/log4j-1.2.15.jar;./lib/commons-logging.jar org.slosc.wsdl2rest.ui.Wsdl2RestForm
+$ java -cp ./dist/lib/wsdl2rest-1.0.jar:./lib/wsif.jar:./lib/wsdl4j-20021124.jar:./lib/log4j-1.2.15.jar:./lib/commons-logging.jar org.slosc.wsdl2rest.ui.Wsdl2RestForm
+
+
+Building and deploying the RESTful webapp
+-----------------------------------------
+To build the web application for testing RESTful webservice follow below steps:
+
+Approach 1:
+
+Create a jsr-311 complient RESTful service interface and implement your business logic in it. see a sample provided at samples\src\impl\org\slosc\wsdl2rest\samples:
+
+Bookstore.java and BookstoreWithPattern.java
+
+once you finished coding you RESTful service interface, compile it seperatly and you may create a jar file. or you can have all as classes.
+
+build the RESTful app as follows
+
+$ cd <source folder>
+$ ant restapp
+
+This will create a web app under ./dist with name 'restapp', you may copy all your classes into it under ./dist/restapp/WEB-INF/classes or have your jar file copied to ./dist/restapp/WEB-INF/lib with all your third party libraries.
+
+deploy the app under Apache Tomcat using following command.
+
+$ cd <source folder>
+$ ant test-svr
+
+you can now access you application at http://host:port/restapp
+
+
+Approach 2:
+
+Create your own web app with jsr-311 complient RESTful service interface and implement your business logic in it. Copy wsdl2rest-1.0.jar (from ./dist/lib folder) and all third party dependents found under ./lib into your web app WEB-INF/lib folder and adding following to web.xml of your web app.
+
+<servlet>
+    <servlet-name>restfulApplicationControllerServlet</servlet-name>
+    <servlet-class>org.slosc.rest.servlet.RestfulApplicationControllerServlet</servlet-class>
+    <load-on-startup>1</load-on-startup>
+</servlet>
+
+<servlet-mapping>
+    <servlet-name>restfulApplicationControllerServlet</servlet-name>
+    <url-pattern>*</url-pattern>
+</servlet-mapping>
